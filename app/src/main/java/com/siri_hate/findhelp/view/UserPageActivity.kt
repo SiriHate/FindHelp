@@ -1,11 +1,17 @@
-package com.siri_hate.findhelp
+package com.siri_hate.findhelp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.siri_hate.findhelp.R
 
-class MainActivity : AppCompatActivity() {
+class UserPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.user_page)
+
+
+
     }
 }
