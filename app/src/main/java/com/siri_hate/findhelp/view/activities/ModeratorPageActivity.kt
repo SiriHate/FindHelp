@@ -1,4 +1,4 @@
-package com.siri_hate.findhelp.view
+package com.siri_hate.findhelp.view.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,7 @@ class ModeratorPageActivity : AppCompatActivity() {
 
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_page)
+        setContentView(R.layout.moderator_page)
 
 
 

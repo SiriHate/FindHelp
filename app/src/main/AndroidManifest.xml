@@ -12,7 +12,7 @@
         android:theme="@style/Theme.FindHelp"
         tools:targetApi="31">
         <activity
-            android:name=".view.UserPageActivity"
+            android:name=".view.activities.AuthorizationPageActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
