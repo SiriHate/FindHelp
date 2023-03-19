@@ -20,6 +20,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activities.UserPageActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".view.activities.ModeratorPageActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".view.activities.OrganizerPageActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
