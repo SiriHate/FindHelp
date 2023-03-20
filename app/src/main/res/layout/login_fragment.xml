@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#313338"
     tools:context=".view.fragments.LoginFragment">
 
     <LinearLayout
@@ -17,37 +18,61 @@
             android:id="@+id/Email_tittle_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите ваш email:" />
+            android:text="Введите ваш email:"
+            android:textColor="#BFBFBF"
+            android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/Email_input_login"
+            android:id="@+id/search_input"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:ems="10"
-            android:inputType="textPersonName" />
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Почта"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/Password_tittle_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите ваш пароль:" />
+            android:text="Введите ваш пароль:"
+            android:textColor="#BFBFBF"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/Password_input_login"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:ems="10"
-            android:inputType="textPassword" />
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Пароль"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/Login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
             android:layout_gravity="left"
-            android:backgroundTint="#00BFFF"
+            android:backgroundTint="#4FB3BF"
             android:text="Войти" />
+
+        <TextView
+            android:id="@+id/Go_to_registration"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:text="Еще не зарегистрированны?"
+            android:textColor="#BFBFBF"
+            android:textSize="16sp" />
 
     </LinearLayout>
 </FrameLayout>

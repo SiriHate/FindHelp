@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,7 @@ class RegisterFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var userTypeChip: Chip
     private lateinit var organizerTypeChip: Chip
+    private lateinit var goBackButton: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +41,11 @@ class RegisterFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         userTypeChip = view.findViewById(R.id.User_type)
         organizerTypeChip = view.findViewById(R.id.Organaizer_type)
+        goBackButton = view.findViewById(R.id.Go_back_button)
+
+        goBackButton.setOnClickListener {
+            goBack()
+        }
 
         // Слушатель кнопки регистрации вызывает функцию регистрации
         registerButton.setOnClickListener {
@@ -60,6 +67,14 @@ class RegisterFragment : Fragment() {
         }
 
         return view
+    }
+
+    // Функция возврата на экран авторизации
+    private fun goBack() {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.AuthorizationFragment, LoginFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     // Функция регистрации
@@ -124,7 +139,7 @@ class RegisterFragment : Fragment() {
                             .child("users").child(it.uid)
                             .setValue(User(uid = it.uid, userType = userType))
                     }
-                    val welcomeFragment = WelcomeFragment()
+                    val welcomeFragment = LoginFragment()
                     val fragmentManager = requireActivity().supportFragmentManager
                     fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
                         welcomeFragment).commit()

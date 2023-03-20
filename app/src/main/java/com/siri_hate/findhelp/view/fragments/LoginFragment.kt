@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -24,11 +25,12 @@ import com.siri_hate.findhelp.view.activities.UserPageActivity
 class LoginFragment : Fragment() {
 
     // Переменные для UI
+
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
-
+    private lateinit var registerTextView: TextView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,9 +39,10 @@ class LoginFragment : Fragment() {
         val view = inflater.inflate(R.layout.login_fragment, container, false)
 
         // Привязка переменных к UI-элементам
-        emailInput = view.findViewById(R.id.Email_input_login)
+        emailInput = view.findViewById(R.id.search_input)
         passwordInput = view.findViewById(R.id.Password_input_login)
         loginButton = view.findViewById(R.id.Login_button)
+        registerTextView = view.findViewById(R.id.Go_to_registration)
 
         // Переменная для Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance()
@@ -47,6 +50,13 @@ class LoginFragment : Fragment() {
         // Слушатель кнопки "Войти" вызывающий функцию авторизации
         loginButton.setOnClickListener {
             login()
+        }
+
+        registerTextView.setOnClickListener {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.AuthorizationFragment, RegisterFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
         return view

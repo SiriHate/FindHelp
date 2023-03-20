@@ -4,42 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#313338"
     tools:context=".view.activities.AuthorizationPageActivity">
 
     <ImageView
         android:id="@+id/Logo"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
+        android:background="#1e1f22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/new_logo" />
 
     <TextView
         android:id="@+id/Quote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="10dp"
+        android:background="#5D5E60"
+        android:paddingLeft="5dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:text="«Мы зарабатываем на жизнь тем, что получаем, но делаем жизнь тем, что даем».  \n© Уинстон Черчилль"
-        android:textAlignment="viewStart"
-        android:textColor="#000000"
+        android:textAlignment="gravity"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Logo" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/AuthorizationFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.WelcomeFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.LoginFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Quote"
-        tools:layout="@layout/welcome_fragment" />
+        tools:layout="@layout/login_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
