@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.database.FirebaseDatabase
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.model.User
 
 class RegisterFragment : Fragment() {
 
@@ -20,6 +22,8 @@ class RegisterFragment : Fragment() {
     private lateinit var secondPasswordInput: EditText
     private lateinit var registerButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var userTypeChip: Chip
+    private lateinit var organizerTypeChip: Chip
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,11 +37,26 @@ class RegisterFragment : Fragment() {
         secondPasswordInput = view.findViewById(R.id.Second_password_input_register)
         registerButton = view.findViewById(R.id.Register_button)
         firebaseAuth = FirebaseAuth.getInstance()
-
+        userTypeChip = view.findViewById(R.id.User_type)
+        organizerTypeChip = view.findViewById(R.id.Organaizer_type)
 
         // Слушатель кнопки регистрации вызывает функцию регистрации
         registerButton.setOnClickListener {
             registration()
+        }
+
+        // Слушатель для чипа UserType
+        userTypeChip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                organizerTypeChip.isChecked = false
+            }
+        }
+
+        // Слушатель для чипа OrganizerType
+        organizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                userTypeChip.isChecked = false
+            }
         }
 
         return view
@@ -45,69 +64,78 @@ class RegisterFragment : Fragment() {
 
     // Функция регистрации
     private fun registration() {
-
-        // Переменные введенных данных
         val email = emailInput.text.toString().trim()
         val password = firstPasswordInput.text.toString().trim()
         val confirmPassword = secondPasswordInput.text.toString().trim()
 
-        var isEmpty = false // Проверка заполнено ли поле
+        if (validateInputs(email, password, confirmPassword)) {
+            val userType = getUserType()
+            registerUser(email, password, userType)
+        }
+    }
 
-        // Проверка на заполнение поля email
+    // Функция проверки на заполненость полей и выбор типа пользователя
+    private fun validateInputs(email: String, password: String, confirmPassword: String): Boolean {
+        var isValid = true
+
         if (email.isEmpty()) {
             emailInput.error = "Введите Email"
-            isEmpty = true
+            isValid = false
         }
 
-        // Проверка на заполнение поля пароль
         if (password.isEmpty()) {
             firstPasswordInput.error = "Введите пароль"
-            isEmpty = true
+            isValid = false
         }
 
-        // Проверка на заполнение поля пароль
         if (confirmPassword.isEmpty()) {
             secondPasswordInput.error = "Введите подтверждение пароля"
-            isEmpty = true
+            isValid = false
         }
 
-        // Проверка на заполнение подтвержения пароля
         if (password != confirmPassword) {
             Toast.makeText(activity, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
-            isEmpty = true
+            isValid = false
         }
 
-        // Если какое-то из полей пустое то выводим ошибку и выходим из функции
-        if (isEmpty) {
-            return
+        if (!userTypeChip.isChecked && !organizerTypeChip.isChecked) {
+            Toast.makeText(activity, "Тип пользователя не выбран", Toast.LENGTH_SHORT).show()
+            isValid = false
         }
 
-        // Обработка ошибок регистрации и успешная регистрация
+        return isValid
+    }
+
+    // Получение типа пользователя
+    private fun getUserType(): String {
+        return if (userTypeChip.isChecked) "user" else "organizer"
+    }
+
+    // Функция регистрации пользователя в базу данных
+    private fun registerUser(email: String, password: String, userType: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(
-                        activity, "Регистрация прошла успешно",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    val welcomeFragment = WelcomeFragment()
-                    parentFragmentManager.beginTransaction() // Возврат на приветственный фрагмент
-                        .replace(R.id.AuthorizationFragment, welcomeFragment)
-                        .commit()
-                } else {
-                    if (task.exception is FirebaseAuthUserCollisionException) {
-                        Toast.makeText(
-                            activity,
-                            "Пользователь уже зарегистрирован в системе",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            activity, "Ошибка регистрации: " +
-                                    task.exception?.message, Toast.LENGTH_SHORT
-                        ).show()
+                    Toast.makeText(activity, "Регистрация прошла успешно",
+                        Toast.LENGTH_SHORT).show()
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    currentUser?.let {
+                        FirebaseDatabase.getInstance().reference
+                            .child("users").child(it.uid)
+                            .setValue(User(uid = it.uid, userType = userType))
                     }
+                    val welcomeFragment = WelcomeFragment()
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
+                        welcomeFragment).commit()
+                } else {
+                    Toast.makeText(
+                        activity,
+                        "Ошибка регистрации: ${task.exception?.message}",
+                        Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
+
 }
