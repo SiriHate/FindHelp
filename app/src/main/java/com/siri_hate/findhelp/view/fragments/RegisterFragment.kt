@@ -33,7 +33,7 @@ class RegisterFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.register_fragment, container, false)
 
-        // Переменные
+        // Переменные UI-элементов
         emailInput = view.findViewById(R.id.Email_input_register)
         firstPasswordInput = view.findViewById(R.id.First_password_input_register)
         secondPasswordInput = view.findViewById(R.id.Second_password_input_register)

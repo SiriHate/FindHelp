@@ -49,6 +49,7 @@ class LoginFragment : Fragment() {
             login()
         }
 
+        // Слушатель кнопки "Зарегистрироваться" вызывающий функцию авторизации
         registerTextView.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.AuthorizationFragment, RegisterFragment())
@@ -59,7 +60,7 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    // Функция авторизации
+    // Основная функция авторизации
     private fun login() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
@@ -78,6 +79,7 @@ class LoginFragment : Fragment() {
             }
     }
 
+    // Функция проверки заполненности полей
     private fun fieldsAreEmpty(email: String, password: String): Boolean {
         var isEmpty = false
 
@@ -94,6 +96,7 @@ class LoginFragment : Fragment() {
         return isEmpty
     }
 
+    // Функция обработки данных в случае успешной авторизации
     private fun loginSuccessfull() {
         val user = firebaseAuth.currentUser
         val email = user?.email
@@ -115,6 +118,7 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // Функция обработки ошибки в случае неуспешной авторизации
     private fun loginFailed(exception: Exception?) {
         if (exception is FirebaseAuthInvalidCredentialsException) {
             showErrorMessage("Неверный email или пароль")
@@ -123,6 +127,7 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // Функция запуска главной страницы пользователя
     private fun startActivity(rights: String?) {
         val intent = when (rights) {
             "user" -> Intent(requireContext(), UserPageActivity::class.java)
@@ -138,6 +143,7 @@ class LoginFragment : Fragment() {
         } ?: showErrorMessage("Не удалось определить права доступа")
     }
 
+    // Функция отображения ошибки
     private fun showErrorMessage(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }

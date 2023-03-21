@@ -70,7 +70,7 @@
             android:layout_height="50dp"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:text="Еще не зарегистрированны?"
+            android:text="Еще не зарегистрированы?"
             android:textColor="#BFBFBF"
             android:textSize="16sp" />
 
