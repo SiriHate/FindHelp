@@ -8,6 +8,7 @@
     tools:context=".view.activities.UserPageActivity">
 
     <LinearLayout
+        android:id="@+id/OrganizerMainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/User_page_logo"
+            android:id="@+id/UserPageLogo"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginBottom="5dp"
@@ -25,13 +26,13 @@
             app:srcCompat="@drawable/new_logo" />
 
         <LinearLayout
-            android:id="@+id/Top_layout"
+            android:id="@+id/UserSearchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/search_input"
+                android:id="@+id/UserSearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -44,7 +45,7 @@
                 android:textSize="16sp" />
 
             <ImageButton
-                android:id="@+id/Filter_button"
+                android:id="@+id/UserFilterButton"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="#313338"
@@ -53,19 +54,20 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/list"
+            android:id="@+id/UserOffersList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <LinearLayout
+            android:id="@+id/UserMenuBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#1e1f22"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/Main_page_button"
+                android:id="@+id/UserMainPageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -75,7 +77,7 @@
                 android:text="Главная" />
 
             <Button
-                android:id="@+id/Profile_page_button"
+                android:id="@+id/UserProfilePageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

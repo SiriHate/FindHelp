@@ -8,4 +8,85 @@
     tools:context=".view.activities.OrganizerPageActivity">
 
 
+    <LinearLayout
+        android:id="@+id/OrganizerMainLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/OrganizerPageLogo"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginBottom="5dp"
+            android:background="#1e1f22"
+            app:srcCompat="@drawable/new_logo" />
+
+        <LinearLayout
+            android:id="@+id/OrganizerSearchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/OrganizerSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_background"
+                android:hint="Введите поисковой запрос"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/OrganizerFilterButton"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="#313338"
+                app:srcCompat="@drawable/filter32" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/OrganizerOffersList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/OrganizerMenuBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#1e1f22"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/OrganizerMainPageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2b2d31"
+                android:text="Главная" />
+
+            <Button
+                android:id="@+id/OrganizerProfilePageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2b2d31"
+                android:text="Профиль" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

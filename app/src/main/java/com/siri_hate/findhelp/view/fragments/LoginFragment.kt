@@ -36,7 +36,7 @@ class LoginFragment : Fragment() {
         val view = inflater.inflate(R.layout.login_fragment, container, false)
 
         // Привязка переменных к UI-элементам
-        emailInput = view.findViewById(R.id.search_input)
+        emailInput = view.findViewById(R.id.UserSearchBar)
         passwordInput = view.findViewById(R.id.Password_input_login)
         loginButton = view.findViewById(R.id.Login_button)
         registerTextView = view.findViewById(R.id.Go_to_registration)
