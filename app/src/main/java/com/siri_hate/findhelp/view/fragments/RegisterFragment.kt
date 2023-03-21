@@ -11,7 +11,6 @@ import android.widget.ImageButton
 import android.widget.Toast
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.User
@@ -134,14 +133,16 @@ class RegisterFragment : Fragment() {
                 if (task.isSuccessful) {
                     Toast.makeText(activity, "Регистрация прошла успешно",
                         Toast.LENGTH_SHORT).show()
+
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     currentUser?.let {
+                        val user = User(
+                            uid = it.uid,
+                            email = email,
+                            userType = userType
+                        )
                         val db = FirebaseFirestore.getInstance()
                         val userRef = db.collection("users").document(email)
-                        val user = hashMapOf(
-                            "uid" to FirebaseAuth.getInstance().currentUser?.uid,
-                            "userType" to userType
-                        )
                         userRef.set(user)
                     }
                     val loginFragment = LoginFragment()
