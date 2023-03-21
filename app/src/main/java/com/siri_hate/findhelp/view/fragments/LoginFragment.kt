@@ -12,10 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.activities.ModeratorPageActivity
 import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
@@ -99,25 +96,22 @@ class LoginFragment : Fragment() {
 
     private fun loginSuccessfull() {
         val user = firebaseAuth.currentUser
-        val uid = user?.uid
+        val email = user?.email
 
-        val database = FirebaseDatabase.getInstance().getReference("users")
-        uid?.let { userId ->
-            database.child(userId).addListenerForSingleValueEvent(object :
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()) {
-                        val userType = snapshot.child("userType").value.toString()
+        val db = FirebaseFirestore.getInstance()
+        email?.let { userEmail ->
+            db.collection("users").document(userEmail).get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userType = task.result?.get("userType") as? String
+                    if (!userType.isNullOrEmpty()) {
                         startActivity(userType)
                     } else {
                         showErrorMessage("Не удалось определить права доступа")
                     }
+                } else {
+                    showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    showErrorMessage("Ошибка доступа к базе данных: " + error.message)
-                }
-            })
+            }
         }
     }
 
@@ -129,7 +123,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun startActivity(rights: String) {
+    private fun startActivity(rights: String?) {
         val intent = when (rights) {
             "user" -> Intent(requireContext(), UserPageActivity::class.java)
             "organizer" -> Intent(requireContext(), OrganizerPageActivity::class.java)

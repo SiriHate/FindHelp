@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.User
 
@@ -135,14 +136,18 @@ class RegisterFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     currentUser?.let {
-                        FirebaseDatabase.getInstance().reference
-                            .child("users").child(it.uid)
-                            .setValue(User(uid = it.uid, userType = userType))
+                        val db = FirebaseFirestore.getInstance()
+                        val userRef = db.collection("users").document(email)
+                        val user = hashMapOf(
+                            "uid" to FirebaseAuth.getInstance().currentUser?.uid,
+                            "userType" to userType
+                        )
+                        userRef.set(user)
                     }
-                    val welcomeFragment = LoginFragment()
+                    val loginFragment = LoginFragment()
                     val fragmentManager = requireActivity().supportFragmentManager
                     fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
-                        welcomeFragment).commit()
+                        loginFragment).commit()
                 } else {
                     Toast.makeText(
                         activity,
