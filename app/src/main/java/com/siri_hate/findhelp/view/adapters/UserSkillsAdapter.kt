@@ -20,7 +20,8 @@ class UserSkillsAdapter(context: Context, skills: MutableList<Skill>) :
     private val inflater = LayoutInflater.from(context)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: inflater.inflate(R.layout.user_skills_list, parent, false)
+        val view = convertView ?: inflater.inflate(R.layout.user_skills_list,
+            parent, false)
 
         // Получение элемента списка
         val skillItem = getItem(position)
@@ -36,10 +37,11 @@ class UserSkillsAdapter(context: Context, skills: MutableList<Skill>) :
         // Обработчик изменения состояния checkbox
         skillCheckbox.setOnCheckedChangeListener { _, isChecked ->
             skillItem?.isSelected = isChecked
-            // Получение uid пользователя
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            // Получение email пользователя
+            val email = FirebaseAuth.getInstance().currentUser!!.email
             // Получение ссылки на документ пользователя
-            val skillsRef = FirebaseFirestore.getInstance().collection("user_skills").document(uid)
+            val skillsRef = FirebaseFirestore.getInstance().
+            collection("user_skills").document(email!!)
             // Обновление состояния навыка в Firestore
             skillItem?.let {
                 skillsRef.update(it.name, it.isSelected)

@@ -1,6 +1,8 @@
 package com.siri_hate.findhelp.view.fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -83,14 +85,14 @@ class RegisterFragment : Fragment() {
         val password = firstPasswordInput.text.toString().trim()
         val confirmPassword = secondPasswordInput.text.toString().trim()
 
-        if (validateInputs(email, password, confirmPassword)) {
+        if (inputCheck(email, password, confirmPassword)) {
             val userType = getUserType()
             registerUser(email, password, userType)
         }
     }
 
     // Функция проверки на заполненость полей и выбор типа пользователя
-    private fun validateInputs(email: String, password: String, confirmPassword: String): Boolean {
+    private fun inputCheck(email: String, password: String, confirmPassword: String): Boolean {
         var isValid = true
 
         if (email.isEmpty()) {
@@ -131,31 +133,66 @@ class RegisterFragment : Fragment() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(activity, "Регистрация прошла успешно",
-                        Toast.LENGTH_SHORT).show()
-
-                    val currentUser = FirebaseAuth.getInstance().currentUser
-                    currentUser?.let {
-                        val user = User(
-                            uid = it.uid,
-                            email = email,
-                            userType = userType
-                        )
-                        val db = FirebaseFirestore.getInstance()
-                        val userRef = db.collection("users").document(email)
-                        userRef.set(user)
-                    }
-                    val loginFragment = LoginFragment()
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
-                        loginFragment).commit()
+                    registrationSuccess(userType, email)
                 } else {
-                    Toast.makeText(
-                        activity,
-                        "Ошибка регистрации: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT).show()
+                    registrationError(task.exception?.message)
                 }
             }
+    }
+
+    // Функция обработки успешной регистрации
+    private fun registrationSuccess(userType: String, email: String) {
+        Toast.makeText(activity, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.let {
+            setUserAccessRights(userType, email, it.uid)
+            initUserSkillsList(userType, email)
+        }
+
+        val loginFragment = LoginFragment()
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
+            loginFragment).commit()
+    }
+
+    // Функция обработки ошибок регистрации
+    private fun registrationError(errorMessage: String?) { Toast.makeText(activity,
+            "Ошибка регистрации: $errorMessage", Toast.LENGTH_SHORT).show()
+    }
+
+    // Функция установки прав доступа пользователя
+    private fun setUserAccessRights(userType: String, email: String, uid: String) {
+        val user = User(uid = uid, userType = userType)
+        val db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("user_rights").document(email)
+        userRef.set(user)
+    }
+
+    // Функция создания нового документа для пользователей типа "user" от базового списка навыков
+    private fun initUserSkillsList(userType: String, email: String) {
+        if (userType == "user") {
+            val db = FirebaseFirestore.getInstance()
+            val skillListInitRef = db.
+            collection("user_skills").document("skill_list_init")
+            skillListInitRef.get()
+                .addOnSuccessListener { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val skillListData = documentSnapshot.data
+                        val userSkillRef = db.collection("user_skills").document(email)
+                        userSkillRef.set(skillListData!!)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "Документ успешно создан!")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Ошибка при создании документа", e)
+                            }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Ошибка при чтении документа skill_list_init", e)
+                }
+        }
     }
 
 

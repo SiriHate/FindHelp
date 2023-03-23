@@ -103,7 +103,8 @@ class LoginFragment : Fragment() {
 
         val db = FirebaseFirestore.getInstance()
         email?.let { userEmail ->
-            db.collection("users").document(userEmail).get().addOnCompleteListener { task ->
+            db.collection("user_rights").document(userEmail).get()
+                .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val userType = task.result?.get("userType") as? String
                     if (!userType.isNullOrEmpty()) {

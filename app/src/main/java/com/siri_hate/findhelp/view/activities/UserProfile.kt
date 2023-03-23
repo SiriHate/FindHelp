@@ -17,14 +17,14 @@ class UserProfile : AppCompatActivity() {
 
     private lateinit var userSkillsList: ListView
     private lateinit var adapter: UserSkillsAdapter
-    private lateinit var uid: String
+    private lateinit var email: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_profile)
 
         initUI()
-        uid = getUserUid()
+        email = getUserEmail()
         initListViewAndAdapter()
         fetchUserSkillsFromFirestore()
         setItemClickListenerForListView()
@@ -50,8 +50,8 @@ class UserProfile : AppCompatActivity() {
         }
     }
 
-    private fun getUserUid(): String {
-        return FirebaseAuth.getInstance().currentUser!!.uid
+    private fun getUserEmail(): String {
+        return FirebaseAuth.getInstance().currentUser!!.email ?: ""
     }
 
     private fun initListViewAndAdapter() {
@@ -62,7 +62,7 @@ class UserProfile : AppCompatActivity() {
 
     private fun fetchUserSkillsFromFirestore() {
         val db = FirebaseFirestore.getInstance()
-        val skillsRef = db.collection("user_skills").document(uid)
+        val skillsRef = db.collection("user_skills").document(email)
 
         skillsRef.addSnapshotListener { documentSnapshot, e ->
             if (e != null) {
@@ -88,7 +88,7 @@ class UserProfile : AppCompatActivity() {
 
                 skillItem?.let {
                     val db = FirebaseFirestore.getInstance()
-                    val skillsRef = db.collection("user_skills").document(uid)
+                    val skillsRef = db.collection("user_skills").document(email)
                     skillsRef.update(it.name, it.isSelected)
                         .addOnSuccessListener {
                             Log.d(TAG, "Документ успешно обновлен!")
