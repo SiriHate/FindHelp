@@ -53,6 +53,15 @@
                 app:srcCompat="@drawable/filter" />
         </LinearLayout>
 
+        <Button
+            android:id="@+id/AddVacancy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#4AA564"
+            android:text="Добавить новую вакансию" />
+
         <ListView
             android:id="@+id/OrganizerOffersList"
             android:layout_width="match_parent"
@@ -69,24 +78,14 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/OrganizerMainPageButton"
+                android:id="@+id/OrganizerLogoutButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="#2b2d31"
-                android:text="Главная" />
-
-            <Button
-                android:id="@+id/OrganizerProfilePageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="#2b2d31"
-                android:text="Профиль" />
+                android:text="Выйти из аккаунта" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

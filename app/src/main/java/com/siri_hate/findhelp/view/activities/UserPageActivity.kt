@@ -26,7 +26,7 @@ class UserPageActivity : AppCompatActivity() {
 
         // Слушатель кнопки "Профиль"
         userProfilePageButton.setOnClickListener {
-            val intent = Intent(this, UserProfile::class.java)
+            val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
         }
 

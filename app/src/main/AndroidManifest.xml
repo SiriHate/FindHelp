@@ -12,16 +12,11 @@
         android:theme="@style/Theme.FindHelp"
         tools:targetApi="31">
         <activity
-            android:name=".view.activities.OrganizerProfile"
+            android:name=".view.activities.VacancyCardActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activities.UserProfile"
+            android:name=".view.activities.UserProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".UserProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_user_profile"
-            android:theme="@style/Theme.FindHelp.NoActionBar" />
         <activity
             android:name=".view.activities.AuthorizationPageActivity"
             android:exported="true">

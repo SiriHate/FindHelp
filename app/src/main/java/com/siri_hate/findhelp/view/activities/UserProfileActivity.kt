@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserSkillsAdapter
 
-class UserProfile : AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity() {
 
     private lateinit var userSkillsList: ListView
     private lateinit var adapter: UserSkillsAdapter
