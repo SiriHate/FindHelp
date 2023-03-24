@@ -30,7 +30,9 @@ class RegisterFragment : Fragment() {
     private lateinit var userTypeChip: Chip
     private lateinit var organizerTypeChip: Chip
     private lateinit var goBackButton: ImageButton
-
+    private lateinit var organizationNameInput: EditText
+    private lateinit var contactPersonInput: EditText
+    private lateinit var organizationPhoneInput: EditText
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +48,9 @@ class RegisterFragment : Fragment() {
         userTypeChip = view.findViewById(R.id.User_type)
         organizerTypeChip = view.findViewById(R.id.Organaizer_type)
         goBackButton = view.findViewById(R.id.Go_back_button)
+        organizationNameInput = view.findViewById(R.id.Organization_name_input)
+        contactPersonInput = view.findViewById(R.id.Contact_person_input)
+        organizationPhoneInput = view.findViewById(R.id.Organization_phone_input)
 
         goBackButton.setOnClickListener {
             goBack()
@@ -88,15 +93,28 @@ class RegisterFragment : Fragment() {
         val email = emailInput.text.toString().trim()
         val password = firstPasswordInput.text.toString().trim()
         val confirmPassword = secondPasswordInput.text.toString().trim()
+        val organizationName = organizationNameInput.text.toString().trim()
+        val contactPerson = contactPersonInput.text.toString().trim()
+        val organizationPhone = organizationPhoneInput.text.toString().trim()
+        val isOrganizer = organizerTypeChip.isChecked
 
-        if (inputCheck(email, password, confirmPassword)) {
+        if (inputCheck(email, password, confirmPassword, isOrganizer,
+                organizationName, contactPerson, organizationPhone)) {
             val userType = getUserType()
             registerUser(email, password, userType)
         }
     }
 
     // Функция проверки на заполненость полей и выбор типа пользователя
-    private fun inputCheck(email: String, password: String, confirmPassword: String): Boolean {
+    private fun inputCheck(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        isOrganizer: Boolean,
+        organizationName: String,
+        contactPerson: String,
+        organizationPhone: String
+    ): Boolean {
         var isValid = true
 
         if (email.isEmpty()) {
@@ -119,9 +137,21 @@ class RegisterFragment : Fragment() {
             isValid = false
         }
 
-        if (!userTypeChip.isChecked && !organizerTypeChip.isChecked) {
-            Toast.makeText(activity, "Тип пользователя не выбран", Toast.LENGTH_SHORT).show()
-            isValid = false
+        if (isOrganizer) {
+            if (organizationName.isEmpty()) {
+                organizationNameInput.error = "Введите название компании"
+                isValid = false
+            }
+
+            if (contactPerson.isEmpty()) {
+                contactPersonInput.error = "Введите контактное лицо"
+                isValid = false
+            }
+
+            if (organizationPhone.isEmpty()) {
+                organizationPhoneInput.error = "Введите телефон компании"
+                isValid = false
+            }
         }
 
         return isValid

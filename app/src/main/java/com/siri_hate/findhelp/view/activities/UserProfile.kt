@@ -18,6 +18,9 @@ class UserProfile : AppCompatActivity() {
     private lateinit var userSkillsList: ListView
     private lateinit var adapter: UserSkillsAdapter
     private lateinit var email: String
+    private lateinit var userMainPageProfileButton: Button
+    private lateinit var userProfileProfileButton: Button
+    private lateinit var userLogoutButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,9 @@ class UserProfile : AppCompatActivity() {
     }
 
     private fun initUI() {
-        val userMainPageProfileButton: Button = findViewById(R.id.UserMainPageProfileButton)
-        val userProfileProfileButton: Button = findViewById(R.id.UserProfileProfileButton)
-        val userLogoutButton: Button = findViewById(R.id.UserLogoutButton)
+        userMainPageProfileButton = findViewById(R.id.UserMainPageProfileButton)
+        userProfileProfileButton = findViewById(R.id.UserProfileProfileButton)
+        userLogoutButton = findViewById(R.id.UserLogoutButton)
 
         userMainPageProfileButton.setOnClickListener {
             val intent = Intent(this, UserPageActivity::class.java)

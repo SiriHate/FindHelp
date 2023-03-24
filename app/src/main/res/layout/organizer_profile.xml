@@ -8,7 +8,7 @@
     tools:context=".view.activities.OrganizerProfile">
 
     <LinearLayout
-        android:id="@+id/OrganizerProfileMainLayout"
+        android:id="@+id/Organizer_profile_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -18,9 +18,71 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/OrganizerProfileLogo"
+            android:id="@+id/Organizer_profile_logo"
             android:layout_width="match_parent"
             android:layout_height="75dp"
-            android:src="@drawable/logo" />
+            android:background="#1e1f22"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/Vacancies_list_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center_horizontal"
+            android:text="Текущие вакансии:"
+            android:textColor="#BFBFBF"
+            android:textSize="24sp" />
+
+        <ListView
+            android:id="@+id/Vacancies_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+        </ListView>
+
+        <Button
+            android:id="@+id/OrganizerLogoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#a93226"
+            android:text="Выйти из аккаунта" />
+
+        <LinearLayout
+            android:id="@+id/Organizer_profile_menu"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#1e1f22"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Organizer_main_profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2b2d31"
+                android:text="Главная" />
+
+            <Button
+                android:id="@+id/Organizer_profile_profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2b2d31"
+                android:text="Профиль" />
+        </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

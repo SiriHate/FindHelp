@@ -7,15 +7,17 @@ import android.widget.Button
 import com.siri_hate.findhelp.R
 
 class UserPageActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
 
+    private lateinit var userMainPageButton: Button
+    private lateinit var userProfilePageButton: Button
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_page)
 
         // Переменные UI-элементов
-        val userMainPageButton: Button = findViewById(R.id.UserMainPageButton)
-        val userProfilePageButton: Button = findViewById(R.id.UserProfilePageButton)
+        userMainPageButton = findViewById(R.id.UserMainPageButton)
+        userProfilePageButton = findViewById(R.id.UserProfilePageButton)
 
         // Слушатель кнопки "Главная"
         userMainPageButton.setOnClickListener {
