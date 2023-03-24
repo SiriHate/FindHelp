@@ -14,6 +14,8 @@ import android.widget.Toast
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.User
 
@@ -58,6 +60,7 @@ class RegisterFragment : Fragment() {
         userTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 organizerTypeChip.isChecked = false
+                view?.findViewById<View>(R.id.OrganizerLayout)?.visibility = View.GONE
             }
         }
 
@@ -65,6 +68,7 @@ class RegisterFragment : Fragment() {
         organizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 userTypeChip.isChecked = false
+                view?.findViewById<View>(R.id.OrganizerLayout)?.visibility = View.VISIBLE
             }
         }
 
@@ -134,6 +138,28 @@ class RegisterFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     registrationSuccess(userType, email)
+
+                    if (userType == "organizer") {
+                        val db = Firebase.firestore
+                        val organizationName = view?.findViewById<EditText>(R.id.Organization_name_input)?.text.toString()
+                        val contactPerson = view?.findViewById<EditText>(R.id.Contact_person_input)?.text.toString()
+                        val organizationPhone = view?.findViewById<EditText>(R.id.Organization_phone_input)?.text.toString()
+
+                        // Сохраняем данные в Firestore
+                        val data = hashMapOf(
+                            "organization_name" to organizationName,
+                            "contact_person" to contactPerson,
+                            "organization_phone" to organizationPhone
+                        )
+
+                        db.collection("organization_info").document(email).set(data)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "DocumentSnapshot added with ID: $email")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error adding document", e)
+                            }
+                    }
                 } else {
                     registrationError(task.exception?.message)
                 }

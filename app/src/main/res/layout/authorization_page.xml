@@ -12,26 +12,11 @@
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:background="#1e1f22"
+        app:layout_constraintBottom_toTopOf="@+id/AuthorizationFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/Quote"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#5D5E60"
-        android:paddingLeft="5dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="«Мы зарабатываем на жизнь тем, что получаем, но делаем жизнь тем, что даем».  \n© Уинстон Черчилль"
-        android:textAlignment="gravity"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Logo" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/AuthorizationFragment"
@@ -41,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Quote"
+        app:layout_constraintTop_toBottomOf="@+id/Logo"
         tools:layout="@layout/login_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

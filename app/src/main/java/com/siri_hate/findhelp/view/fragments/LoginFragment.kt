@@ -22,7 +22,6 @@ import com.siri_hate.findhelp.view.activities.UserPageActivity
 class LoginFragment : Fragment() {
 
     // Переменные для UI
-
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button

@@ -84,13 +84,84 @@
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/edittext_background"
                 android:hint="Пароль еще раз"
                 android:inputType="textPassword"
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/OrganizerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/Organization_name_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите название вашей организации:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/Organization_name_input"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edittext_background"
+                    android:hint="Название организации"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/Contact_person_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите ваше ФИО:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/Contact_person_input"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edittext_background"
+                    android:hint="ФИО"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/Organization_phone_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите телефон вашей организации:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/Organization_phone_input"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edittext_background"
+                    android:hint="Телефон организации"
+                    android:inputType="phone"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/Type_of_user"
@@ -117,7 +188,7 @@
             <Button
                 android:id="@+id/Register_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_gravity="left"
                 android:layout_marginTop="15dp"
                 android:backgroundTint="#4FB3BF"
