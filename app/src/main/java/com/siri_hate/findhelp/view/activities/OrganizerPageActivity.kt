@@ -7,11 +7,18 @@ import android.widget.Button
 import com.siri_hate.findhelp.R
 
 class OrganizerPageActivity : AppCompatActivity() {
+
+    private lateinit var addVacancyButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.organizer_page)
 
+        addVacancyButton = findViewById(R.id.addVacancyButton)
 
+        addVacancyButton.setOnClickListener {
+            val intent = Intent(this, CreateVacancyPage::class.java)
+            startActivity(intent)
+        }
 
     }
 }

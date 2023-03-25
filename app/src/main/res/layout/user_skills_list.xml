@@ -6,17 +6,18 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/Vacancy_name"
+        android:id="@+id/Skill_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_weight="1"
+        android:text="Базовое знание английского языка"
         android:textColor="#dfe0e3"
         android:textSize="18sp" />
 
     <CheckBox
-        android:id="@+id/skill_checkbox"
+        android:id="@+id/Skill_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

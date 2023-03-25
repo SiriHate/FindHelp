@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="#2b2d31">
+
+    <TextView
+        android:id="@+id/vacancyName"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:text="Волонтер мед-помощник"
+        android:textColor="#dfe0e3"
+        android:textSize="14dp"
+        app:autoSizeMinTextSize="8sp" />
+
+    <ImageButton
+        android:id="@+id/vacancyDeleteButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:backgroundTint="#a93226"
+        app:srcCompat="@drawable/delete" />
+</LinearLayout>

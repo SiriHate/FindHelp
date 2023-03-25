@@ -27,11 +27,11 @@ class UserSkillsAdapter(context: Context, skills: MutableList<Skill>) :
         val skillItem = getItem(position)
 
         // Настройка отображения названия навыка
-        val skillName = view.findViewById<TextView>(R.id.Vacancy_name)
+        val skillName = view.findViewById<TextView>(R.id.Skill_name)
         skillName.text = skillItem?.name
 
         // Настройка отображения состояния checkbox
-        val skillCheckbox = view.findViewById<CheckBox>(R.id.skill_checkbox)
+        val skillCheckbox = view.findViewById<CheckBox>(R.id.Skill_checkbox)
         skillCheckbox.isChecked = skillItem?.isSelected ?: false
 
         // Обработчик изменения состояния checkbox
