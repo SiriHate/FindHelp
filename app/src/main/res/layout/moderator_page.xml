@@ -8,7 +8,7 @@
     tools:context=".view.activities.ModeratorPageActivity">
 
     <LinearLayout
-        android:id="@+id/ModeratorMainLayout"
+        android:id="@+id/moderator_page_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/moderator_page_logo"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:layout_marginBottom="5dp"
@@ -26,12 +26,13 @@
             app:srcCompat="@drawable/logo" />
 
         <LinearLayout
+            android:id="@+id/moderator_page_search_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/ModeratorSearchBar"
+                android:id="@+id/moderator_page_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -44,7 +45,7 @@
                 android:textSize="16sp" />
 
             <ImageButton
-                android:id="@+id/ModeratorFilterButton"
+                android:id="@+id/moderator_page_filter_button"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:background="#313338"
@@ -53,20 +54,20 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/moderatorVacancyList"
+            android:id="@+id/moderator_vacancy_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/UserMenuBar"
+            android:id="@+id/moderator_page_menu_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#1e1f22"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/ModeratorLogoutButton"
+                android:id="@+id/moderato_page_logout_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"

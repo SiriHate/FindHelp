@@ -229,14 +229,13 @@ class RegisterFragment : Fragment() {
     private fun initUserSkillsList(userType: String, email: String) {
         if (userType == "user") {
             val db = FirebaseFirestore.getInstance()
-            val skillListInitRef = db.
-            collection("user_skills").document("skill_list_init")
-            skillListInitRef.get()
+            val baseSkillsRef = db.collection("init_data").document("base_skills_init")
+            baseSkillsRef.get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
-                        val skillListData = documentSnapshot.data
+                        val baseSkillsData = documentSnapshot.data
                         val userSkillRef = db.collection("user_skills").document(email)
-                        userSkillRef.set(skillListData!!)
+                        userSkillRef.set(baseSkillsData!!)
                             .addOnSuccessListener {
                                 Log.d(TAG, "Документ успешно создан!")
                             }
@@ -246,7 +245,7 @@ class RegisterFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.w(TAG, "Ошибка при чтении документа skill_list_init", e)
+                    Log.w(TAG, "Ошибка при чтении документа base_skills_init", e)
                 }
         }
     }

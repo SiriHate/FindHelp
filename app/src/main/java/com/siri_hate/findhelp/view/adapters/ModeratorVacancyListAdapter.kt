@@ -14,7 +14,6 @@ import com.siri_hate.findhelp.R
 
 class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapshot>) :
     ArrayAdapter<DocumentSnapshot>(context, 0, offers.toMutableList()) {
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val convertViewInner: View = convertView ?: LayoutInflater.from(context)
             .inflate(R.layout.vacancy_list, parent, false)
@@ -24,7 +23,7 @@ class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
 
         val document: DocumentSnapshot? = getItem(position)
         document?.let {
-            vacancyNameTextView.text = it.id
+            vacancyNameTextView.text = it.getString("organization_name")
             val documentRef = it.reference
             vacancyDeleteButton.setOnClickListener {
                 // Создание всплывающего окна
@@ -47,6 +46,11 @@ class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
         return convertViewInner
     }
 }
+
+
+
+
+
 
 
 

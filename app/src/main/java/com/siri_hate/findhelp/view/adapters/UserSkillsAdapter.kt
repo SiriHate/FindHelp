@@ -1,67 +1,70 @@
 package com.siri_hate.findhelp.view.adapters
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
 
-class UserSkillsAdapter(context: Context, skills: MutableList<Skill>) :
-    ArrayAdapter<Skill>(context, 0, skills) {
+class UserSkillsAdapter(
+    private val context: Context,
+    private val db: FirebaseFirestore,
+    private val userEmail: String,
+    private var skillsList: List<String>
+) : BaseAdapter() {
 
-    private val inflater = LayoutInflater.from(context)
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = convertView ?: LayoutInflater.from(context).inflate(
+            R.layout.skills_list_item_layout, parent, false
+        )
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: inflater.inflate(R.layout.user_skills_list,
-            parent, false)
+        val skillNameTextView: TextView = view.findViewById(R.id.Skill_name)
+        val skillCheckBox: CheckBox = view.findViewById(R.id.Skill_checkbox)
 
-        // Получение элемента списка
-        val skillItem = getItem(position)
+        val skillName = skillsList[position]
+        skillNameTextView.text = skillName
 
-        // Настройка отображения названия навыка
-        val skillName = view.findViewById<TextView>(R.id.Skill_name)
-        skillName.text = skillItem?.name
-
-        // Настройка отображения состояния checkbox
-        val skillCheckbox = view.findViewById<CheckBox>(R.id.Skill_checkbox)
-        skillCheckbox.isChecked = skillItem?.isSelected ?: false
-
-        // Обработчик изменения состояния checkbox
-        skillCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            skillItem?.isSelected = isChecked
-            // Получение email пользователя
-            val email = FirebaseAuth.getInstance().currentUser!!.email
-            // Получение ссылки на документ пользователя
-            val skillsRef = FirebaseFirestore.getInstance().
-            collection("user_skills").document(email!!)
-            // Обновление состояния навыка в Firestore
-            skillItem?.let {
-                skillsRef.update(it.name, it.isSelected)
-                    .addOnSuccessListener {
-                        Log.d(TAG, "Документ успешно обновлен!")
-                    }
-                    .addOnFailureListener { e: Exception ->
-                        Log.w(TAG, "Ошибка обновления документа", e)
-                    }
+        db.collection("user_skills").document(userEmail).get()
+            .addOnSuccessListener { documentSnapshot ->
+                val skillsMap = documentSnapshot.get("skills") as Map<String, Boolean>
+                skillCheckBox.isChecked = skillsMap[skillName] ?: false
             }
+
+        skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            db.collection("user_skills").document(userEmail)
+                .update("skills.$skillName", isChecked)
         }
 
         return view
     }
 
-    // Обновление списка навыков
-    fun updateSkills(skillsMap: Map<String, Boolean>) {
-        clear()
-        for ((name, isSelected) in skillsMap) {
-            add(Skill(name, isSelected))
-        }
+    override fun getItem(position: Int): Any {
+        return skillsList[position]
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return skillsList.size
+    }
+
+    fun updateSkillsList(newList: List<String>) {
+        skillsList.toMutableList().clear()
+        skillsList = newList.toMutableList()
+        notifyDataSetChanged()
     }
 }
+
+
+
+
+
+
+
+

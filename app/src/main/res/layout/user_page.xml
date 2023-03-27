@@ -60,7 +60,7 @@
             android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/UserMenuBar"
+            android:id="@+id/moderator_page_menu_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#1e1f22"

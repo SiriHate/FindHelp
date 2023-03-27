@@ -1,5 +1,6 @@
 package com.siri_hate.findhelp.view.activities
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,8 +24,8 @@ class ModeratorPageActivity : AppCompatActivity() {
         setContentView(R.layout.moderator_page)
 
         // Переменные UI-элементов
-        val moderatorLogoutButton: Button = findViewById(R.id.ModeratorLogoutButton)
-        val moderatorVacancyList: ListView = findViewById(R.id.moderatorVacancyList)
+        val moderatorLogoutButton: Button = findViewById(R.id.moderato_page_logout_button)
+        val moderatorVacancyList: ListView = findViewById(R.id.moderator_vacancy_list)
         adapter = ModeratorVacancyListAdapter(this, emptyList())
         moderatorVacancyList.adapter = adapter
 
@@ -52,9 +53,5 @@ class ModeratorPageActivity : AppCompatActivity() {
             adapter.addAll(offers)
             adapter.notifyDataSetChanged()
         }
-    }
-
-    companion object {
-        private const val TAG = "ModeratorPageActivity"
     }
 }

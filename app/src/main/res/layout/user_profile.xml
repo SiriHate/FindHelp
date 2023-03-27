@@ -36,13 +36,11 @@
             android:textSize="24sp" />
 
         <ListView
-            android:id="@+id/UserSkillsList"
+            android:id="@+id/user_skills_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:overScrollMode="never">
-
-        </ListView>
+            android:overScrollMode="never"/>
 
         <Button
             android:id="@+id/UserLogoutButton"

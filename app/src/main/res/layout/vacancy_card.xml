@@ -4,6 +4,207 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#313338"
     tools:context=".view.activities.VacancyCard">
+
+    <ScrollView
+        android:id="@+id/vacancy_card_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/vacancy_card_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/vacancy_card_logo"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="#1e1f22"
+                app:srcCompat="@drawable/logo" />
+
+            <ImageButton
+                android:id="@+id/vacancy_card_go_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#313338"
+                android:tint="#FFFFFF"
+                app:srcCompat="@drawable/go_back" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:text="Волонтер мед-помощник"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/vacancy_card_main_info_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="ОСНОВНАЯ ИНФОРМАЦИЯ"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/vacancy_card_company_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/vacancy_card_company_icon"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:tint="#FFFFFF"
+                    app:srcCompat="@drawable/company" />
+
+                <TextView
+                    android:id="@+id/vacancy_card_company_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="ООО Добрый волонтер"
+                    android:textColor="#C9CCD1"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vacancy_card_contact_person_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/vacancy_card_contact_person_icon"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:tint="#FFFFFF"
+                    app:srcCompat="@drawable/contact" />
+
+                <TextView
+                    android:id="@+id/vacancy_card_contact_person_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Костылев Владимир Александрович"
+                    android:textColor="#C9CCD1"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vacancy_card_phone_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/vacancy_card_phone_icon"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:tint="#FFFFFF"
+                    app:srcCompat="@drawable/phone" />
+
+                <TextView
+                    android:id="@+id/vacancy_card_phone_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="+7(495)765-22-15"
+                    android:textColor="#C9CCD1"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vacancy_card_city_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/vacancy_card_city_icon"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:tint="#FFFFFF"
+                    app:srcCompat="@drawable/city" />
+
+                <TextView
+                    android:id="@+id/vacancy_card_city_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Москва"
+                    android:textColor="#C9CCD1"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/vacancy_card_description_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="ОПИСАНИЕ ВАКАНСИИ"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/vacancy_card_description_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Необходимо помогать мед персоналу в оказании мед помощи пострадавшим в результате пожара"
+                android:textColor="#C9CCD1"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/vacancy_card_skills_list_tittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="НЕОБХОДИМЫЕ НАВЫКИ"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <ListView
+                android:id="@+id/vacancy_card_skills_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
