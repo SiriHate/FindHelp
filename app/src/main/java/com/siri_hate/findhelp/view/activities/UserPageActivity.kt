@@ -8,24 +8,24 @@ import com.siri_hate.findhelp.R
 
 class UserPageActivity : AppCompatActivity() {
 
-    private lateinit var userMainPageButton: Button
-    private lateinit var userProfilePageButton: Button
+    private lateinit var userPageDummyButton: Button
+    private lateinit var userPageGoProfileButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_page)
 
         // Переменные UI-элементов
-        userMainPageButton = findViewById(R.id.UserMainPageButton)
-        userProfilePageButton = findViewById(R.id.UserProfilePageButton)
+        userPageDummyButton = findViewById(R.id.user_page_dummy_button)
+        userPageGoProfileButton = findViewById(R.id.user_page_go_profile_button)
 
         // Слушатель кнопки "Главная"
-        userMainPageButton.setOnClickListener {
+        userPageDummyButton.setOnClickListener {
             // Nothing
         }
 
         // Слушатель кнопки "Профиль"
-        userProfilePageButton.setOnClickListener {
+        userPageGoProfileButton.setOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
         }

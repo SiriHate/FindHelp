@@ -19,11 +19,11 @@ class UserSkillsAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(
-            R.layout.skills_list_item_layout, parent, false
+            R.layout.user_skills_list_item, parent, false
         )
 
-        val skillNameTextView: TextView = view.findViewById(R.id.Skill_name)
-        val skillCheckBox: CheckBox = view.findViewById(R.id.Skill_checkbox)
+        val skillNameTextView: TextView = view.findViewById(R.id.skill_item_name)
+        val skillCheckBox: CheckBox = view.findViewById(R.id.skill_item_checkbox)
 
         val skillName = skillsList[position]
         skillNameTextView.text = skillName

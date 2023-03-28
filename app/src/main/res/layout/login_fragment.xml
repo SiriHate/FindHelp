@@ -7,7 +7,7 @@
     tools:context=".view.fragments.LoginFragment">
 
     <LinearLayout
-        android:id="@+id/Login_layout"
+        android:id="@+id/login_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/Email_tittle_login"
+            android:id="@+id/login_fragment_email_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Введите ваш email:"
@@ -23,7 +23,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/UserSearchBar"
+            android:id="@+id/login_fragment_login_input"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -36,7 +36,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/Password_tittle_login"
+            android:id="@+id/login_fragment_password_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Введите ваш пароль:"
@@ -44,7 +44,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/Password_input_login"
+            android:id="@+id/login_fragment_password_input"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -57,7 +57,7 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/Login_button"
+            android:id="@+id/login_fragment_login_button"
             android:layout_width="120dp"
             android:layout_height="60dp"
             android:layout_gravity="left"
@@ -65,7 +65,7 @@
             android:text="Войти" />
 
         <TextView
-            android:id="@+id/Go_to_registration"
+            android:id="@+id/login_fragment_registration_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:clickable="true"

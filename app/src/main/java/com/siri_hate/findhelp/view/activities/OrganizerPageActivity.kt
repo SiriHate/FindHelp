@@ -13,7 +13,7 @@ class OrganizerPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.organizer_page)
 
-        addVacancyButton = findViewById(R.id.addVacancyButton)
+        addVacancyButton = findViewById(R.id.organizer_page_add_vacancy_button)
 
         addVacancyButton.setOnClickListener {
             val intent = Intent(this, CreateVacancyPage::class.java)

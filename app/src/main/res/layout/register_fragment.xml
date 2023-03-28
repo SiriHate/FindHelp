@@ -8,21 +8,22 @@
     tools:context=".view.fragments.RegisterFragment">
 
     <LinearLayout
-        android:id="@+id/Main_layout"
+        android:id="@+id/register_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/Go_back_button"
+            android:id="@+id/register_fragment_go_back_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="start"
             android:backgroundTint="#313338"
             android:src="@drawable/go_back"
             app:tint="#FFFFFF" />
 
         <LinearLayout
-            android:id="@+id/Registration_layout"
+            android:id="@+id/register_fragment_registration_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
@@ -30,7 +31,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/Email_tittle_register"
+                android:id="@+id/register_fragment_email_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Введите ваш email:"
@@ -38,7 +39,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/Email_input_register"
+                android:id="@+id/register_fragment_email_input"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -51,7 +52,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/First_password_tittle_register"
+                android:id="@+id/register_fragment_password_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Введите ваш пароль:"
@@ -59,7 +60,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/First_password_input_register"
+                android:id="@+id/register_fragment_password_input"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -72,7 +73,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/Second_password_tittle_register"
+                android:id="@+id/register_fragment_password_tittle_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Повторите ваш пароль:"
@@ -80,7 +81,7 @@
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/Second_password_input_register"
+                android:id="@+id/register_fragment_password_input_repeat"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -93,14 +94,14 @@
                 android:textSize="16sp" />
 
             <LinearLayout
-                android:id="@+id/OrganizerLayout"
+                android:id="@+id/register_fragment_organizer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/Organization_name_tittle"
+                    android:id="@+id/register_fragment_organization_name_tittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Введите название вашей организации:"
@@ -108,7 +109,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/Organization_name_input"
+                    android:id="@+id/register_fragment_organization_name_input"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -121,7 +122,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/Contact_person_tittle"
+                    android:id="@+id/register_fragment_contact_person_tittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Введите ваше ФИО:"
@@ -129,7 +130,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/Contact_person_input"
+                    android:id="@+id/register_fragment_Contact_person_input"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -142,7 +143,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/Organization_phone_tittle"
+                    android:id="@+id/register_fragment_organization_phone_tittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Введите телефон вашей организации:"
@@ -150,7 +151,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/Organization_phone_input"
+                    android:id="@+id/register_fragment_organization_phone_input"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -164,21 +165,21 @@
             </LinearLayout>
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/Type_of_user"
+                android:id="@+id/register_fragment_chip_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:selectionRequired="false"
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/User_type"
+                    android:id="@+id/register_fragment_user_type_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
                     android:text="Я пользователь" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/Organaizer_type"
+                    android:id="@+id/register_fragment_organaizer_type_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checkable="true"
@@ -186,7 +187,7 @@
             </com.google.android.material.chip.ChipGroup>
 
             <Button
-                android:id="@+id/Register_button"
+                android:id="@+id/register_fragment_register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_gravity="left"

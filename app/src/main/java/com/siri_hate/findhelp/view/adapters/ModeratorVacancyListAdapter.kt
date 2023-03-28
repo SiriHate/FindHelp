@@ -16,16 +16,17 @@ class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
     ArrayAdapter<DocumentSnapshot>(context, 0, offers.toMutableList()) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val convertViewInner: View = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.vacancy_list, parent, false)
+            .inflate(R.layout.vacancies_list_item, parent, false)
 
-        val vacancyNameTextView = convertViewInner.findViewById<TextView>(R.id.vacancyName)
-        val vacancyDeleteButton = convertViewInner.findViewById<ImageButton>(R.id.vacancyDeleteButton)
+        val vacancyItemName = convertViewInner.findViewById<TextView>(R.id.vacancy_item_name)
+        val vacancyItemDeleteButton =
+            convertViewInner.findViewById<ImageButton>(R.id.vacancy_item_delete_button)
 
         val document: DocumentSnapshot? = getItem(position)
         document?.let {
-            vacancyNameTextView.text = it.getString("organization_name")
+            vacancyItemName.text = it.getString("organization_name")
             val documentRef = it.reference
-            vacancyDeleteButton.setOnClickListener {
+            vacancyItemDeleteButton.setOnClickListener {
                 // Создание всплывающего окна
                 val dialog = AlertDialog.Builder(context)
                     .setTitle("Удаление вакансии")

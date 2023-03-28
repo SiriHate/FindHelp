@@ -22,17 +22,17 @@ import com.siri_hate.findhelp.model.User
 class RegisterFragment : Fragment() {
 
     // Переменные
-    private lateinit var emailInput: EditText
-    private lateinit var firstPasswordInput: EditText
-    private lateinit var secondPasswordInput: EditText
-    private lateinit var registerButton: Button
+    private lateinit var registerFragmentEmailInput: EditText
+    private lateinit var registerFragmentPasswordInput: EditText
+    private lateinit var registerFragmentPasswordInputRepeat: EditText
+    private lateinit var registerFragmentRegisterButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var userTypeChip: Chip
-    private lateinit var organizerTypeChip: Chip
-    private lateinit var goBackButton: ImageButton
-    private lateinit var organizationNameInput: EditText
-    private lateinit var contactPersonInput: EditText
-    private lateinit var organizationPhoneInput: EditText
+    private lateinit var registerFragmentUserTypeChip: Chip
+    private lateinit var registerFragmentOrganaizerTypeChip: Chip
+    private lateinit var registerFragmentGoBackButton: ImageButton
+    private lateinit var registerFragmentOrganizationNameInput: EditText
+    private lateinit var registerFragmentContactPersonInput: EditText
+    private lateinit var registerFragmentOrganizationPhoneInput: EditText
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,40 +40,47 @@ class RegisterFragment : Fragment() {
         val view = inflater.inflate(R.layout.register_fragment, container, false)
 
         // Переменные UI-элементов
-        emailInput = view.findViewById(R.id.Email_input_register)
-        firstPasswordInput = view.findViewById(R.id.First_password_input_register)
-        secondPasswordInput = view.findViewById(R.id.Second_password_input_register)
-        registerButton = view.findViewById(R.id.Register_button)
+        registerFragmentEmailInput = view.findViewById(R.id.register_fragment_email_input)
+        registerFragmentPasswordInput = view.findViewById(R.id.register_fragment_password_input)
+        registerFragmentPasswordInputRepeat =
+            view.findViewById(R.id.register_fragment_password_input_repeat)
+        registerFragmentRegisterButton = view.findViewById(R.id.register_fragment_register_button)
         firebaseAuth = FirebaseAuth.getInstance()
-        userTypeChip = view.findViewById(R.id.User_type)
-        organizerTypeChip = view.findViewById(R.id.Organaizer_type)
-        goBackButton = view.findViewById(R.id.Go_back_button)
-        organizationNameInput = view.findViewById(R.id.Organization_name_input)
-        contactPersonInput = view.findViewById(R.id.Contact_person_input)
-        organizationPhoneInput = view.findViewById(R.id.Organization_phone_input)
+        registerFragmentUserTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
+        registerFragmentOrganaizerTypeChip =
+            view.findViewById(R.id.register_fragment_organaizer_type_chip)
+        registerFragmentGoBackButton = view.findViewById(R.id.register_fragment_go_back_button)
+        registerFragmentOrganizationNameInput =
+            view.findViewById(R.id.register_fragment_organization_name_input)
+        registerFragmentContactPersonInput =
+            view.findViewById(R.id.register_fragment_Contact_person_input)
+        registerFragmentOrganizationPhoneInput =
+            view.findViewById(R.id.register_fragment_organization_phone_input)
 
-        goBackButton.setOnClickListener {
+        registerFragmentGoBackButton.setOnClickListener {
             goBack()
         }
 
         // Слушатель кнопки регистрации вызывает функцию регистрации
-        registerButton.setOnClickListener {
+        registerFragmentRegisterButton.setOnClickListener {
             registration()
         }
 
         // Слушатель для чипа UserType
-        userTypeChip.setOnCheckedChangeListener { _, isChecked ->
+        registerFragmentUserTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                organizerTypeChip.isChecked = false
-                view?.findViewById<View>(R.id.OrganizerLayout)?.visibility = View.GONE
+                registerFragmentOrganaizerTypeChip.isChecked = false
+                view?.findViewById<View>(R.id.register_fragment_organizer_layout)?.visibility =
+                    View.GONE
             }
         }
 
         // Слушатель для чипа OrganizerType
-        organizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
+        registerFragmentOrganaizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                userTypeChip.isChecked = false
-                view?.findViewById<View>(R.id.OrganizerLayout)?.visibility = View.VISIBLE
+                registerFragmentUserTypeChip.isChecked = false
+                view?.findViewById<View>(R.id.register_fragment_organizer_layout)?.visibility =
+                    View.VISIBLE
             }
         }
 
@@ -83,23 +90,26 @@ class RegisterFragment : Fragment() {
     // Функция возврата на экран авторизации
     private fun goBack() {
         val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.AuthorizationFragment, LoginFragment())
+        transaction.replace(R.id.authorization_fragment_layout, LoginFragment())
         transaction.addToBackStack(null)
         transaction.commit()
     }
 
     // Функция регистрации
     private fun registration() {
-        val email = emailInput.text.toString().trim()
-        val password = firstPasswordInput.text.toString().trim()
-        val confirmPassword = secondPasswordInput.text.toString().trim()
-        val organizationName = organizationNameInput.text.toString().trim()
-        val contactPerson = contactPersonInput.text.toString().trim()
-        val organizationPhone = organizationPhoneInput.text.toString().trim()
-        val isOrganizer = organizerTypeChip.isChecked
+        val email = registerFragmentEmailInput.text.toString().trim()
+        val password = registerFragmentPasswordInput.text.toString().trim()
+        val confirmPassword = registerFragmentPasswordInputRepeat.text.toString().trim()
+        val organizationName = registerFragmentOrganizationNameInput.text.toString().trim()
+        val contactPerson = registerFragmentContactPersonInput.text.toString().trim()
+        val organizationPhone = registerFragmentOrganizationPhoneInput.text.toString().trim()
+        val isOrganizer = registerFragmentOrganaizerTypeChip.isChecked
 
-        if (inputCheck(email, password, confirmPassword, isOrganizer,
-                organizationName, contactPerson, organizationPhone)) {
+        if (inputCheck(
+                email, password, confirmPassword, isOrganizer,
+                organizationName, contactPerson, organizationPhone
+            )
+        ) {
             val userType = getUserType()
             registerUser(email, password, userType)
         }
@@ -118,17 +128,17 @@ class RegisterFragment : Fragment() {
         var isValid = true
 
         if (email.isEmpty()) {
-            emailInput.error = "Введите Email"
+            registerFragmentEmailInput.error = "Введите Email"
             isValid = false
         }
 
         if (password.isEmpty()) {
-            firstPasswordInput.error = "Введите пароль"
+            registerFragmentPasswordInput.error = "Введите пароль"
             isValid = false
         }
 
         if (confirmPassword.isEmpty()) {
-            secondPasswordInput.error = "Введите подтверждение пароля"
+            registerFragmentPasswordInputRepeat.error = "Введите подтверждение пароля"
             isValid = false
         }
 
@@ -139,17 +149,17 @@ class RegisterFragment : Fragment() {
 
         if (isOrganizer) {
             if (organizationName.isEmpty()) {
-                organizationNameInput.error = "Введите название компании"
+                registerFragmentOrganizationNameInput.error = "Введите название компании"
                 isValid = false
             }
 
             if (contactPerson.isEmpty()) {
-                contactPersonInput.error = "Введите контактное лицо"
+                registerFragmentContactPersonInput.error = "Введите контактное лицо"
                 isValid = false
             }
 
             if (organizationPhone.isEmpty()) {
-                organizationPhoneInput.error = "Введите телефон компании"
+                registerFragmentOrganizationPhoneInput.error = "Введите телефон компании"
                 isValid = false
             }
         }
@@ -159,7 +169,7 @@ class RegisterFragment : Fragment() {
 
     // Получение типа пользователя
     private fun getUserType(): String {
-        return if (userTypeChip.isChecked) "user" else "organizer"
+        return if (registerFragmentUserTypeChip.isChecked) "user" else "organizer"
     }
 
     // Функция регистрации пользователя в базу данных
@@ -171,9 +181,12 @@ class RegisterFragment : Fragment() {
 
                     if (userType == "organizer") {
                         val db = Firebase.firestore
-                        val organizationName = view?.findViewById<EditText>(R.id.Organization_name_input)?.text.toString()
-                        val contactPerson = view?.findViewById<EditText>(R.id.Contact_person_input)?.text.toString()
-                        val organizationPhone = view?.findViewById<EditText>(R.id.Organization_phone_input)?.text.toString()
+                        val organizationName =
+                            view?.findViewById<EditText>(R.id.register_fragment_organization_name_input)?.text.toString()
+                        val contactPerson =
+                            view?.findViewById<EditText>(R.id.register_fragment_Contact_person_input)?.text.toString()
+                        val organizationPhone =
+                            view?.findViewById<EditText>(R.id.register_fragment_organization_phone_input)?.text.toString()
 
                         // Сохраняем данные в Firestore
                         val data = hashMapOf(
@@ -208,13 +221,18 @@ class RegisterFragment : Fragment() {
 
         val loginFragment = LoginFragment()
         val fragmentManager = requireActivity().supportFragmentManager
-        fragmentManager.beginTransaction().replace(R.id.AuthorizationFragment,
-            loginFragment).commit()
+        fragmentManager.beginTransaction().replace(
+            R.id.authorization_fragment_layout,
+            loginFragment
+        ).commit()
     }
 
     // Функция обработки ошибок регистрации
-    private fun registrationError(errorMessage: String?) { Toast.makeText(activity,
-            "Ошибка регистрации: $errorMessage", Toast.LENGTH_SHORT).show()
+    private fun registrationError(errorMessage: String?) {
+        Toast.makeText(
+            activity,
+            "Ошибка регистрации: $errorMessage", Toast.LENGTH_SHORT
+        ).show()
     }
 
     // Функция установки прав доступа пользователя
@@ -249,6 +267,4 @@ class RegisterFragment : Fragment() {
                 }
         }
     }
-
-
 }

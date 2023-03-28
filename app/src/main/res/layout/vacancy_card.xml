@@ -34,11 +34,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#313338"
-                android:tint="#FFFFFF"
-                app:srcCompat="@drawable/go_back" />
+                app:srcCompat="@drawable/go_back"
+                app:tint="#FFFFFF" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/vacancy_card_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -73,8 +73,8 @@
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
-                    android:tint="#FFFFFF"
-                    app:srcCompat="@drawable/company" />
+                    app:srcCompat="@drawable/company"
+                    app:tint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/vacancy_card_company_text"
@@ -101,8 +101,8 @@
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
-                    android:tint="#FFFFFF"
-                    app:srcCompat="@drawable/contact" />
+                    app:srcCompat="@drawable/contact"
+                    app:tint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/vacancy_card_contact_person_text"
@@ -128,8 +128,8 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginRight="10dp"
-                    android:tint="#FFFFFF"
-                    app:srcCompat="@drawable/phone" />
+                    app:srcCompat="@drawable/phone"
+                    app:tint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/vacancy_card_phone_text"
@@ -155,8 +155,8 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginRight="10dp"
-                    android:tint="#FFFFFF"
-                    app:srcCompat="@drawable/city" />
+                    app:srcCompat="@drawable/city"
+                    app:tint="#FFFFFF" />
 
                 <TextView
                     android:id="@+id/vacancy_card_city_text"

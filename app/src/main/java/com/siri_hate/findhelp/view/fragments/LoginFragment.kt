@@ -35,10 +35,10 @@ class LoginFragment : Fragment() {
         val view = inflater.inflate(R.layout.login_fragment, container, false)
 
         // Привязка переменных к UI-элементам
-        emailInput = view.findViewById(R.id.UserSearchBar)
-        passwordInput = view.findViewById(R.id.Password_input_login)
-        loginButton = view.findViewById(R.id.Login_button)
-        registerTextView = view.findViewById(R.id.Go_to_registration)
+        emailInput = view.findViewById(R.id.login_fragment_login_input)
+        passwordInput = view.findViewById(R.id.login_fragment_password_input)
+        loginButton = view.findViewById(R.id.login_fragment_login_button)
+        registerTextView = view.findViewById(R.id.login_fragment_registration_button)
 
         // Переменная для Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance()
@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
         // Слушатель кнопки "Зарегистрироваться" вызывающий функцию авторизации
         registerTextView.setOnClickListener {
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.AuthorizationFragment, RegisterFragment())
+            transaction.replace(R.id.authorization_fragment_layout, RegisterFragment())
             transaction.addToBackStack(null)
             transaction.commit()
         }

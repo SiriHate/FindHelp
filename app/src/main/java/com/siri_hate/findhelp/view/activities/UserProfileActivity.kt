@@ -11,29 +11,34 @@ import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserSkillsAdapter
 class UserProfileActivity : AppCompatActivity() {
 
-    private lateinit var userMainPageProfileButton: Button
-    private lateinit var userProfileProfileButton: Button
-    private lateinit var userLogoutButton: Button
-    private lateinit var listView: ListView
+    private lateinit var userProfileGoUserPage: Button
+    private lateinit var userProfileDummyButton: Button
+    private lateinit var userProfileLogoutButton: Button
+    private lateinit var userProfileSkillList: ListView
     private lateinit var adapter: UserSkillsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_profile)
 
-        userMainPageProfileButton = findViewById(R.id.UserMainPageProfileButton)
-        userProfileProfileButton = findViewById(R.id.UserProfileProfileButton)
-        userLogoutButton = findViewById(R.id.UserLogoutButton)
-        listView = findViewById(R.id.user_skills_list)
+        userProfileGoUserPage = findViewById(R.id.user_profile_go_user_page)
+        userProfileDummyButton = findViewById(R.id.user_profile_dummy_button)
+        userProfileLogoutButton = findViewById(R.id.user_profile_logout_button)
+        userProfileSkillList = findViewById(R.id.user_profile_skill_list)
 
-        userMainPageProfileButton.setOnClickListener {
+        // Слушатель кнопки "Главная"
+        userProfileGoUserPage.setOnClickListener {
             val intent = Intent(this, UserPageActivity::class.java)
             startActivity(intent)
         }
 
-        userProfileProfileButton.setOnClickListener {}
+        // Слушатель кнопки "Профиль"
+        userProfileDummyButton.setOnClickListener {
+            // Nothing
+        }
 
-        userLogoutButton.setOnClickListener {
+        // Слушатель кнопки "Выйти из аккаунта"
+        userProfileLogoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, AuthorizationPageActivity::class.java)
             startActivity(intent)
@@ -43,7 +48,7 @@ class UserProfileActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val userEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
         adapter = UserSkillsAdapter(this, db, userEmail, emptyList())
-        listView.adapter = adapter
+        userProfileSkillList.adapter = adapter
 
         db.collection("user_skills").document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->

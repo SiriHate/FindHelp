@@ -6,7 +6,7 @@
     android:background="#2b2d31">
 
     <TextView
-        android:id="@+id/vacancyName"
+        android:id="@+id/vacancy_item_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
@@ -19,7 +19,7 @@
         app:autoSizeMinTextSize="8sp" />
 
     <ImageButton
-        android:id="@+id/vacancyDeleteButton"
+        android:id="@+id/vacancy_item_delete_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"

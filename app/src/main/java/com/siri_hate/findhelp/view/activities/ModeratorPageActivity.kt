@@ -24,7 +24,7 @@ class ModeratorPageActivity : AppCompatActivity() {
         setContentView(R.layout.moderator_page)
 
         // Переменные UI-элементов
-        val moderatorLogoutButton: Button = findViewById(R.id.moderato_page_logout_button)
+        val moderatorLogoutButton: Button = findViewById(R.id.moderator_page_logout_button)
         val moderatorVacancyList: ListView = findViewById(R.id.moderator_vacancy_list)
         adapter = ModeratorVacancyListAdapter(this, emptyList())
         moderatorVacancyList.adapter = adapter
