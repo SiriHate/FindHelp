@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ class LoginFragment : Fragment() {
     private lateinit var loginButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var registerTextView: TextView
+    private lateinit var loginFragmentRegistrationLoginProgressBar: ProgressBar
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,13 +41,37 @@ class LoginFragment : Fragment() {
         passwordInput = view.findViewById(R.id.login_fragment_password_input)
         loginButton = view.findViewById(R.id.login_fragment_login_button)
         registerTextView = view.findViewById(R.id.login_fragment_registration_button)
+        loginFragmentRegistrationLoginProgressBar =
+            view.findViewById(R.id.login_fragment_registration_login_progress_bar)
 
         // Переменная для Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance()
 
+        // Переменная Firebase Firestore
+        val db = FirebaseFirestore.getInstance()
+
         // Слушатель кнопки "Войти" вызывающий функцию авторизации
         loginButton.setOnClickListener {
             login()
+        }
+
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            // Получение прав доступа пользователя из базы данных Firebase Firestore
+            loginFragmentRegistrationLoginProgressBar.visibility = View.VISIBLE
+            val userEmail = currentUser.email
+            if (!userEmail.isNullOrEmpty()) {
+                db.collection("user_rights").document(userEmail).get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val userType = task.result?.get("userType") as? String
+                            loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
+                            startActivity(userType)
+                        } else {
+                            showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
+                        }
+                    }
+            }
         }
 
         // Слушатель кнопки "Зарегистрироваться" вызывающий функцию авторизации
@@ -68,6 +94,7 @@ class LoginFragment : Fragment() {
             return
         }
 
+        loginFragmentRegistrationLoginProgressBar.visibility = View.VISIBLE
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -104,22 +131,23 @@ class LoginFragment : Fragment() {
         email?.let { userEmail ->
             db.collection("user_rights").document(userEmail).get()
                 .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val userType = task.result?.get("userType") as? String
-                    if (!userType.isNullOrEmpty()) {
-                        startActivity(userType)
+                    if (task.isSuccessful) {
+                        val userType = task.result?.get("userType") as? String
+                        if (!userType.isNullOrEmpty()) {
+                            startActivity(userType)
+                        } else {
+                            showErrorMessage("Не удалось определить права доступа")
+                        }
                     } else {
-                        showErrorMessage("Не удалось определить права доступа")
+                        showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
                     }
-                } else {
-                    showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
                 }
-            }
         }
     }
 
     // Функция обработки ошибки в случае неуспешной авторизации
     private fun loginFailed(exception: Exception?) {
+        loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
         if (exception is FirebaseAuthInvalidCredentialsException) {
             showErrorMessage("Неверный email или пароль")
         } else {
@@ -138,6 +166,7 @@ class LoginFragment : Fragment() {
 
         intent?.let {
             it.putExtra("layout", "${rights}_page")
+            loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
             startActivity(it)
             requireActivity().finish()
         } ?: showErrorMessage("Не удалось определить права доступа")

@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
-    tools:context=".view.activities.VacancyCard">
+    tools:context=".view.activities.VacancyCardActivity">
 
     <ScrollView
         android:id="@+id/vacancy_card_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,8 +32,8 @@
 
             <ImageButton
                 android:id="@+id/vacancy_card_go_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="#313338"
                 app:srcCompat="@drawable/go_back"
                 app:tint="#FFFFFF" />
@@ -41,12 +42,11 @@
                 android:id="@+id/vacancy_card_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center_horizontal"
                 android:text="Волонтер мед-помощник"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/vacancy_card_main_info_tittle"
@@ -63,8 +63,8 @@
                 android:id="@+id/vacancy_card_company_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -72,12 +72,12 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/company"
                     app:tint="#FFFFFF" />
 
                 <TextView
-                    android:id="@+id/vacancy_card_company_text"
+                    android:id="@+id/vacancy_card_company_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -100,12 +100,12 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/contact"
                     app:tint="#FFFFFF" />
 
                 <TextView
-                    android:id="@+id/vacancy_card_contact_person_text"
+                    android:id="@+id/vacancy_card_contact_person"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -127,12 +127,12 @@
                     android:id="@+id/vacancy_card_phone_icon"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/phone"
                     app:tint="#FFFFFF" />
 
                 <TextView
-                    android:id="@+id/vacancy_card_phone_text"
+                    android:id="@+id/vacancy_card_organization_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -154,18 +154,19 @@
                     android:id="@+id/vacancy_card_city_icon"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     app:srcCompat="@drawable/city"
                     app:tint="#FFFFFF" />
 
                 <TextView
-                    android:id="@+id/vacancy_card_city_text"
+                    android:id="@+id/vacancy_card_organization_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Москва"
+                    android:text="г.Москва, ул. Малая Никитская, д.14"
                     android:textColor="#C9CCD1"
                     android:textSize="20sp" />
+
             </LinearLayout>
 
             <TextView
@@ -179,7 +180,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/vacancy_card_description_text"
+                android:id="@+id/vacancy_card_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -201,9 +202,13 @@
             <ListView
                 android:id="@+id/vacancy_card_skills_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="400dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:overScrollMode="never">
+
+            </ListView>
+
         </LinearLayout>
     </ScrollView>
 

@@ -20,21 +20,22 @@
         <ImageView
             android:id="@+id/moderator_page_logo"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="70dp"
             android:background="#1e1f22"
             app:srcCompat="@drawable/logo" />
 
         <LinearLayout
             android:id="@+id/moderator_page_search_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
+            android:background="#1e1f22"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/moderator_page_search_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/edittext_background"
@@ -47,8 +48,11 @@
             <ImageButton
                 android:id="@+id/moderator_page_filter_button"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="#313338"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="#2b2d31"
+                android:tint="#FFFFFF"
                 app:srcCompat="@drawable/filter" />
 
         </LinearLayout>

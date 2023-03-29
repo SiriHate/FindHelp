@@ -6,12 +6,7 @@ import com.siri_hate.findhelp.R
 
 class AuthorizationPageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.authorization_page)
-
-
-
     }
 }

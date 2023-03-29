@@ -182,11 +182,14 @@ class RegisterFragment : Fragment() {
                     if (userType == "organizer") {
                         val db = Firebase.firestore
                         val organizationName =
-                            view?.findViewById<EditText>(R.id.register_fragment_organization_name_input)?.text.toString()
+                            view?.findViewById<EditText>(
+                                R.id.register_fragment_organization_name_input)?.text.toString()
                         val contactPerson =
-                            view?.findViewById<EditText>(R.id.register_fragment_Contact_person_input)?.text.toString()
+                            view?.findViewById<EditText>(
+                                R.id.register_fragment_Contact_person_input)?.text.toString()
                         val organizationPhone =
-                            view?.findViewById<EditText>(R.id.register_fragment_organization_phone_input)?.text.toString()
+                            view?.findViewById<EditText>(
+                                R.id.register_fragment_organization_phone_input)?.text.toString()
 
                         // Сохраняем данные в Firestore
                         val data = hashMapOf(
@@ -247,7 +250,8 @@ class RegisterFragment : Fragment() {
     private fun initUserSkillsList(userType: String, email: String) {
         if (userType == "user") {
             val db = FirebaseFirestore.getInstance()
-            val baseSkillsRef = db.collection("init_data").document("base_skills_init")
+            val baseSkillsRef = db.collection("init_data")
+                .document("base_skills_init")
             baseSkillsRef.get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {

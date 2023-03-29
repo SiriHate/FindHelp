@@ -8,61 +8,132 @@
     tools:context=".view.activities.CreateVacancyPage">
 
     <ScrollView
-        android:id="@+id/createVacancyPageScroll"
+        android:id="@+id/create_vacancy_page_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:id="@+id/createVacancyPageMainLayout"
+            android:id="@+id/create_vacancy_page_main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/createVacancyPageLogo"
+                android:id="@+id/create_vacancy_page_logo"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:background="#1e1f22"
                 android:src="@drawable/logo" />
 
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#313338"
-                android:src="@drawable/go_back" />
-
-            <TextView
-                android:id="@+id/textView2"
+            <LinearLayout
+                android:id="@+id/create_vacancy_page_second_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Введите название вакансии:" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editTextTextPersonName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Name" />
+                <ImageButton
+                    android:id="@+id/create_vacancy_page_go_back_button"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#313338"
+                    android:src="@drawable/go_back"
+                    android:tint="#FFFFFF" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Введите описание вакансии:" />
+                <TextView
+                    android:id="@+id/create_vacancy_page_vacancy_name_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите название вакансии:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/editTextTextMultiLine2"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                <EditText
+                    android:id="@+id/create_vacancy_page_vacancy_name_input"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/edittext_background"
+                    android:hint="Название вакансии"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/create_vacancy_page_vacancy_city_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите город вакансии:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/create_vacancy_page_vacancy_city_input"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/edittext_background"
+                    android:hint="Город вакансии"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/create_vacancy_page_vacancy_skills_list_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Выберите необходимые навыки:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <ListView
+                    android:id="@+id/create_vacancy_page_vacancy_skills_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/create_vacancy_page_vacancy_description_tittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Введите описание вакансии:"
+                    android:textColor="#BFBFBF"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/create_vacancy_page_vacancy_description_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_background"
+                    android:gravity="top|left"
+                    android:hint="Описание вакансии"
+                    android:inputType="textMultiLine"
+                    android:lines="15"
+                    android:padding="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/create_vacancy_page_create_new_vacancy_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Создать" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

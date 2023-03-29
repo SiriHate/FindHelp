@@ -12,13 +12,10 @@
         android:theme="@style/Theme.FindHelp"
         tools:targetApi="31">
         <activity
-            android:name=".view.activities.VacancyCard"
+            android:name=".view.activities.VacancyCardActivity"
             android:exported="false" />
         <activity
             android:name=".view.activities.CreateVacancyPage"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.VacancyCardActivity"
             android:exported="false" />
         <activity
             android:name=".view.activities.UserProfileActivity"
