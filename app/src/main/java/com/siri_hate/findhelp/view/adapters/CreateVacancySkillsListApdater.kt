@@ -10,10 +10,10 @@ import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 
-class UserSkillsAdapter(
+class CreateVacancySkillsListApdater(
     private val context: Context,
     private val db: FirebaseFirestore,
-    private val userEmail: String,
+    private val vacancyID: String,
     private var skillsList: List<String>
 ) : BaseAdapter() {
 
@@ -28,15 +28,15 @@ class UserSkillsAdapter(
         val skillName = skillsList[position]
         skillNameTextView.text = skillName
 
-        db.collection("user_skills").document(userEmail).get()
+        db.collection("vacancies_list").document(vacancyID).get()
             .addOnSuccessListener { documentSnapshot ->
-                val skillsMap = documentSnapshot.get("skills") as Map<String, Boolean>
+                val skillsMap = documentSnapshot.get("vacancy_skills_list") as Map<String, Boolean>
                 skillCheckBox.isChecked = skillsMap[skillName] ?: false
             }
 
         skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            db.collection("user_skills").document(userEmail)
-                .update("skills.$skillName", isChecked)
+            db.collection("vacancies_list").document(vacancyID)
+                .update("vacancy_skills_list.$skillName", isChecked)
         }
 
         return view
@@ -60,11 +60,3 @@ class UserSkillsAdapter(
         notifyDataSetChanged()
     }
 }
-
-
-
-
-
-
-
-

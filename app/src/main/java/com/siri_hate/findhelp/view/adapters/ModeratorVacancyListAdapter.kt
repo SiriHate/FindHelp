@@ -26,7 +26,7 @@ class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
 
         val document: DocumentSnapshot? = getItem(position)
         document?.let { documentSnapshot ->
-            vacancyItemName.text = documentSnapshot.getString("organization_name")
+            vacancyItemName.text = documentSnapshot.getString("vacancy_name")
             val documentRef = documentSnapshot.reference
 
             // Слушатель нажатия на элемент списка

@@ -166,8 +166,8 @@ class LoginFragment : Fragment() {
 
         intent?.let {
             it.putExtra("layout", "${rights}_page")
-            loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
             startActivity(it)
+            loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
             requireActivity().finish()
         } ?: showErrorMessage("Не удалось определить права доступа")
     }

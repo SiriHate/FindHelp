@@ -113,7 +113,7 @@ class VacancyCardActivity : AppCompatActivity() {
                     companyNameTextView.text = document.getString("organization_name")
                     contactPersonTextView.text = document.getString("contact_person")
                     organizationPhoneTextView.text = document.getString("organization_phone")
-                    organizationCityTextView.text = document.getString("organization_city")
+                    organizationCityTextView.text = document.getString("vacancy_city")
                     vacancyDescriptionTextView.text = document.getString("vacancy_description")
                 } else {
                     Log.d(TAG, "Документ не найден")

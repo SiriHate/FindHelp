@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/authorization_page_logo"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:background="#1e1f22"
         app:layout_constraintBottom_toTopOf="@+id/authorization_fragment_layout"
         app:layout_constraintEnd_toEndOf="parent"
