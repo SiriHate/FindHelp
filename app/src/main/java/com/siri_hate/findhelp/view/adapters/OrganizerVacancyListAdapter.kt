@@ -25,7 +25,7 @@ class OrganizerVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
         val convertViewInner: View = convertView ?: LayoutInflater.from(context)
             .inflate(R.layout.vacancies_list_item, parent, false)
 
-        val vacancyItemName = convertViewInner.findViewById<TextView>(R.id.vacancy_item_name)
+        val vacancyItemName = convertViewInner.findViewById<TextView>(R.id.user_vacancies_list_item_vacancy_name)
         val vacancyItemDeleteButton =
             convertViewInner.findViewById<ImageButton>(R.id.vacancy_item_delete_button)
 

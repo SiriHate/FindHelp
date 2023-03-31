@@ -1,21 +1,25 @@
 package com.siri_hate.findhelp.view.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
 
 class NewVacancyMainFragment : Fragment() {
     private lateinit var vacancyNameInput: EditText
     private lateinit var vacancyCityInput: EditText
     private lateinit var vacancyDescriptionInput: EditText
     private lateinit var createVacancyButton: Button
+    private lateinit var newVacancyMainFragmentGoBackButton: ImageButton
 
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val currentUserEmail: String? = FirebaseAuth.getInstance().currentUser?.email
@@ -31,6 +35,13 @@ class NewVacancyMainFragment : Fragment() {
         vacancyCityInput = view.findViewById(R.id.new_vacancy_main_fragment_fragment_city_input)
         vacancyDescriptionInput = view.findViewById(R.id.new_vacancy_main_fragment_description_input)
         createVacancyButton = view.findViewById(R.id.new_vacancy_main_fragment_continue_button)
+        newVacancyMainFragmentGoBackButton = view.findViewById(R.id.new_vacancy_main_fragment_go_back_button)
+
+        newVacancyMainFragmentGoBackButton.setOnClickListener {
+            requireActivity().finish()
+            startActivity(Intent(requireActivity(), OrganizerPageActivity::class.java))
+        }
+
 
         createVacancyButton.setOnClickListener {
             val organizationInfoDocRef =

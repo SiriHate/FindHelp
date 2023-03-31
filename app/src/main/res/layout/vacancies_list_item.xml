@@ -6,7 +6,7 @@
     android:background="#2b2d31">
 
     <TextView
-        android:id="@+id/vacancy_item_name"
+        android:id="@+id/user_vacancies_list_item_vacancy_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
