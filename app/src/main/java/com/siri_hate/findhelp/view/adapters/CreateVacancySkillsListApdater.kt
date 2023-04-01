@@ -14,7 +14,8 @@ class CreateVacancySkillsListApdater(
     private val context: Context,
     private val db: FirebaseFirestore,
     private val vacancyID: String,
-    private var skillsList: List<String>
+    private var skillsList: List<String>,
+    private val onCheckboxSelected: () -> Unit
 ) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -37,6 +38,7 @@ class CreateVacancySkillsListApdater(
         skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
             db.collection("vacancies_list").document(vacancyID)
                 .update("vacancy_skills_list.$skillName", isChecked)
+            onCheckboxSelected()
         }
 
         return view

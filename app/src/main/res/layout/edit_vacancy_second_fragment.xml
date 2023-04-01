@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#313338"
+    tools:context=".view.fragments.EditVacancySecondFragment">
+
+    <LinearLayout
+        android:id="@+id/edit_vacancy_second_fragment_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/edit_vacancy_second_fragment_list_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:text="Укажите навыки необходимые для данной вакансии"
+            android:textColor="#dfe0e3"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/edit_vacancy_second_fragment_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:overScrollMode="never" />
+
+        <Button
+            android:id="@+id/edit_vacancy_second_fragment_create_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="#4FB3BF"
+            android:text="Завершить редактирование" />
+    </LinearLayout>
+</FrameLayout>

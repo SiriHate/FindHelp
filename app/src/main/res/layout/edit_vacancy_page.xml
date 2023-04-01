@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
-    tools:context=".view.activities.CreateVacancyPage">
+    tools:context=".view.activities.EditVacancyPage">
 
     <LinearLayout
-        android:id="@+id/create_vacancy_page_main_layout"
+        android:id="@+id/edit_vacancy_page_main_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -18,18 +18,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/create_vacancy_page_logo"
+            android:id="@+id/edit_vacancy_page_logo"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:background="#1e1f22"
             android:src="@drawable/logo" />
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/create_vacancy_page_fragment_layout"
-            android:name="com.siri_hate.findhelp.view.fragments.CreateVacancyMainFragment"
+            android:id="@+id/edit_vacancy_page_fragment_layout"
+            android:name="com.siri_hate.findhelp.view.fragments.EditVacancyMainFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/create_vacancy_main_fragment" />
+            tools:layout="@layout/edit_vacancy_main_fragment" />
 
 
     </LinearLayout>

@@ -30,13 +30,44 @@
                 android:background="#1e1f22"
                 app:srcCompat="@drawable/logo" />
 
-            <ImageButton
-                android:id="@+id/vacancy_card_go_back_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="#313338"
-                app:srcCompat="@drawable/go_back"
-                app:tint="#FFFFFF" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/vacancy_card_go_back_button"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="#313338"
+                        app:srcCompat="@drawable/go_back"
+                        app:tint="#FFFFFF" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="5dp"
+                        android:background="#313338"
+                        android:tint="#FFFFFF"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/edit" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/vacancy_card_name"

@@ -5,31 +5,15 @@
     android:layout_height="75dp"
     android:background="#2b2d31">
 
-    <LinearLayout
-        android:id="@+id/user_vacancies_list_item_skill_layout"
+    <TextView
+        android:id="@+id/user_vacancies_list_item_match_percent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
         android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/user_vacancies_list_item_match_percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TEST"
-            android:textColor="#dfe0e3"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/user_vacancies_list_item_match_ratio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="TEST"
-            android:textColor="#dfe0e3"
-            android:textSize="16sp" />
-    </LinearLayout>
+        android:text="55% (5/5)"
+        android:textColor="#dfe0e3"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/user_vacancies_list_item_vacancy_name"
