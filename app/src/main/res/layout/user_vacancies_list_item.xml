@@ -9,7 +9,7 @@
         android:id="@+id/user_vacancies_list_item_match_percent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:gravity="center_vertical"
         android:text="55% (5/5)"
         android:textColor="#dfe0e3"
@@ -19,12 +19,13 @@
         android:id="@+id/user_vacancies_list_item_vacancy_name"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:clickable="true"
         android:gravity="center_vertical"
         android:text="Волонтер мед-помощник"
         android:textColor="#dfe0e3"
-        android:textSize="14dp"
-        app:autoSizeMinTextSize="8sp" />
+        android:textSize="14sp"
+        app:autoSizeMinTextSize="8sp"
+        android:focusable="true" />
 
 </LinearLayout>

@@ -35,9 +35,9 @@
 
             <EditText
                 android:id="@+id/organizer_page_search_bar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/edittext_background"
                 android:hint="Введите поисковой запрос"
@@ -53,8 +53,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="#2b2d31"
-                android:tint="#FFFFFF"
-                app:srcCompat="@drawable/filter" />
+                app:srcCompat="@drawable/filter"
+                app:tint="#FFFFFF" />
 
         </LinearLayout>
 
@@ -70,7 +70,7 @@
         <ListView
             android:id="@+id/organizer_page_vacancy_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1">
 
         </ListView>
@@ -84,7 +84,7 @@
 
             <Button
                 android:id="@+id/organizer_page_logout_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"

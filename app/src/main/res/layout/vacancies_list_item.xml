@@ -7,16 +7,17 @@
 
     <TextView
         android:id="@+id/user_vacancies_list_item_vacancy_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_weight="1"
         android:clickable="true"
         android:gravity="center_vertical"
         android:text="Волонтер мед-помощник"
         android:textColor="#dfe0e3"
-        android:textSize="14dp"
-        app:autoSizeMinTextSize="8sp" />
+        android:textSize="14sp"
+        app:autoSizeMinTextSize="8sp"
+        android:focusable="true" />
 
     <ImageButton
         android:id="@+id/vacancy_item_delete_button"

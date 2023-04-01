@@ -11,7 +11,7 @@
         android:id="@+id/login_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -27,7 +27,7 @@
             android:id="@+id/login_fragment_login_input"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginBottom="5dp"
             android:background="@drawable/edittext_background"
             android:hint="Почта"
@@ -48,7 +48,7 @@
             android:id="@+id/login_fragment_password_input"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edittext_background"
             android:hint="Пароль"
@@ -61,7 +61,7 @@
             android:id="@+id/login_fragment_login_button"
             android:layout_width="120dp"
             android:layout_height="60dp"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_marginTop="15dp"
             android:backgroundTint="#4FB3BF"
             android:text="Войти" />
@@ -74,7 +74,8 @@
             android:gravity="center_vertical"
             android:text="Еще не зарегистрированы?"
             android:textColor="#BFBFBF"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:focusable="true" />
 
         <ProgressBar
             android:id="@+id/login_fragment_registration_login_progress_bar"
@@ -82,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:visibility="invisible" />
 
     </LinearLayout>

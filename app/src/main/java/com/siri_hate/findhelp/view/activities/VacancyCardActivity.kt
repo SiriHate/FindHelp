@@ -1,5 +1,6 @@
 package com.siri_hate.findhelp.view.activities
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,11 +22,21 @@ class VacancyCardActivity : AppCompatActivity() {
     private lateinit var organizationCityTextView: TextView
     private lateinit var vacancyDescriptionTextView: TextView
     private lateinit var vacancyCardGoBackButton: ImageButton
+    private lateinit var skillsListView: ListView
+    private lateinit var skillsList: MutableList<String>
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.vacancy_card)
 
+        initViews()
+        initSkillsListView()
+        setVacancyInfo()
+        setGoBackButtonListener()
+    }
+
+    private fun initViews() {
         vacancyNameTextView = findViewById(R.id.vacancy_card_name)
         companyNameTextView = findViewById(R.id.vacancy_card_company_name)
         contactPersonTextView = findViewById(R.id.vacancy_card_contact_person)
@@ -33,54 +44,18 @@ class VacancyCardActivity : AppCompatActivity() {
         organizationCityTextView = findViewById(R.id.vacancy_card_organization_city)
         vacancyDescriptionTextView = findViewById(R.id.vacancy_card_description)
         vacancyCardGoBackButton = findViewById(R.id.vacancy_card_go_back_button)
+        skillsListView = findViewById(R.id.vacancy_card_skills_list)
+        db = FirebaseFirestore.getInstance()
+    }
 
+    private fun initSkillsListView() {
+        skillsList = mutableListOf()
+        val adapter = VacancySkillsListAdapter(this, skillsList)
+        skillsListView.adapter = adapter
+    }
+
+    private fun setVacancyInfo() {
         val documentId = intent.getStringExtra("document_id") ?: return
-
-        vacancyCardGoBackButton.setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser
-            val db = FirebaseFirestore.getInstance()
-            user?.email?.let { email ->
-                db.collection("user_rights").document(email)
-                    .get()
-                    .addOnSuccessListener { document ->
-                        if (document != null && document.exists()) {
-                            when (val userType = document.getString("userType")) {
-                                "user" -> {
-                                    val intent = Intent(this,
-                                        UserPageActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                "organizer" -> {
-                                    val intent = Intent(this,
-                                        OrganizerPageActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                "moderator" -> {
-                                    val intent = Intent(this,
-                                        ModeratorPageActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                else -> {
-                                    Log.d(TAG, "Неккоректный userType: $userType")
-                                }
-                            }
-                        } else {
-                            Log.d(TAG, "Документ не найден")
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.d(TAG, "Ошибка получения документа", exception)
-                    }
-            }
-        }
-
-        val skillsListView = findViewById<ListView>(R.id.vacancy_card_skills_list)
-        val skillsList = mutableListOf<String>()
-
-        val db = FirebaseFirestore.getInstance()
         db.collection("vacancies_list").document(documentId)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
@@ -97,34 +72,62 @@ class VacancyCardActivity : AppCompatActivity() {
                                 skillsList.add(key.toString())
                             }
                         }
-                        val adapter = VacancySkillsListAdapter(this, skillsList)
-                        skillsListView.adapter = adapter
+                        (skillsListView.adapter as VacancySkillsListAdapter).notifyDataSetChanged()
                     }
+
+                    vacancyNameTextView.text = snapshot.getString("vacancy_name")
+                    companyNameTextView.text = snapshot.getString("organization_name")
+                    contactPersonTextView.text = snapshot.getString("contact_person")
+                    organizationPhoneTextView.text = snapshot.getString("organization_phone")
+                    organizationCityTextView.text = snapshot.getString("vacancy_city")
+                    vacancyDescriptionTextView.text = snapshot.getString("vacancy_description")
                 } else {
                     Log.d(TAG, "Current data: null")
                 }
             }
-
-        db.collection("vacancies_list").document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    vacancyNameTextView.text = document.getString("vacancy_name")
-                    companyNameTextView.text = document.getString("organization_name")
-                    contactPersonTextView.text = document.getString("contact_person")
-                    organizationPhoneTextView.text = document.getString("organization_phone")
-                    organizationCityTextView.text = document.getString("vacancy_city")
-                    vacancyDescriptionTextView.text = document.getString("vacancy_description")
-                } else {
-                    Log.d(TAG, "Документ не найден")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Ошибка получения документа", exception)
-            }
     }
 
-    companion object {
-        const val TAG = "VacancyCard"
+    private fun setGoBackButtonListener() {
+        vacancyCardGoBackButton.setOnClickListener {
+            val user = FirebaseAuth.getInstance().currentUser
+            user?.email?.let { email ->
+                db.collection("user_rights").document(email)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        if (document != null && document.exists()) {
+                            when (val userType = document.getString("userType")) {
+                                "user" -> {
+                                    startActivity(Intent(this,
+                                        UserPageActivity::class.java))
+                                    finish()
+                                }
+                                "organizer" -> {
+                                    startActivity(Intent(this,
+                                        OrganizerPageActivity::class.java))
+                                    finish()
+                                }
+                                "moderator" -> {
+                                    startActivity(Intent(this,
+                                        ModeratorPageActivity::class.java))
+                                    finish()
+                                }
+                                else -> {
+                                    Log.d(TAG, "Неккоректный userType: $userType")
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Документ не найден")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d(TAG, "Ошибка получения документа", exception)
+                    }
+            }
+        }
     }
 }
+
+
+
+
+
