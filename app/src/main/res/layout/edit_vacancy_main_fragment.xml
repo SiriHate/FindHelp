@@ -17,12 +17,12 @@
 
         <ImageButton
             android:id="@+id/edit_vacancy_main_fragment_go_back_button"
-            app:tint="#FFFFFF"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:background="#313338"
-            android:src="@drawable/go_back" />
+            android:src="@drawable/go_back"
+            app:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/edit_vacancy_main_fragment_name_tittle"

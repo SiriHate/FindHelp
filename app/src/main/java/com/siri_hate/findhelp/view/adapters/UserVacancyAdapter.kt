@@ -1,5 +1,6 @@
 package com.siri_hate.findhelp.view.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.view.activities.VacancyCardActivity
 
 class UserVacancyAdapter(
     private var vacancies: MutableList<DocumentSnapshot>,
@@ -36,6 +38,7 @@ class UserVacancyAdapter(
         }.toMutableList()
     }
 
+
     override fun getCount(): Int {
         return filteredVacancies.size
     }
@@ -55,6 +58,14 @@ class UserVacancyAdapter(
         val vacancyNameTextView = view.findViewById<TextView>(R.id.user_vacancies_list_item_vacancy_name)
         val vacancy = filteredVacancies[position]
         vacancyNameTextView.text = vacancy.getString("vacancy_name")
+
+        vacancyNameTextView.setOnClickListener {
+            val context = parent?.context
+            val intent = Intent(context, VacancyCardActivity::class.java)
+            val vacancyId = vacancy.id // получение id элемента
+            intent.putExtra("document_id", vacancyId) // передача id в Intent
+            context?.startActivity(intent)
+        }
 
         val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
         val userSkills = userDoc["skills"] as? HashMap<String, Boolean>

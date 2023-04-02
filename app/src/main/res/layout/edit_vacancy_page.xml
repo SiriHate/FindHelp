@@ -7,31 +7,26 @@
     android:background="#313338"
     tools:context=".view.activities.EditVacancyPage">
 
-    <LinearLayout
-        android:id="@+id/edit_vacancy_page_main_layout"
+    <ImageView
+        android:id="@+id/edit_vacancy_page_logo"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="#1e1f22"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/edit_vacancy_page_fragment_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/edit_vacancy_page_fragment_layout"
+        android:name="com.siri_hate.findhelp.view.fragments.EditVacancyMainFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/edit_vacancy_page_logo"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="#1e1f22"
-            android:src="@drawable/logo" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/edit_vacancy_page_fragment_layout"
-            android:name="com.siri_hate.findhelp.view.fragments.EditVacancyMainFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/edit_vacancy_main_fragment" />
-
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/edit_vacancy_page_logo"
+        tools:layout="@layout/edit_vacancy_main_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
