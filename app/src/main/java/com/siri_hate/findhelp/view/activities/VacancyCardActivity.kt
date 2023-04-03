@@ -39,9 +39,7 @@ class VacancyCardActivity : AppCompatActivity() {
         setVacancyInfo()
 
         vacancyCardGoBackButton.setOnClickListener { navigateToUserPage() }
-
         vacancyCardEditVacancyButton.setOnClickListener { editVacancy() }
-
     }
 
     private fun editVacancy() {
@@ -184,6 +182,11 @@ class VacancyCardActivity : AppCompatActivity() {
         startActivity(Intent(this, activityClass))
         finish()
     }
+
+    companion object {
+        private const val TAG = "VacancyCardActivity"
+    }
+
 }
 
 

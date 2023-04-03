@@ -46,7 +46,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         val db = FirebaseFirestore.getInstance()
-        val userEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
         adapter = UserSkillsAdapter(this, db, userEmail, emptyList())
         userProfileSkillList.adapter = adapter
 

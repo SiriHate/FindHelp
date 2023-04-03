@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.activities
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,21 +18,20 @@ import com.siri_hate.findhelp.view.adapters.UserVacancyAdapter
 
 class UserPageActivity : AppCompatActivity() {
 
-    private lateinit var userPageDummyButton: Button
-    private lateinit var userPageGoProfileButton: Button
-    private lateinit var userPageVacancyList: ListView
-    private lateinit var searchView: EditText
-    private val db = Firebase.firestore
+    private val db by lazy { Firebase.firestore }
     private lateinit var userDoc: DocumentSnapshot
     private var allVacancies = mutableListOf<DocumentSnapshot>()
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var userPageDummyButton: Button
+    private lateinit var userPageGoProfileButton:Button
+    private lateinit var userPageVacancyList: ListView
+    private lateinit var searchView: EditText
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.user_page)
 
-        // Переменные UI-элементов
         userPageDummyButton = findViewById(R.id.user_page_dummy_button)
         userPageGoProfileButton = findViewById(R.id.user_page_go_profile_button)
         userPageVacancyList = findViewById(R.id.user_page_vacancy_list)
@@ -46,38 +44,41 @@ class UserPageActivity : AppCompatActivity() {
 
         // Слушатель кнопки "Профиль"
         userPageGoProfileButton.setOnClickListener {
-            val intent = Intent(this, UserProfileActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
-        db.collection("user_skills")
-            .document(FirebaseAuth.getInstance().currentUser?.email ?: "")
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    userDoc = document
-                    db.collection("vacancies_list")
-                        .addSnapshotListener { value, error ->
-                            if (error != null) {
-                                Log.w(TAG, "Listen failed.", error)
-                                return@addSnapshotListener
+        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
+
+        if (currentUserEmail != null) {
+            db.collection("user_skills")
+                .document(currentUserEmail)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        userDoc = document
+                        db.collection("vacancies_list")
+                            .addSnapshotListener { value, error ->
+                                if (error != null) {
+                                    Log.w(TAG, "Listen failed.", error)
+                                    return@addSnapshotListener
+                                }
+
+                                allVacancies.clear()
+                                filteredVacancies.clear()
+
+                                value?.documents?.let { allVacancies.addAll(it) }
+                                filterVacancies("")
+                                val adapter = UserVacancyAdapter(filteredVacancies, userDoc)
+                                userPageVacancyList.adapter = adapter
                             }
-
-                            allVacancies.clear()
-                            filteredVacancies.clear()
-
-                            value?.documents?.let { allVacancies.addAll(it) }
-                            filterVacancies("")
-                            val adapter = UserVacancyAdapter(filteredVacancies, userDoc)
-                            userPageVacancyList.adapter = adapter
-                        }
-                } else {
-                    Log.d(TAG, "No such document")
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
+        }
 
         // Обработчик изменения текста в EditText
         searchView.addTextChangedListener(object : TextWatcher {
@@ -99,5 +100,9 @@ class UserPageActivity : AppCompatActivity() {
             val vacancyName = it.getString("vacancy_name") ?: ""
             vacancyName.startsWith(query, ignoreCase = true)
         }.toMutableList()
+    }
+
+    companion object {
+        private const val TAG = "UserPageActivity"
     }
 }
