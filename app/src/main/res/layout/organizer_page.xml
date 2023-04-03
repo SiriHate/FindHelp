@@ -47,25 +47,16 @@
                 android:textSize="16sp" />
 
             <ImageButton
-                android:id="@+id/organizer_filter_button"
+                android:id="@+id/organizer_page_add_vacancy_button"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="#2b2d31"
-                app:srcCompat="@drawable/filter"
+                app:srcCompat="@drawable/add"
                 app:tint="#FFFFFF" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/organizer_page_add_vacancy_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#4AA564"
-            android:text="Добавить новую вакансию" />
 
         <ListView
             android:id="@+id/organizer_page_vacancy_list"

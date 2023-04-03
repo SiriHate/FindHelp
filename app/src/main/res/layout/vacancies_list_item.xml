@@ -24,6 +24,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="5dp"
         android:backgroundTint="#a93226"
+        android:tint="#dfe0e3"
         app:srcCompat="@drawable/delete" />
 </LinearLayout>

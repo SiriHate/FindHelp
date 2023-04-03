@@ -4,8 +4,12 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ListView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -15,7 +19,7 @@ import com.siri_hate.findhelp.view.adapters.OrganizerVacancyListAdapter
 
 class OrganizerPageActivity : AppCompatActivity() {
 
-    private lateinit var organizerPageAddVacancyButton: Button
+    private lateinit var organizerPageAddVacancyButton: ImageButton
     private lateinit var organizerPageLogoutButton: Button
     private lateinit var listView: ListView
     private lateinit var adapter: OrganizerVacancyListAdapter
@@ -47,6 +51,7 @@ class OrganizerPageActivity : AppCompatActivity() {
         }
 
         // Получение списка вакансий из Firebase Firestore
+        // Получение списка вакансий из Firebase Firestore
         database.collection("vacancies_list")
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -67,6 +72,30 @@ class OrganizerPageActivity : AppCompatActivity() {
                 // Создание адаптера и привязка его к ListView
                 adapter = OrganizerVacancyListAdapter(this, filteredOffers)
                 listView.adapter = adapter
+
+                // Добавление слушателя изменения текста в EditText searchbar
+                val searchbar = findViewById<EditText>(R.id.organizer_page_search_bar)
+                searchbar.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        // Ничего не делаем
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        // Фильтрация списка по введенному тексту
+                        val filteredList = filteredOffers.filter {
+                            it.getString("vacancy_name")?.startsWith(s.toString(), ignoreCase = true) ?: false
+                        }
+
+                        // Обновление адаптера
+                        adapter.clear()
+                        adapter.addAll(filteredList)
+                        adapter.notifyDataSetChanged()
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        // Ничего не делаем
+                    }
+                })
             }
     }
 }
