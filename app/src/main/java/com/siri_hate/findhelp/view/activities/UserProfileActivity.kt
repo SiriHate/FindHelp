@@ -52,8 +52,8 @@ class UserProfileActivity : AppCompatActivity() {
 
         db.collection("user_skills").document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
-                val skillsMap = documentSnapshot.get("skills") as? Map<String, Boolean> ?: emptyMap()
-                val skillsList = skillsMap.keys.toList()
+                val skillsMap = documentSnapshot.get("skills") as? Map<String, Any>
+                val skillsList = skillsMap?.keys?.toList() ?: emptyList()
                 adapter.updateSkillsList(skillsList)
             }
     }

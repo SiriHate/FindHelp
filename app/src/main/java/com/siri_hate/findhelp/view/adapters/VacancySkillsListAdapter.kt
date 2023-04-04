@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.siri_hate.findhelp.R
 
 
-class VacancySkillsListAdapter(context: Context, private val skillsList: List<String>) :
+class VacancySkillsListAdapter(context: Context, skillsList: List<String>) :
     ArrayAdapter<String>(context, 0, skillsList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -20,9 +20,9 @@ class VacancySkillsListAdapter(context: Context, private val skillsList: List<St
         }
 
         val skillNameTextView: TextView =
-            itemView!!.findViewById(R.id.vacancy_skills_list_item_name)
+            itemView?.findViewById(R.id.vacancy_skills_list_item_name) ?: TextView(context)
         skillNameTextView.text = getItem(position)
 
-        return itemView
+        return itemView ?: View(context)
     }
 }

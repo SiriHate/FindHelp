@@ -84,7 +84,9 @@ class UserVacancyAdapter(
         // Вычисляем процентное соотношение совпавших навыков
         val matchPercent = if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         val matchPercentTextView = view.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent)
-        matchPercentTextView.text = "$matchPercent% ($matchCount/$vacancyCount)"
+        val text =
+            parent?.context?.getString(R.string.match_count, matchPercent, matchCount, vacancyCount)
+        matchPercentTextView.text = text
 
         return view
     }

@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.activities
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

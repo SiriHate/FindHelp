@@ -16,7 +16,6 @@ import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
 
 
 class CreateVacancySecondFragment : Fragment() {
-
     private lateinit var newVacancySecondFragmentList: ListView
     private lateinit var adapter: CreateVacancySkillsListApdater
     private lateinit var newVacancySecondFragmentCreateButton: Button
@@ -37,6 +36,22 @@ class CreateVacancySecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpAdapter()
+
+        val db = FirebaseFirestore.getInstance()
+        val vacancyID = arguments?.getString("vacancy_id") ?: ""
+        fetchSkillsListFromFirestore(db, vacancyID)
+
+        newVacancySecondFragmentCreateButton.setOnClickListener {
+            if (!isAtLeastOneCheckboxSelected) {
+                showNoSkillsSelectedToast()
+            } else {
+                finishCurrentActivity()
+            }
+        }
+    }
+
+    private fun setUpAdapter() {
         val db = FirebaseFirestore.getInstance()
         val vacancyID = arguments?.getString("vacancy_id") ?: ""
 
@@ -44,21 +59,28 @@ class CreateVacancySecondFragment : Fragment() {
             isAtLeastOneCheckboxSelected = true
         }
         newVacancySecondFragmentList.adapter = adapter
+    }
 
+    private fun fetchSkillsListFromFirestore(db: FirebaseFirestore, vacancyID: String) {
         db.collection("vacancies_list").document(vacancyID).get()
             .addOnSuccessListener { documentSnapshot ->
-                val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean> ?: emptyMap()
+                val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean>
+                    ?: emptyMap()
                 val skillsList = skillsMap.keys.toList()
                 adapter.updateSkillsList(skillsList)
             }
+    }
 
-        newVacancySecondFragmentCreateButton.setOnClickListener {
-            if (!isAtLeastOneCheckboxSelected) {
-                Toast.makeText(requireContext(), "Необходимо выбрать хотя бы один навык", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            requireActivity().finish()
-            startActivity(Intent(requireActivity(), OrganizerPageActivity::class.java))
-        }
+    private fun showNoSkillsSelectedToast() {
+        Toast.makeText(
+            requireContext(),
+            "Необходимо выбрать хотя бы один навык",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun finishCurrentActivity() {
+        requireActivity().finish()
+        startActivity(Intent(requireActivity(), OrganizerPageActivity::class.java))
     }
 }
