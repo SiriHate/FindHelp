@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,10 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.FirebaseAuth
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.ModeratorPageActivity
-import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
 import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
 
 class EditVacancySecondFragment : Fragment() {
@@ -22,10 +20,9 @@ class EditVacancySecondFragment : Fragment() {
     private lateinit var editVacancySecondFragmentList: ListView
     private lateinit var adapter: CreateVacancySkillsListApdater
     private lateinit var editVacancySecondFragmentCreateButton: Button
+    private lateinit var controller: NavController
     private var isAtLeastOneCheckboxSelected = false
     private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
-    private val currentUserEmail = auth.currentUser?.email ?: ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +34,7 @@ class EditVacancySecondFragment : Fragment() {
         editVacancySecondFragmentList = view.findViewById(R.id.edit_vacancy_second_fragment_list)
         editVacancySecondFragmentCreateButton =
             view.findViewById(R.id.edit_vacancy_second_fragment_create_button)
+        controller = findNavController()
         return view
     }
 
@@ -44,7 +42,7 @@ class EditVacancySecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // получение id документа
-        val documentId = requireActivity().intent.getStringExtra("document_id") ?: ""
+        val documentId = arguments?.getString("document_id") ?: ""
 
         // создание адаптера
         adapter = CreateVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
@@ -71,46 +69,12 @@ class EditVacancySecondFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
+            } else {
+                val bundle = Bundle()
+                bundle.putString("document_id", documentId)
+                controller.navigate(R.id.action_editVacancySecondFragment_to_vacancyCardFragment, bundle)
             }
-
-            // определение типа пользователя и переход на соответствующую страницу
-            db.collection("user_rights").document(currentUserEmail).get()
-                .addOnSuccessListener { documentSnapshot ->
-                    when (documentSnapshot.get("userType") as? String ?: "") {
-                        "moderator" -> {
-                            requireActivity().finish()
-                            startActivity(
-                                Intent(
-                                    requireActivity(),
-                                    ModeratorPageActivity::class.java
-                                )
-                            )
-                        }
-                        "organizer" -> {
-                            requireActivity().finish()
-                            startActivity(
-                                Intent(
-                                    requireActivity(),
-                                    OrganizerPageActivity::class.java
-                                )
-                            )
-                        }
-                        else -> {
-                            Toast.makeText(
-                                requireContext(),
-                                "Не удалось определить тип пользователя",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(
-                        requireContext(),
-                        "Не удалось определить тип пользователя",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
         }
+
     }
 }

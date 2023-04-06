@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +10,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.ModeratorPageActivity
-import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
-import com.siri_hate.findhelp.view.activities.UserPageActivity
 
 
 class LoginFragment : Fragment() {
@@ -29,6 +27,7 @@ class LoginFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var registerTextView: TextView
     private lateinit var loginFragmentRegistrationLoginProgressBar: ProgressBar
+    private lateinit var controller: NavController
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,6 +48,8 @@ class LoginFragment : Fragment() {
 
         // Переменная Firebase Firestore
         val db = FirebaseFirestore.getInstance()
+
+        controller = findNavController()
 
         // Слушатель кнопки "Войти" вызывающий функцию авторизации
         loginButton.setOnClickListener {
@@ -76,10 +77,7 @@ class LoginFragment : Fragment() {
 
         // Слушатель кнопки "Зарегистрироваться" вызывающий функцию авторизации
         registerTextView.setOnClickListener {
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.authorization_fragment_layout, RegisterFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
+            controller.navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
         return view
@@ -157,19 +155,14 @@ class LoginFragment : Fragment() {
 
     // Функция запуска главной страницы пользователя
     private fun startActivity(rights: String?) {
-        val intent = when (rights) {
-            "user" -> Intent(requireContext(), UserPageActivity::class.java)
-            "organizer" -> Intent(requireContext(), OrganizerPageActivity::class.java)
-            "moderator" -> Intent(requireContext(), ModeratorPageActivity::class.java)
-            else -> null
+        val controller = findNavController()
+        when (rights) {
+            "user" -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)
+            "organizer" -> controller.navigate(R.id.action_loginFragment_to_organizerPageFragment)
+            "moderator" -> controller.navigate(R.id.action_loginFragment_to_moderatorPageFragment)
+            else -> showErrorMessage("Не удалось определить права доступа")
         }
-
-        intent?.let {
-            it.putExtra("layout", "${rights}_page")
-            startActivity(it)
-            loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
-            requireActivity().finish()
-        } ?: showErrorMessage("Не удалось определить права доступа")
+        loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
     }
 
     // Функция отображения ошибки

@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,9 +9,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.VacancyCardActivity
 
 class EditVacancyMainFragment : Fragment() {
 
@@ -22,11 +22,12 @@ class EditVacancyMainFragment : Fragment() {
     private lateinit var descriptionEditText: EditText
     private lateinit var continueButton: Button
     private lateinit var goBackButton: ImageButton
+    private lateinit var controller: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        documentId = requireActivity().intent.getStringExtra("document_id") ?: ""
+        documentId = arguments?.getString("document_id") ?: ""
         setVacancyValues()
     }
 
@@ -38,6 +39,7 @@ class EditVacancyMainFragment : Fragment() {
         val view = inflater.inflate(R.layout.edit_vacancy_main_fragment, container, false)
         bindViews(view)
         setupButtons()
+        controller = findNavController()
         return view
     }
 
@@ -60,9 +62,9 @@ class EditVacancyMainFragment : Fragment() {
 
     private fun setupButtons() {
         goBackButton.setOnClickListener {
-            val intent = Intent(context, VacancyCardActivity::class.java)
-            intent.putExtra("document_id", documentId)
-            context?.startActivity(intent)
+            val bundle = Bundle()
+            bundle.putString("document_id", documentId)
+            controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
         }
 
         continueButton.setOnClickListener {
@@ -104,9 +106,8 @@ class EditVacancyMainFragment : Fragment() {
     }
 
     private fun navigateToSecondFragment() {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.edit_vacancy_page_fragment_layout, EditVacancySecondFragment())
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val bundle = Bundle()
+        bundle.putString("document_id", documentId)
+        controller.navigate(R.id.action_editVacancyMainFragment_to_editVacancySecondFragment, bundle)
     }
 }

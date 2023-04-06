@@ -11,23 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FindHelp"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.EditVacancyPage"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.VacancyCardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.CreateVacancyPage"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.UserProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.AuthorizationPageActivity"
+            android:name=".view.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,15 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.activities.UserPageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.ModeratorPageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activities.OrganizerPageActivity"
-            android:exported="false" />
-    </application>
 
+    </application>
 </manifest>

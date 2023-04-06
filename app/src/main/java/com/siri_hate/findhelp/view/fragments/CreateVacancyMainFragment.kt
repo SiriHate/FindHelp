@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,13 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
 
 class CreateVacancyMainFragment : Fragment() {
     private lateinit var vacancyNameInput: EditText
@@ -23,6 +23,7 @@ class CreateVacancyMainFragment : Fragment() {
     private lateinit var vacancyDescriptionInput: EditText
     private lateinit var createVacancyButton: Button
     private lateinit var newVacancyMainFragmentGoBackButton: ImageButton
+    private lateinit var controller: NavController
 
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val currentUserEmail: String? = FirebaseAuth.getInstance().currentUser?.email
@@ -34,7 +35,7 @@ class CreateVacancyMainFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.create_vacancy_main_fragment, container, false)
         initViews(view)
-
+        controller = findNavController()
         return view
     }
 
@@ -76,11 +77,7 @@ class CreateVacancyMainFragment : Fragment() {
                             // Переключение на NewVacancySecondFragment с передачей ID документа
                             val bundle = Bundle()
                             bundle.putString("vacancy_id", vacancyDocRef.id)
-                            val fragment = CreateVacancySecondFragment()
-                            fragment.arguments = bundle
-                            requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.create_vacancy_page_fragment_layout, fragment)
-                                .commit()
+                            controller.navigate(R.id.action_createVacancyMainFragment_to_createVacancySecondFragment)
                         }
                     }
                 }
@@ -114,7 +111,6 @@ class CreateVacancyMainFragment : Fragment() {
     }
 
     private fun goBackToOrganizerPage() {
-        requireActivity().finish()
-        startActivity(Intent(requireActivity(), OrganizerPageActivity::class.java))
+        controller.navigate(R.id.action_createVacancyMainFragment_to_organizerPageFragment)
     }
 }

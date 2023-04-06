@@ -2,20 +2,20 @@ package com.siri_hate.findhelp.view.adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.VacancyCardActivity
 
-class OrganizerVacancyListAdapter(context: Context, offers: List<DocumentSnapshot>) :
+class OrganizerVacancyListAdapter(context: Context, offers: List<DocumentSnapshot>, private val controller: NavController) :
     ArrayAdapter<DocumentSnapshot>(context, 0, offers.toMutableList()) {
 
     private val auth = FirebaseAuth.getInstance()
@@ -39,9 +39,9 @@ class OrganizerVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
                 // Слушатель нажатия на элемент списка
                 vacancyItemName.setOnClickListener {
                     documentSnapshot.id.let { documentId ->
-                        val intent = Intent(context, VacancyCardActivity::class.java)
-                        intent.putExtra("document_id", documentId)
-                        context.startActivity(intent)
+                        val bundle = Bundle()
+                        bundle.putString("document_id", documentId)
+                        controller.navigate(R.id.action_organizerPageFragment_to_vacancyCardFragment, bundle)
                     }
                 }
 

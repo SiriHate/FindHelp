@@ -1,14 +1,18 @@
-package com.siri_hate.findhelp.view.activities
+package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -16,7 +20,7 @@ import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserVacancyAdapter
 
-class UserPageActivity : AppCompatActivity() {
+class UserPageFragment : Fragment() {
 
     private val db by lazy { Firebase.firestore }
     private lateinit var userDoc: DocumentSnapshot
@@ -27,15 +31,20 @@ class UserPageActivity : AppCompatActivity() {
     private lateinit var userPageGoProfileButton:Button
     private lateinit var userPageVacancyList: ListView
     private lateinit var searchView: EditText
+    private lateinit var controller: NavController
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_page)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.user_page_fragment, container, false)
 
-        userPageDummyButton = findViewById(R.id.user_page_dummy_button)
-        userPageGoProfileButton = findViewById(R.id.user_page_go_profile_button)
-        userPageVacancyList = findViewById(R.id.user_page_vacancy_list)
-        searchView = findViewById(R.id.user_page_search_bar)
+        userPageDummyButton = view.findViewById(R.id.user_page_dummy_button)
+        userPageGoProfileButton = view.findViewById(R.id.user_page_go_profile_button)
+        userPageVacancyList = view.findViewById(R.id.user_page_vacancy_list)
+        searchView = view.findViewById(R.id.user_page_search_bar)
+
+        controller = findNavController()
 
         // Слушатель кнопки "Главная"
         userPageDummyButton.setOnClickListener {
@@ -44,7 +53,7 @@ class UserPageActivity : AppCompatActivity() {
 
         // Слушатель кнопки "Профиль"
         userPageGoProfileButton.setOnClickListener {
-            startActivity(Intent(this, UserProfileActivity::class.java))
+            controller.navigate(R.id.action_userPageFragment_to_userProfileFragment)
         }
 
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
@@ -68,7 +77,7 @@ class UserPageActivity : AppCompatActivity() {
 
                                 value?.documents?.let { allVacancies.addAll(it) }
                                 filterVacancies("")
-                                val adapter = UserVacancyAdapter(filteredVacancies, userDoc)
+                                val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
                                 userPageVacancyList.adapter = adapter
                             }
                     } else {
@@ -86,12 +95,14 @@ class UserPageActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 filterVacancies(s.toString())
-                val adapter = UserVacancyAdapter(filteredVacancies, userDoc)
+                val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
                 userPageVacancyList.adapter = adapter
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        return view
     }
 
     // Функция для фильтрации вакансий
@@ -103,6 +114,6 @@ class UserPageActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "UserPageActivity"
+        private const val TAG = "UserPageFragment"
     }
 }

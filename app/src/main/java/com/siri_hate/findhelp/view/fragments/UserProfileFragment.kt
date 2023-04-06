@@ -1,35 +1,42 @@
-package com.siri_hate.findhelp.view.activities
+package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserSkillsAdapter
-class UserProfileActivity : AppCompatActivity() {
-
+class UserProfileFragment : Fragment() {
     private lateinit var userProfileGoUserPage: Button
     private lateinit var userProfileDummyButton: Button
     private lateinit var userProfileLogoutButton: Button
     private lateinit var userProfileSkillList: ListView
     private lateinit var adapter: UserSkillsAdapter
+    private lateinit var controller: NavController
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_profile)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.user_profile_fragment, container, false)
 
-        userProfileGoUserPage = findViewById(R.id.user_profile_go_user_page)
-        userProfileDummyButton = findViewById(R.id.user_profile_dummy_button)
-        userProfileLogoutButton = findViewById(R.id.user_profile_logout_button)
-        userProfileSkillList = findViewById(R.id.user_profile_skill_list)
+        userProfileGoUserPage = view.findViewById(R.id.user_profile_go_user_page)
+        userProfileDummyButton = view.findViewById(R.id.user_profile_dummy_button)
+        userProfileLogoutButton = view.findViewById(R.id.user_profile_logout_button)
+        userProfileSkillList = view.findViewById(R.id.user_profile_skill_list)
+
+        controller = findNavController()
 
         // Слушатель кнопки "Главная"
         userProfileGoUserPage.setOnClickListener {
-            val intent = Intent(this, UserPageActivity::class.java)
-            startActivity(intent)
+            controller.navigate(R.id.action_userProfileFragment_to_userPageFragment)
         }
 
         // Слушатель кнопки "Профиль"
@@ -40,14 +47,12 @@ class UserProfileActivity : AppCompatActivity() {
         // Слушатель кнопки "Выйти из аккаунта"
         userProfileLogoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, AuthorizationPageActivity::class.java)
-            startActivity(intent)
-            finish()
+            controller.navigate(R.id.action_userProfileFragment_to_loginFragment)
         }
 
         val db = FirebaseFirestore.getInstance()
         val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
-        adapter = UserSkillsAdapter(this, db, userEmail, emptyList())
+        adapter = UserSkillsAdapter(requireContext(), db, userEmail, emptyList())
         userProfileSkillList.adapter = adapter
 
         db.collection("user_skills").document(userEmail).get()
@@ -56,5 +61,7 @@ class UserProfileActivity : AppCompatActivity() {
                 val skillsList = skillsMap?.keys?.toList() ?: emptyList()
                 adapter.updateSkillsList(skillsList)
             }
+
+        return view
     }
 }
