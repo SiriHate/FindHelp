@@ -1,13 +1,16 @@
-package com.siri_hate.findhelp.view.activities
+package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -15,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.VacancySkillsListAdapter
 
-class VacancyCardActivity : AppCompatActivity() {
+class VacancyCardFragment : Fragment() {
 
     private lateinit var vacancyNameTextView: TextView
     private lateinit var companyNameTextView: TextView
@@ -28,12 +31,21 @@ class VacancyCardActivity : AppCompatActivity() {
     private lateinit var skillsListView: ListView
     private lateinit var skillsList: MutableList<String>
     private lateinit var db: FirebaseFirestore
+    private lateinit var controller: NavController
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.vacancy_card)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        controller = findNavController()
+        return inflater.inflate(R.layout.fragment_vacancy_card, container, false)
+    }
 
-        initViews()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
         initSkillsListView()
         setVacancyInfo()
 
@@ -42,41 +54,40 @@ class VacancyCardActivity : AppCompatActivity() {
     }
 
     private fun editVacancy() {
-        val documentId = intent.getStringExtra("document_id")
-        val intent = Intent(this, EditVacancyPage::class.java)
-        intent.putExtra("document_id", documentId)
-        startActivity(intent)
+        val documentId = arguments?.getString("document_id") ?: ""
+        val bundle = Bundle()
+        bundle.putString("document_id", documentId)
+        controller.navigate(R.id.action_vacancyCardFragment_to_editVacancyMainFragment, bundle)
     }
 
-    private fun initViews() {
-        vacancyNameTextView = findViewById(R.id.vacancy_card_name)
-        companyNameTextView = findViewById(R.id.vacancy_card_company_name)
-        contactPersonTextView = findViewById(R.id.vacancy_card_contact_person)
-        organizationPhoneTextView = findViewById(R.id.vacancy_card_organization_phone)
-        organizationCityTextView = findViewById(R.id.vacancy_card_organization_city)
-        vacancyDescriptionTextView = findViewById(R.id.vacancy_card_description)
-        vacancyCardGoBackButton = findViewById(R.id.vacancy_card_go_back_button)
-        vacancyCardEditVacancyButton = findViewById(R.id.vacancy_card_edit_vacancy_button)
-        skillsListView = findViewById(R.id.vacancy_card_skills_list)
+    private fun initViews(view: View) {
+        vacancyNameTextView = view.findViewById(R.id.vacancy_card_name)
+        companyNameTextView = view.findViewById(R.id.vacancy_card_company_name)
+        contactPersonTextView = view.findViewById(R.id.vacancy_card_contact_person)
+        organizationPhoneTextView = view.findViewById(R.id.vacancy_card_organization_phone)
+        organizationCityTextView = view.findViewById(R.id.vacancy_card_organization_city)
+        vacancyDescriptionTextView = view.findViewById(R.id.vacancy_card_description)
+        vacancyCardGoBackButton = view.findViewById(R.id.vacancy_card_go_back_button)
+        vacancyCardEditVacancyButton = view.findViewById(R.id.vacancy_card_edit_vacancy_button)
+        skillsListView = view.findViewById(R.id.vacancy_card_skills_list)
         db = FirebaseFirestore.getInstance()
     }
 
 
     private fun initSkillsListView() {
         skillsList = mutableListOf()
-        val adapter = VacancySkillsListAdapter(this, skillsList)
+        val adapter = VacancySkillsListAdapter(requireContext(), skillsList)
         skillsListView.adapter = adapter
     }
 
     private fun setVacancyInfo() {
-        val documentId = intent.getStringExtra("document_id") ?: return
+        val documentId = arguments?.getString("document_id") ?: return
         getVacancyDocument(documentId,
             { snapshot ->
                 updateVacancyInfo(snapshot)
-                checkUserRightsAndSetEditButtonVisibility(
-                    FirebaseAuth.getInstance().currentUser,
-                    snapshot
-                )
+                FirebaseAuth.getInstance().currentUser?.let {
+                    checkUserRightsAndSetEditButtonVisibility(it, snapshot)
+                }
             },
             { exception ->
                 Log.d(TAG, "Error getting vacancy document", exception)
@@ -128,18 +139,16 @@ class VacancyCardActivity : AppCompatActivity() {
     }
 
     private fun checkUserRightsAndSetEditButtonVisibility(
-        user: FirebaseUser?,
+        user: FirebaseUser,
         snapshot: DocumentSnapshot
     ) {
-        user?.email?.let { email ->
+        user.email?.let { email ->
             db.collection("user_rights").document(email)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val userType = document.getString("userType")
-                        if (userType == "moderator" ||
-                            (userType == "organizer" && user.email ==
-                                    snapshot.getString("creator_email"))) {
+                        if ((userType == "organizer") && (user.email == snapshot.getString("creator_email"))) {
                             vacancyCardEditVacancyButton.visibility = View.VISIBLE
                         } else {
                             vacancyCardEditVacancyButton.visibility = View.GONE
@@ -162,9 +171,9 @@ class VacancyCardActivity : AppCompatActivity() {
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         when (val userType = document.getString("userType")) {
-                            "user" -> navigateToActivity(UserPageActivity::class.java)
-                            "organizer" -> navigateToActivity(OrganizerPageActivity::class.java)
-                            "moderator" -> navigateToActivity(ModeratorPageActivity::class.java)
+                            "user" -> controller.navigate(R.id.action_vacancyCardFragment_to_userPageFragment)
+                            "organizer" -> controller.navigate(R.id.action_vacancyCardFragment_to_organizerPageFragment)
+                            "moderator" -> controller.navigate(R.id.action_vacancyCardFragment_to_moderatorPageFragment)
                             else -> Log.d(TAG, "Неккоректный userType: $userType")
                         }
                     } else {
@@ -177,15 +186,9 @@ class VacancyCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToActivity(activityClass: Class<*>) {
-        startActivity(Intent(this, activityClass))
-        finish()
-    }
-
     companion object {
         private const val TAG = "VacancyCardActivity"
     }
-
 }
 
 

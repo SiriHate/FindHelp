@@ -1,18 +1,19 @@
 package com.siri_hate.findhelp.view.adapters
 
-import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import androidx.navigation.NavController
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.VacancyCardActivity
 
 class UserVacancyAdapter(
     private var vacancies: MutableList<DocumentSnapshot>,
-    private val userDoc: DocumentSnapshot
+    private val userDoc: DocumentSnapshot,
+    private val controller: NavController
 ) : BaseAdapter() {
 
     private var filteredVacancies = vacancies
@@ -20,7 +21,9 @@ class UserVacancyAdapter(
     init {
         // Отсортировать список в конструкторе
         vacancies = vacancies.sortedByDescending { vacancy ->
+            @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
+            @Suppress("UNCHECKED_CAST")
             val userSkills = userDoc["skills"] as? HashMap<String, Boolean>
             var matchCount = 0
             var vacancyCount = 0
@@ -60,14 +63,14 @@ class UserVacancyAdapter(
         vacancyNameTextView.text = vacancy.getString("vacancy_name")
 
         vacancyNameTextView.setOnClickListener {
-            val context = parent?.context
-            val intent = Intent(context, VacancyCardActivity::class.java)
-            val vacancyId = vacancy.id // получение id элемента
-            intent.putExtra("document_id", vacancyId) // передача id в Intent
-            context?.startActivity(intent)
+            val bundle = Bundle()
+            bundle.putString("document_id", vacancy.id)
+            controller.navigate(R.id.action_userPageFragment_to_vacancyCardFragment, bundle)
         }
 
+        @Suppress("UNCHECKED_CAST")
         val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
+        @Suppress("UNCHECKED_CAST")
         val userSkills = userDoc["skills"] as? HashMap<String, Boolean>
         var matchCount = 0
         var vacancyCount = 0
@@ -84,8 +87,7 @@ class UserVacancyAdapter(
         // Вычисляем процентное соотношение совпавших навыков
         val matchPercent = if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         val matchPercentTextView = view.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent)
-        val text =
-            parent?.context?.getString(R.string.match_count, matchPercent, matchCount, vacancyCount)
+        val text = parent?.context?.getString(R.string.match_count, matchPercent, matchCount, vacancyCount)
         matchPercentTextView.text = text
 
         return view

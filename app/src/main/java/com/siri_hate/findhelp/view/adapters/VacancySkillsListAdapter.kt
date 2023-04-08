@@ -16,7 +16,7 @@ class VacancySkillsListAdapter(context: Context, skillsList: List<String>) :
         var itemView = convertView
         if (itemView == null) {
             itemView = LayoutInflater.from(context).
-            inflate(R.layout.vacancy_skills_list_item, parent, false)
+            inflate(R.layout.vacancy_card_skills_list_item, parent, false)
         }
 
         val skillNameTextView: TextView =

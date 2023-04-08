@@ -1,15 +1,13 @@
-package com.siri_hate.findhelp.view.activities
+package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
+import android.view.View
 import android.widget.ListView
-import com.google.firebase.auth.FirebaseAuth
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -17,10 +15,9 @@ import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
 import java.util.*
 
-class ModeratorPageActivity : AppCompatActivity() {
+class ModeratorPageFragment : Fragment(R.layout.fragment_moderator_page) {
 
-    private lateinit var searchBar: EditText
-    private lateinit var moderatorLogoutButton: Button
+    private lateinit var searchBar: SearchView
     private lateinit var moderatorVacancyList: ListView
 
     private val db = FirebaseFirestore.getInstance()
@@ -29,29 +26,30 @@ class ModeratorPageActivity : AppCompatActivity() {
     private var snapshotListener: ListenerRegistration? = null
     private var offers: List<DocumentSnapshot> = emptyList()
     private var originalOffers: List<DocumentSnapshot> = emptyList()
+    private lateinit var controller: NavController
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.moderator_page)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Переменные UI-элементов
-        moderatorLogoutButton = findViewById(R.id.moderator_page_logout_button)
-        moderatorVacancyList = findViewById(R.id.moderator_vacancy_list)
-        searchBar = findViewById(R.id.moderator_page_search_bar)
+        moderatorVacancyList = view.findViewById(R.id.moderator_vacancy_list)
+        searchBar = view.findViewById(R.id.moderator_page_search_bar)
+
+        controller = findNavController()
 
         // Адаптер
-        adapter = ModeratorVacancyListAdapter(this, emptyList())
+        adapter = ModeratorVacancyListAdapter(requireContext(), emptyList(), controller)
         moderatorVacancyList.adapter = adapter
 
         // Слушатель изменения текста в searchBar
-        searchBar.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
 
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Получение текста из searchBar
-                val query = s.toString().lowercase(Locale.getDefault())
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Получение текста из SearchView
+                val query = newText?.lowercase(Locale.getDefault()) ?: ""
 
                 // Фильтрация списка вакансий по запросу
                 val filteredOffers = offers.filter {
@@ -63,6 +61,8 @@ class ModeratorPageActivity : AppCompatActivity() {
                 adapter.clear()
                 adapter.addAll(filteredOffers)
                 adapter.notifyDataSetChanged()
+
+                return true
             }
         })
 
@@ -77,14 +77,6 @@ class ModeratorPageActivity : AppCompatActivity() {
             adapter.clear()
             adapter.addAll(offers)
             adapter.notifyDataSetChanged()
-        }
-
-        // Слушатель кнопки "Выйти из аккаунта"
-        moderatorLogoutButton.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this, AuthorizationPageActivity::class.java)
-            startActivity(intent)
-            finish()
         }
 
         // Слушатель изменений коллекции Firestore
@@ -107,6 +99,6 @@ class ModeratorPageActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "ModeratorPageActivity"
+        private const val TAG = "ModeratorPageFragment"
     }
 }

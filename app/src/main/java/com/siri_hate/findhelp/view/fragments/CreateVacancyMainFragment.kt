@@ -1,7 +1,8 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.Intent
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,13 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.activities.OrganizerPageActivity
 
 class CreateVacancyMainFragment : Fragment() {
     private lateinit var vacancyNameInput: EditText
@@ -23,6 +25,7 @@ class CreateVacancyMainFragment : Fragment() {
     private lateinit var vacancyDescriptionInput: EditText
     private lateinit var createVacancyButton: Button
     private lateinit var newVacancyMainFragmentGoBackButton: ImageButton
+    private lateinit var controller: NavController
 
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val currentUserEmail: String? = FirebaseAuth.getInstance().currentUser?.email
@@ -32,9 +35,9 @@ class CreateVacancyMainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.create_vacancy_main_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_create_vacancy_info, container, false)
         initViews(view)
-
+        controller = findNavController()
         return view
     }
 
@@ -59,28 +62,27 @@ class CreateVacancyMainFragment : Fragment() {
                         val (contactPerson, organizationName, organizationPhone) = getOrganizationInfo(
                             orgInfoDoc
                         )
-                        val skills = fetchInitData()
-
-                        val vacancyDocRef = firestore.collection("vacancies_list").document()
-                        val newVacancy = hashMapOf(
-                            "creator_email" to currentUserEmail,
-                            "contact_person" to contactPerson,
-                            "organization_name" to organizationName,
-                            "organization_phone" to organizationPhone,
-                            "vacancy_name" to vacancyNameInput.text.toString(),
-                            "vacancy_city" to vacancyCityInput.text.toString(),
-                            "vacancy_description" to vacancyDescriptionInput.text.toString(),
-                            "vacancy_skills_list" to skills
-                        )
-                        vacancyDocRef.set(newVacancy).addOnSuccessListener {
-                            // Переключение на NewVacancySecondFragment с передачей ID документа
-                            val bundle = Bundle()
-                            bundle.putString("vacancy_id", vacancyDocRef.id)
-                            val fragment = CreateVacancySecondFragment()
-                            fragment.arguments = bundle
-                            requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.create_vacancy_page_fragment_layout, fragment)
-                                .commit()
+                        fetchInitData { skills ->
+                            val vacancyDocRef = firestore.collection("vacancies_list").document()
+                            val newVacancy = hashMapOf(
+                                "creator_email" to currentUserEmail,
+                                "contact_person" to contactPerson,
+                                "organization_name" to organizationName,
+                                "organization_phone" to organizationPhone,
+                                "vacancy_name" to vacancyNameInput.text.toString(),
+                                "vacancy_city" to vacancyCityInput.text.toString(),
+                                "vacancy_description" to vacancyDescriptionInput.text.toString(),
+                                "vacancy_skills_list" to skills
+                            )
+                            vacancyDocRef.set(newVacancy).addOnSuccessListener {
+                                // Переключение на NewVacancySecondFragment с передачей ID документа
+                                val bundle = Bundle()
+                                bundle.putString("document_id", vacancyDocRef.id)
+                                controller.navigate(
+                                    R.id.action_createVacancyMainFragment_to_createVacancySecondFragment,
+                                    bundle
+                                )
+                            }
                         }
                     }
                 }
@@ -107,14 +109,19 @@ class CreateVacancyMainFragment : Fragment() {
         return Triple(contactPerson, organizationName, organizationPhone)
     }
 
-    private fun fetchInitData(): HashMap<*, *> {
+    private fun fetchInitData(callback: (HashMap<String, Any>) -> Unit) {
         val initdataDocRef = firestore.collection("init_data").document("base_skills_init")
-        val initdataDoc = initdataDocRef.get().result
-        return initdataDoc?.get("skills") as HashMap<*, *>
+        initdataDocRef.get().addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                @Suppress("UNCHECKED_CAST")
+                callback(documentSnapshot.get("skills") as HashMap<String, Any>)
+            }
+        }.addOnFailureListener { exception ->
+            Log.e(TAG, "Error fetching init data", exception)
+        }
     }
 
     private fun goBackToOrganizerPage() {
-        requireActivity().finish()
-        startActivity(Intent(requireActivity(), OrganizerPageActivity::class.java))
+        controller.navigate(R.id.action_createVacancyMainFragment_to_organizerPageFragment)
     }
 }
