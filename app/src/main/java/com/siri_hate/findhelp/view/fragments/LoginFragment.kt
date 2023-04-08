@@ -33,7 +33,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.login_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_login_page, container, false)
 
         // Привязка переменных к UI-элементам
         emailInput = view.findViewById(R.id.login_fragment_login_input)
@@ -67,7 +67,7 @@ class LoginFragment : Fragment() {
                         if (task.isSuccessful) {
                             val userType = task.result?.get("userType") as? String
                             loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
-                            startActivity(userType)
+                            startFragment(userType)
                         } else {
                             showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
                         }
@@ -132,7 +132,7 @@ class LoginFragment : Fragment() {
                     if (task.isSuccessful) {
                         val userType = task.result?.get("userType") as? String
                         if (!userType.isNullOrEmpty()) {
-                            startActivity(userType)
+                            startFragment(userType)
                         } else {
                             showErrorMessage("Не удалось определить права доступа")
                         }
@@ -154,7 +154,7 @@ class LoginFragment : Fragment() {
     }
 
     // Функция запуска главной страницы пользователя
-    private fun startActivity(rights: String?) {
+    private fun startFragment(rights: String?) {
         val controller = findNavController()
         when (rights) {
             "user" -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)

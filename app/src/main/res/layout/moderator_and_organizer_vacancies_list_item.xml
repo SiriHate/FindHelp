@@ -12,12 +12,12 @@
         android:layout_marginStart="5dp"
         android:layout_weight="1"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center_vertical"
         android:text="Волонтер мед-помощник"
         android:textColor="#dfe0e3"
-        android:textSize="14sp"
-        app:autoSizeMinTextSize="8sp"
-        android:focusable="true" />
+        android:textSize="20sp"
+        app:autoSizeMinTextSize="8sp" />
 
     <ImageButton
         android:id="@+id/vacancy_item_delete_button"

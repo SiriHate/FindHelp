@@ -18,7 +18,7 @@ class ModeratorVacancyListAdapter(context: Context, offers: List<DocumentSnapsho
     ArrayAdapter<DocumentSnapshot>(context, 0, offers.toMutableList()) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val convertViewInner: View = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.vacancies_list_item, parent, false)
+            .inflate(R.layout.moderator_and_organizer_vacancies_list_item, parent, false)
 
         val vacancyItemName = convertViewInner.findViewById<TextView>(R.id.user_vacancies_list_item_vacancy_name)
         val vacancyItemDeleteButton =

@@ -30,6 +30,7 @@ class UserSkillsAdapter(
 
         db.collection("user_skills").document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot.get("skills") as Map<String, Boolean>
                 skillCheckBox.isChecked = skillsMap[skillName] ?: false
             }

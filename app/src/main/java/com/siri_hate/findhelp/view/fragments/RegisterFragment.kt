@@ -42,7 +42,7 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.register_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_register_page, container, false)
 
         // Переменные UI-элементов
         registerFragmentEmailInput = view.findViewById(R.id.register_fragment_email_input)
@@ -105,8 +105,9 @@ class RegisterFragment : Fragment() {
         val isOrganizer = registerFragmentOrganaizerTypeChip.isChecked
 
         if (
-            inputCheck(email, password, confirmPassword, isOrganizer,
-             organizationName, contactPerson, organizationPhone
+            inputCheck(
+                email, password, confirmPassword, isOrganizer,
+                organizationName, contactPerson, organizationPhone
             )
         ) {
             val userType = getUserType()

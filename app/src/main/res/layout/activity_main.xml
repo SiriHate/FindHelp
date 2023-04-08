@@ -6,15 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".view.activities.MainActivity">
 
-    <ImageView
-        android:id="@+id/main_logo"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/main_top_layout"
+        android:layout_width="match_parent"
         android:layout_height="75dp"
         android:background="#1e1f22"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/main_fragment_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/main_app_logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#1e1f22"
+            app:srcCompat="@drawable/logo" />
+
+        <ImageButton
+            android:id="@+id/main_logout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="5dp"
+            android:background="#1e1f22"
+            android:visibility="gone"
+            app:srcCompat="@drawable/logout"
+            app:tint="#FFFFFF" />
+
+    </FrameLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_fragment_container"
@@ -26,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_logo"
+        app:layout_constraintTop_toBottomOf="@+id/main_top_layout"
         app:navGraph="@navigation/nav_graph"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/fragment_login_page" />
 </androidx.constraintlayout.widget.ConstraintLayout>

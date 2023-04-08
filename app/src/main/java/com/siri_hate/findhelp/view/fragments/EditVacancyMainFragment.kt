@@ -36,7 +36,7 @@ class EditVacancyMainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.edit_vacancy_main_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_vacancy_skills, container, false)
         bindViews(view)
         setupButtons()
         controller = findNavController()
@@ -108,6 +108,9 @@ class EditVacancyMainFragment : Fragment() {
     private fun navigateToSecondFragment() {
         val bundle = Bundle()
         bundle.putString("document_id", documentId)
-        controller.navigate(R.id.action_editVacancyMainFragment_to_editVacancySecondFragment, bundle)
+        controller.navigate(
+            R.id.action_editVacancyMainFragment_to_editVacancySecondFragment,
+            bundle
+        )
     }
 }

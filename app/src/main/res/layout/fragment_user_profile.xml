@@ -39,43 +39,15 @@
             android:dividerHeight="5dp"
             android:overScrollMode="never" />
 
-        <Button
-            android:id="@+id/user_profile_logout_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#a93226"
-            android:text="Выйти из аккаунта"
-            android:textColor="#f2f2f2" />
-
-        <LinearLayout
-            android:id="@+id/user_profile_menu_button"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/user_profile_menu"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:background="#1e1f22"
-            android:orientation="horizontal">
+            app:itemIconTint="@drawable/bottom_nav_color"
+            app:itemTextColor="@drawable/bottom_nav_color"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_navigation_menu_user" />
 
-            <Button
-                android:id="@+id/user_profile_go_user_page"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="#2b2d31"
-                android:text="Главная" />
-
-            <Button
-                android:id="@+id/user_profile_dummy_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="#2b2d31"
-                android:text="Профиль" />
-        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

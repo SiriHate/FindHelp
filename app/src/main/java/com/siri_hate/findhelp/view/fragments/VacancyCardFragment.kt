@@ -39,7 +39,7 @@ class VacancyCardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         controller = findNavController()
-        return inflater.inflate(R.layout.vacancy_card_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_vacancy_card, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,10 +85,9 @@ class VacancyCardFragment : Fragment() {
         getVacancyDocument(documentId,
             { snapshot ->
                 updateVacancyInfo(snapshot)
-                checkUserRightsAndSetEditButtonVisibility(
-                    FirebaseAuth.getInstance().currentUser,
-                    snapshot
-                )
+                FirebaseAuth.getInstance().currentUser?.let {
+                    checkUserRightsAndSetEditButtonVisibility(it, snapshot)
+                }
             },
             { exception ->
                 Log.d(TAG, "Error getting vacancy document", exception)
@@ -140,18 +139,16 @@ class VacancyCardFragment : Fragment() {
     }
 
     private fun checkUserRightsAndSetEditButtonVisibility(
-        user: FirebaseUser?,
+        user: FirebaseUser,
         snapshot: DocumentSnapshot
     ) {
-        user?.email?.let { email ->
+        user.email?.let { email ->
             db.collection("user_rights").document(email)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val userType = document.getString("userType")
-                        if (userType == "moderator" ||
-                            (userType == "organizer" && user.email ==
-                                    snapshot.getString("creator_email"))) {
+                        if ((userType == "organizer") && (user.email == snapshot.getString("creator_email"))) {
                             vacancyCardEditVacancyButton.visibility = View.VISIBLE
                         } else {
                             vacancyCardEditVacancyButton.visibility = View.GONE

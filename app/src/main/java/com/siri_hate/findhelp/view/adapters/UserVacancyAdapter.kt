@@ -21,7 +21,9 @@ class UserVacancyAdapter(
     init {
         // Отсортировать список в конструкторе
         vacancies = vacancies.sortedByDescending { vacancy ->
+            @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
+            @Suppress("UNCHECKED_CAST")
             val userSkills = userDoc["skills"] as? HashMap<String, Boolean>
             var matchCount = 0
             var vacancyCount = 0
@@ -66,7 +68,9 @@ class UserVacancyAdapter(
             controller.navigate(R.id.action_userPageFragment_to_vacancyCardFragment, bundle)
         }
 
+        @Suppress("UNCHECKED_CAST")
         val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
+        @Suppress("UNCHECKED_CAST")
         val userSkills = userDoc["skills"] as? HashMap<String, Boolean>
         var matchCount = 0
         var vacancyCount = 0

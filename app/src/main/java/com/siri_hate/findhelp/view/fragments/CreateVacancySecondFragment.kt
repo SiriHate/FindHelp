@@ -28,7 +28,7 @@ class CreateVacancySecondFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.create_vacancy_second_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_create_vacancy_skills, container, false)
         newVacancySecondFragmentList = view.findViewById(R.id.new_vacancy_second_fragment_list)
         newVacancySecondFragmentCreateButton =
             view.findViewById(R.id.new_vacancy_second_fragment_create_button)
@@ -63,9 +63,10 @@ class CreateVacancySecondFragment : Fragment() {
         newVacancySecondFragmentList.adapter = adapter
     }
 
-    private fun fetchSkillsListFromFirestore(db: FirebaseFirestore, vacancyID: String) {
-        db.collection("vacancies_list").document(vacancyID).get()
+    private fun fetchSkillsListFromFirestore(db: FirebaseFirestore, documentId: String) {
+        db.collection("vacancies_list").document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean>
                     ?: emptyMap()
                 val skillsList = skillsMap.keys.toList()

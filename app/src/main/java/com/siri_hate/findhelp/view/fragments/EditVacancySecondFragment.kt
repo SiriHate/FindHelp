@@ -30,7 +30,7 @@ class EditVacancySecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // создание view
-        val view = inflater.inflate(R.layout.edit_vacancy_second_fragment, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
         editVacancySecondFragmentList = view.findViewById(R.id.edit_vacancy_second_fragment_list)
         editVacancySecondFragmentCreateButton =
             view.findViewById(R.id.edit_vacancy_second_fragment_create_button)
@@ -53,6 +53,7 @@ class EditVacancySecondFragment : Fragment() {
         // загрузка списка навыков в адаптер из Firestore
         db.collection("vacancies_list").document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean>
                     ?: emptyMap()
                 val skillsList = skillsMap.keys.toList()

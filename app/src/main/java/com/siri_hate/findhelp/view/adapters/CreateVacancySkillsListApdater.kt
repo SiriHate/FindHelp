@@ -13,7 +13,7 @@ import com.siri_hate.findhelp.R
 class CreateVacancySkillsListApdater(
     private val context: Context,
     private val db: FirebaseFirestore,
-    private val vacancyID: String,
+    private val documentId: String,
     private var skillsList: List<String>,
     private val onCheckboxSelected: () -> Unit
 ) : BaseAdapter() {
@@ -29,14 +29,15 @@ class CreateVacancySkillsListApdater(
         val skillName = skillsList[position]
         skillNameTextView.text = skillName
 
-        db.collection("vacancies_list").document(vacancyID).get()
+        db.collection("vacancies_list").document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot.get("vacancy_skills_list") as Map<String, Boolean>
                 skillCheckBox.isChecked = skillsMap[skillName] ?: false
             }
 
         skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            db.collection("vacancies_list").document(vacancyID)
+            db.collection("vacancies_list").document(documentId)
                 .update("vacancy_skills_list.$skillName", isChecked)
             onCheckboxSelected()
         }
