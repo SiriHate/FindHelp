@@ -10,7 +10,6 @@
         android:id="@+id/main_top_layout"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:background="#1e1f22"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/main_fragment_container"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,20 +20,19 @@
             android:id="@+id/main_app_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#1e1f22"
+            android:background="#181611"
             app:srcCompat="@drawable/logo" />
 
         <ImageButton
             android:id="@+id/main_logout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="5dp"
-            android:background="#1e1f22"
+            android:background="#181611"
             android:visibility="gone"
             app:srcCompat="@drawable/logout"
-            app:tint="#FFFFFF" />
+            app:tint="#5984d6" />
 
     </FrameLayout>
 

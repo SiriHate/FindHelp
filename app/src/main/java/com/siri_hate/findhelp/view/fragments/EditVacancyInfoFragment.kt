@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 
-class EditVacancyMainFragment : Fragment() {
+class EditVacancyInfoFragment : Fragment() {
 
     private lateinit var documentId: String
     private lateinit var nameEditText: EditText

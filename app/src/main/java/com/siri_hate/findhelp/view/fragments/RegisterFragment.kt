@@ -16,28 +16,35 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.User
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 class RegisterFragment : Fragment() {
 
     // Переменные
-    private lateinit var registerFragmentEmailInput: EditText
-    private lateinit var registerFragmentPasswordInput: EditText
-    private lateinit var registerFragmentPasswordInputRepeat: EditText
-    private lateinit var registerFragmentRegisterButton: Button
+    private lateinit var emailInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var passwordInputRepeat: EditText
+    private lateinit var registerButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var registerFragmentUserTypeChip: Chip
-    private lateinit var registerFragmentOrganaizerTypeChip: Chip
-    private lateinit var registerFragmentGoBackButton: ImageButton
-    private lateinit var registerFragmentOrganizationNameInput: EditText
-    private lateinit var registerFragmentContactPersonInput: EditText
-    private lateinit var registerFragmentOrganizationPhoneInput: EditText
-    private lateinit var registerFragmentOrganizerLayout: LinearLayout
+    private lateinit var userTypeChip: Chip
+    private lateinit var organaizerTypeChip: Chip
+    private lateinit var goBackButton: ImageButton
+    private lateinit var organizationNameInput: EditText
+    private lateinit var contactPersonInput: EditText
+    private lateinit var organizationPhoneInput: EditText
+    private lateinit var organizerLayout: LinearLayout
     private lateinit var controller: NavController
+
+    private lateinit var db: FirebaseFirestore
+    private lateinit var orgInfoCollection: CollectionReference
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,44 +52,41 @@ class RegisterFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_register_page, container, false)
 
         // Переменные UI-элементов
-        registerFragmentEmailInput = view.findViewById(R.id.register_fragment_email_input)
-        registerFragmentPasswordInput = view.findViewById(R.id.register_fragment_password_input)
-        registerFragmentPasswordInputRepeat =
-            view.findViewById(R.id.register_fragment_password_input_repeat)
-        registerFragmentRegisterButton = view.findViewById(R.id.register_fragment_register_button)
-        firebaseAuth = FirebaseAuth.getInstance()
-        registerFragmentUserTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
-        registerFragmentOrganaizerTypeChip =
-            view.findViewById(R.id.register_fragment_organaizer_type_chip)
-        registerFragmentGoBackButton = view.findViewById(R.id.register_fragment_go_back_button)
-        registerFragmentOrganizationNameInput =
-            view.findViewById(R.id.register_fragment_organization_name_input)
-        registerFragmentContactPersonInput =
-            view.findViewById(R.id.register_fragment_Contact_person_input)
-        registerFragmentOrganizationPhoneInput =
-            view.findViewById(R.id.register_fragment_organization_phone_input)
-        registerFragmentOrganizerLayout = view.findViewById(R.id.register_fragment_organizer_layout)
+        emailInput = view.findViewById(R.id.register_fragment_email_input)
+        passwordInput = view.findViewById(R.id.register_fragment_password_input)
+        passwordInputRepeat = view.findViewById(R.id.register_fragment_password_input_repeat)
+        registerButton = view.findViewById(R.id.register_fragment_register_button)
+        userTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
+        organaizerTypeChip = view.findViewById(R.id.register_fragment_organaizer_type_chip)
+        goBackButton = view.findViewById(R.id.register_fragment_go_back_button)
+        organizationNameInput = view.findViewById(R.id.register_fragment_organization_name_input)
+        contactPersonInput = view.findViewById(R.id.register_fragment_Contact_person_input)
+        organizationPhoneInput = view.findViewById(R.id.register_fragment_organization_phone_input)
+        organizerLayout = view.findViewById(R.id.register_fragment_organizer_layout)
 
         controller = findNavController()
+        firebaseAuth = FirebaseAuth.getInstance()
+        db = Firebase.firestore
+        orgInfoCollection = db.collection("organization_info")
 
-        registerFragmentGoBackButton.setOnClickListener { goBack() }
+        goBackButton.setOnClickListener { goBack() }
 
         // Слушатель кнопки регистрации вызывает функцию регистрации
-        registerFragmentRegisterButton.setOnClickListener { registration() }
+        registerButton.setOnClickListener { registration() }
 
         // Слушатель для чипа UserType
-        registerFragmentUserTypeChip.setOnCheckedChangeListener { _, isChecked ->
+        userTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                registerFragmentOrganaizerTypeChip.isChecked = false
-                registerFragmentOrganizerLayout.visibility = View.GONE
+                organaizerTypeChip.isChecked = false
+                organizerLayout.visibility = View.GONE
             }
         }
 
         // Слушатель для чипа OrganizerType
-        registerFragmentOrganaizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
+        organaizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                registerFragmentUserTypeChip.isChecked = false
-                registerFragmentOrganizerLayout.visibility = View.VISIBLE
+                userTypeChip.isChecked = false
+                organizerLayout.visibility = View.VISIBLE
             }
         }
 
@@ -96,13 +100,13 @@ class RegisterFragment : Fragment() {
 
     // Функция регистрации
     private fun registration() {
-        val email = registerFragmentEmailInput.text.toString().trim()
-        val password = registerFragmentPasswordInput.text.toString().trim()
-        val confirmPassword = registerFragmentPasswordInputRepeat.text.toString().trim()
-        val organizationName = registerFragmentOrganizationNameInput.text.toString().trim()
-        val contactPerson = registerFragmentContactPersonInput.text.toString().trim()
-        val organizationPhone = registerFragmentOrganizationPhoneInput.text.toString().trim()
-        val isOrganizer = registerFragmentOrganaizerTypeChip.isChecked
+        val email = emailInput.text.toString().trim()
+        val password = passwordInput.text.toString().trim()
+        val confirmPassword = passwordInputRepeat.text.toString().trim()
+        val organizationName = organizationNameInput.text.toString().trim()
+        val contactPerson = contactPersonInput.text.toString().trim()
+        val organizationPhone = organizationPhoneInput.text.toString().trim()
+        val isOrganizer = organaizerTypeChip.isChecked
 
         if (
             inputCheck(
@@ -110,9 +114,35 @@ class RegisterFragment : Fragment() {
                 organizationName, contactPerson, organizationPhone
             )
         ) {
-            val userType = getUserType()
-            registerUser(email, password, userType)
+            if (isOrganizer) {
+                val isNameExists = runBlocking { checkOrganizationNameExists(organizationName) }
+                val isPhoneExists = runBlocking { checkOrganizationPhoneExists(organizationPhone) }
+                if (isNameExists) {
+                    organizationNameInput.error = "Название организации уже занято"
+                    return
+                }
+                if (isPhoneExists) {
+                    organizationPhoneInput.error = "Номер телефона уже занят"
+                    return
+                }
+
+                registerOrganizer(email, password, organizationName, contactPerson, organizationPhone)
+            } else {
+                registerUser(email, password)
+            }
         }
+    }
+
+    private suspend fun checkOrganizationNameExists(organizationName: String): Boolean {
+        val querySnapshot =
+            orgInfoCollection.whereEqualTo("organization_name", organizationName).get().await()
+        return querySnapshot.documents.isNotEmpty()
+    }
+
+    private suspend fun checkOrganizationPhoneExists(organizationPhone: String): Boolean {
+        val querySnapshot =
+            orgInfoCollection.whereEqualTo("organization_phone", organizationPhone).get().await()
+        return querySnapshot.documents.isNotEmpty()
     }
 
     // Функция проверки на заполненость полей и выбор типа пользователя
@@ -126,17 +156,17 @@ class RegisterFragment : Fragment() {
         organizationPhone: String
     ): Boolean {
         if (email.isEmpty()) {
-            registerFragmentEmailInput.error = "Введите Email"
+            emailInput.error = "Введите Email"
             return false
         }
 
         if (password.isEmpty()) {
-            registerFragmentPasswordInput.error = "Введите пароль"
+            passwordInput.error = "Введите пароль"
             return false
         }
 
         if (confirmPassword.isEmpty()) {
-            registerFragmentPasswordInputRepeat.error = "Введите подтверждение пароля"
+            passwordInputRepeat.error = "Введите подтверждение пароля"
             return false
         }
 
@@ -147,17 +177,17 @@ class RegisterFragment : Fragment() {
 
         if (isOrganizer) {
             if (organizationName.isEmpty()) {
-                registerFragmentOrganizationNameInput.error = "Введите название компании"
+                organizationNameInput.error = "Введите название компании"
                 return false
             }
 
             if (contactPerson.isEmpty()) {
-                registerFragmentContactPersonInput.error = "Введите контактное лицо"
+                contactPersonInput.error = "Введите контактное лицо"
                 return false
             }
 
             if (organizationPhone.isEmpty()) {
-                registerFragmentOrganizationPhoneInput.error = "Введите телефон компании"
+                organizationPhoneInput.error = "Введите телефон компании"
                 return false
             }
         }
@@ -165,40 +195,46 @@ class RegisterFragment : Fragment() {
         return true
     }
 
-    // Получение типа пользователя
-    private fun getUserType(): String {
-        return if (registerFragmentUserTypeChip.isChecked) "user" else "organizer"
-    }
-
     // Функция регистрации пользователя в базу данных
-    private fun registerUser(email: String, password: String, userType: String) {
+    private fun registerUser(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    registrationSuccess(userType, email)
+                    registrationSuccess("user", email)
+                } else {
+                    registrationError(task.exception?.message)
+                }
+            }
+    }
 
-                    if (userType == "organizer") {
-                        val db = Firebase.firestore
-                        val organizationName = registerFragmentOrganizationNameInput.text.toString()
-                        val contactPerson = registerFragmentContactPersonInput.text.toString()
-                        val organizationPhone =
-                            registerFragmentOrganizationPhoneInput.text.toString()
+    private fun registerOrganizer(
+        email: String,
+        password: String,
+        organizationName: String,
+        contactPerson: String,
+        organizationPhone: String
+    ) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    registrationSuccess("organizer", email)
 
-                        // Сохраняем данные в Firestore
-                        val data = hashMapOf(
-                            "organization_name" to organizationName,
-                            "contact_person" to contactPerson,
-                            "organization_phone" to organizationPhone
-                        )
+                    val db = Firebase.firestore
 
-                        db.collection("organization_info").document(email).set(data)
-                            .addOnSuccessListener {
-                                Log.d(TAG, "DocumentSnapshot added with ID: $email")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.w(TAG, "Error adding document", e)
-                            }
-                    }
+                    // Сохраняем данные в Firestore
+                    val data = hashMapOf(
+                        "organization_name" to organizationName,
+                        "contact_person" to contactPerson,
+                        "organization_phone" to organizationPhone
+                    )
+
+                    db.collection("organization_info").document(email).set(data)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "DocumentSnapshot added with ID: $email")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
                 } else {
                     registrationError(task.exception?.message)
                 }
@@ -250,5 +286,4 @@ class RegisterFragment : Fragment() {
             }
         }
     }
-
 }

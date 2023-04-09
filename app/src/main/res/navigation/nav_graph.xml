@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/createVacancyMainFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.CreateVacancyMainFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.CreateVacancyInfoFragment"
         android:label="create_vacancy_main_fragment"
         tools:layout="@layout/fragment_create_vacancy_info" >
         <action
@@ -99,7 +99,7 @@
     </fragment>
     <fragment
         android:id="@+id/createVacancySecondFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.CreateVacancySecondFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.CreateVacancySkillsFragment"
         android:label="create_vacancy_second_fragment"
         tools:layout="@layout/fragment_create_vacancy_skills" >
         <action
@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/editVacancyMainFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.EditVacancyMainFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.EditVacancyInfoFragment"
         android:label="edit_vacancy_main_fragment"
         tools:layout="@layout/fragment_edit_vacancy_skills" >
         <action
@@ -138,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/editVacancySecondFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.EditVacancySecondFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.EditVacancySkillsFragment"
         android:label="edit_vacancy_second_fragment"
         tools:layout="@layout/fragment_edit_vacancy_info" >
         <action

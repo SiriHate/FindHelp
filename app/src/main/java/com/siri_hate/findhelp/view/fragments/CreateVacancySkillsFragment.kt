@@ -15,7 +15,7 @@ import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
 
 
-class CreateVacancySecondFragment : Fragment() {
+class CreateVacancySkillsFragment : Fragment() {
     private lateinit var newVacancySecondFragmentList: ListView
     private lateinit var adapter: CreateVacancySkillsListApdater
     private lateinit var newVacancySecondFragmentCreateButton: Button

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
-    tools:context=".view.fragments.CreateVacancyMainFragment">
+    tools:context=".view.fragments.CreateVacancyInfoFragment">
 
     <LinearLayout
-        android:id="@+id/new_vacancy_main_fragment_main_layout"
+        android:id="@+id/create_vacancy_info_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -16,73 +16,74 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/new_vacancy_main_fragment_go_back_button"
+            android:id="@+id/create_vacancy_info_fragment_go_back_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="10dp"
             android:background="#313338"
             android:src="@drawable/go_back"
-            app:tint="#FFFFFF" />
+            app:tint="#FFFFFF"
+            android:contentDescription="@string/create_vacancy_info_fragment_go_back_button" />
 
         <TextView
-            android:id="@+id/new_vacancy_main_fragment_name_tittle"
+            android:id="@+id/create_vacancy_info_fragment_name_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите название вакансии:"
+            android:text="@string/create_vacancy_info_fragment_name_tittle"
             android:textColor="#BFBFBF"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/new_vacancy_main_fragment_name_input"
+            android:id="@+id/create_vacancy_info_fragment_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edittext_background"
-            android:hint="Название вакансии"
+            android:hint="@string/create_vacancy_info_fragment_name_input"
             android:inputType="textEmailAddress"
             android:padding="16dp"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/new_vacancy_main_fragment_city_tittle"
+            android:id="@+id/create_vacancy_info_fragment_city_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите город вакансии:"
+            android:text="@string/create_vacancy_info_fragment_city_tittle"
             android:textColor="#BFBFBF"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/new_vacancy_main_fragment_fragment_city_input"
+            android:id="@+id/create_vacancy_info_fragment_city_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edittext_background"
-            android:hint="Город вакансии"
+            android:hint="@string/create_vacancy_info_fragment_city_input"
             android:inputType="textEmailAddress"
             android:padding="16dp"
             android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/new_vacancy_main_fragment_description_tittle"
+            android:id="@+id/create_vacancy_info_fragment_description_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Введите описание вакансии:"
+            android:text="@string/create_vacancy_info_fragment_description_tittle"
             android:textColor="#BFBFBF"
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/new_vacancy_main_fragment_description_input"
+            android:id="@+id/create_vacancy_info_fragment_description_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_background"
             android:gravity="top|start"
-            android:hint="Описание вакансии"
+            android:hint="@string/create_vacancy_info_fragment_description_input"
             android:inputType="textMultiLine"
             android:lines="15"
             android:padding="16dp"
@@ -90,12 +91,12 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/new_vacancy_main_fragment_continue_button"
+            android:id="@+id/create_vacancy_info_fragment_continue_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:backgroundTint="#4FB3BF"
-            android:text="Дальше" />
+            android:text="@string/create_vacancy_info_fragment_continue_button" />
 
     </LinearLayout>
 </FrameLayout>

@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
 
-class EditVacancySecondFragment : Fragment() {
+class EditVacancySkillsFragment : Fragment() {
 
     // объявление переменных
     private lateinit var editVacancySecondFragmentList: ListView

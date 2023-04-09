@@ -19,7 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 
-class CreateVacancyMainFragment : Fragment() {
+class CreateVacancyInfoFragment : Fragment() {
     private lateinit var vacancyNameInput: EditText
     private lateinit var vacancyCityInput: EditText
     private lateinit var vacancyDescriptionInput: EditText
@@ -42,13 +42,13 @@ class CreateVacancyMainFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
-        vacancyNameInput = view.findViewById(R.id.new_vacancy_main_fragment_name_input)
-        vacancyCityInput = view.findViewById(R.id.new_vacancy_main_fragment_fragment_city_input)
+        vacancyNameInput = view.findViewById(R.id.create_vacancy_info_fragment_name_input)
+        vacancyCityInput = view.findViewById(R.id.create_vacancy_info_fragment_city_input)
         vacancyDescriptionInput =
-            view.findViewById(R.id.new_vacancy_main_fragment_description_input)
-        createVacancyButton = view.findViewById(R.id.new_vacancy_main_fragment_continue_button)
+            view.findViewById(R.id.create_vacancy_info_fragment_description_input)
+        createVacancyButton = view.findViewById(R.id.create_vacancy_info_fragment_continue_button)
         newVacancyMainFragmentGoBackButton =
-            view.findViewById(R.id.new_vacancy_main_fragment_go_back_button)
+            view.findViewById(R.id.create_vacancy_info_fragment_go_back_button)
 
         newVacancyMainFragmentGoBackButton.setOnClickListener {
             goBackToOrganizerPage()

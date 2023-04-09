@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
-    tools:context=".view.fragments.EditVacancyMainFragment">
+    tools:context=".view.fragments.EditVacancyInfoFragment">
 
     <LinearLayout
         android:id="@+id/edit_vacancy_main_fragment_main_layout"

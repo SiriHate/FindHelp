@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">FindHelp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_user_profile">UserProfileActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+
+
     <string name="match_count">%1$d%% (%2$d/%3$d)</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- CreateVacancyInfoFragment -->
+    <string name="create_vacancy_info_fragment_name_tittle">Введите название вакансии:</string>
+    <string name="create_vacancy_info_fragment_name_input">Название вакансии</string>
+    <string name="create_vacancy_info_fragment_city_tittle">Введите город вакансии:</string>
+    <string name="create_vacancy_info_fragment_city_input">Город вакансии</string>
+    <string name="create_vacancy_info_fragment_description_tittle">Введите описание вакансии:</string>
+    <string name="create_vacancy_info_fragment_description_input">Описание вакансии</string>
+    <string name="create_vacancy_info_fragment_continue_button">Дальше</string>
+    <string name="create_vacancy_info_fragment_go_back_button">Кнопка "назад"</string>
+
+
 </resources>
