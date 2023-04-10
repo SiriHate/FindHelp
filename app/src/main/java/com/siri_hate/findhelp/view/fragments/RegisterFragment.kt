@@ -34,7 +34,7 @@ class RegisterFragment : Fragment() {
     private lateinit var registerButton: Button
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var userTypeChip: Chip
-    private lateinit var organaizerTypeChip: Chip
+    private lateinit var organizerTypeChip: Chip
     private lateinit var goBackButton: ImageButton
     private lateinit var organizationNameInput: EditText
     private lateinit var contactPersonInput: EditText
@@ -51,46 +51,54 @@ class RegisterFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_register_page, container, false)
 
-        // Переменные UI-элементов
-        emailInput = view.findViewById(R.id.register_fragment_email_input)
-        passwordInput = view.findViewById(R.id.register_fragment_password_input)
-        passwordInputRepeat = view.findViewById(R.id.register_fragment_password_input_repeat)
-        registerButton = view.findViewById(R.id.register_fragment_register_button)
-        userTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
-        organaizerTypeChip = view.findViewById(R.id.register_fragment_organaizer_type_chip)
-        goBackButton = view.findViewById(R.id.register_fragment_go_back_button)
-        organizationNameInput = view.findViewById(R.id.register_fragment_organization_name_input)
-        contactPersonInput = view.findViewById(R.id.register_fragment_Contact_person_input)
-        organizationPhoneInput = view.findViewById(R.id.register_fragment_organization_phone_input)
-        organizerLayout = view.findViewById(R.id.register_fragment_organizer_layout)
-
         controller = findNavController()
         firebaseAuth = FirebaseAuth.getInstance()
         db = Firebase.firestore
         orgInfoCollection = db.collection("organization_info")
 
-        goBackButton.setOnClickListener { goBack() }
+        bindViews(view)
+        setupListeners()
 
-        // Слушатель кнопки регистрации вызывает функцию регистрации
-        registerButton.setOnClickListener { registration() }
+        return view
+    }
 
-        // Слушатель для чипа UserType
+    private fun bindViews(view: View) {
+        emailInput = view.findViewById(R.id.register_fragment_email_input)
+        passwordInput = view.findViewById(R.id.register_fragment_password_input)
+        passwordInputRepeat = view.findViewById(R.id.register_fragment_password_input_repeat)
+        registerButton = view.findViewById(R.id.register_fragment_register_button)
+        userTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
+        organizerTypeChip = view.findViewById(R.id.register_fragment_organaizer_type_chip)
+        goBackButton = view.findViewById(R.id.register_fragment_go_back_button)
+        organizationNameInput = view.findViewById(R.id.register_fragment_organization_name_input)
+        contactPersonInput = view.findViewById(R.id.register_fragment_Contact_person_input)
+        organizationPhoneInput = view.findViewById(R.id.register_fragment_organization_phone_input)
+        organizerLayout = view.findViewById(R.id.register_fragment_organizer_layout)
+    }
+
+    private fun setupListeners() {
+
+        goBackButton.setOnClickListener {
+            goBack()
+        }
+
+        registerButton.setOnClickListener {
+            registration()
+        }
+
         userTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                organaizerTypeChip.isChecked = false
+                organizerTypeChip.isChecked = false
                 organizerLayout.visibility = View.GONE
             }
         }
 
-        // Слушатель для чипа OrganizerType
-        organaizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
+        organizerTypeChip.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 userTypeChip.isChecked = false
                 organizerLayout.visibility = View.VISIBLE
             }
         }
-
-        return view
     }
 
     // Функция возврата на экран авторизации
@@ -106,7 +114,7 @@ class RegisterFragment : Fragment() {
         val organizationName = organizationNameInput.text.toString().trim()
         val contactPerson = contactPersonInput.text.toString().trim()
         val organizationPhone = organizationPhoneInput.text.toString().trim()
-        val isOrganizer = organaizerTypeChip.isChecked
+        val isOrganizer = organizerTypeChip.isChecked
 
         if (
             inputCheck(
@@ -248,7 +256,7 @@ class RegisterFragment : Fragment() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         currentUser?.let {
             setUserAccessRights(userType, email, it.uid)
-            initUserSkillsList(userType, email)
+            initUserInfo(userType, email)
         }
 
         controller.navigate(R.id.action_registerFragment_to_loginFragment)
@@ -271,14 +279,17 @@ class RegisterFragment : Fragment() {
     }
 
     // Функция создания нового документа для пользователей типа "user" от базового списка навыков
-    private fun initUserSkillsList(userType: String, email: String) {
+    private fun initUserInfo(userType: String, email: String) {
         if (userType == "user") {
             val db = FirebaseFirestore.getInstance()
             val baseSkillsRef = db.collection("init_data").document("base_skills_init")
             baseSkillsRef.get().addOnSuccessListener { documentSnapshot ->
                 val baseSkillsData = documentSnapshot.data
-                db.collection("user_skills").document(email)
-                    .set(baseSkillsData ?: return@addOnSuccessListener)
+                val userData = HashMap<String, Any>()
+                userData.putAll(baseSkillsData ?: return@addOnSuccessListener)
+                userData["user_city"] = "Не выбрано" // добавляем поле и значение
+                db.collection("user_info").document(email)
+                    .set(userData)
                     .addOnSuccessListener { Log.d(TAG, "Документ успешно создан!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Ошибка при создании документа", e) }
             }.addOnFailureListener { e ->

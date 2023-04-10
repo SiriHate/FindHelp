@@ -73,7 +73,7 @@ class UserPageFragment : Fragment() {
 
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         (currentUserEmail)?.let { it ->
-            db.collection("user_skills")
+            db.collection("user_info")
                 .document(it)
                 .get()
                 .addOnSuccessListener { document ->
@@ -122,9 +122,15 @@ class UserPageFragment : Fragment() {
     // Функция для фильтрации вакансий
     private fun filterVacancies(query: String) {
         filteredVacancies = allVacancies.filter {
-            val vacancyName = it.getString("vacancy_name") ?: ""
-            vacancyName.startsWith(query, ignoreCase = true)
+            val vacancyCity = it.getString("vacancy_city")
+            vacancyCity == userDoc.getString("user_city")
         }.toMutableList()
+        if (query.isNotEmpty()) {
+            filteredVacancies = filteredVacancies.filter {
+                val vacancyName = it.getString("vacancy_name") ?: ""
+                vacancyName.startsWith(query, ignoreCase = true)
+            }.toMutableList()
+        }
     }
 
     companion object {

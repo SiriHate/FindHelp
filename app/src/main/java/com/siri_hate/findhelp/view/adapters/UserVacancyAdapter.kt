@@ -11,7 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
 
 class UserVacancyAdapter(
-    private var vacancies: MutableList<DocumentSnapshot>,
+    vacancies: MutableList<DocumentSnapshot>,
     private val userDoc: DocumentSnapshot,
     private val controller: NavController
 ) : BaseAdapter() {
@@ -20,7 +20,7 @@ class UserVacancyAdapter(
 
     init {
         // Отсортировать список в конструкторе
-        vacancies = vacancies.sortedByDescending { vacancy ->
+        filteredVacancies = vacancies.sortedByDescending { vacancy ->
             @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
             @Suppress("UNCHECKED_CAST")

@@ -28,7 +28,7 @@ class UserSkillsAdapter(
         val skillName = skillsList[position]
         skillNameTextView.text = skillName
 
-        db.collection("user_skills").document(userEmail).get()
+        db.collection("user_info").document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
                 @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot.get("skills") as Map<String, Boolean>
@@ -36,7 +36,7 @@ class UserSkillsAdapter(
             }
 
         skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            db.collection("user_skills").document(userEmail)
+            db.collection("user_info").document(userEmail)
                 .update("skills.$skillName", isChecked)
         }
 
