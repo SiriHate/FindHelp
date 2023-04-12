@@ -56,7 +56,7 @@
             android:textColor="#BFBFBF"
             android:textSize="24sp" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_profile_skill_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"

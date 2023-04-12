@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
@@ -28,8 +30,7 @@ class VacancyCardFragment : Fragment() {
     private lateinit var vacancyDescriptionTextView: TextView
     private lateinit var vacancyCardGoBackButton: ImageButton
     private lateinit var vacancyCardEditVacancyButton: ImageButton
-    private lateinit var skillsListView: ListView
-    private lateinit var skillsList: MutableList<String>
+    private lateinit var skillsRecyclerView: RecyclerView
     private lateinit var db: FirebaseFirestore
     private lateinit var controller: NavController
 
@@ -46,7 +47,7 @@ class VacancyCardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
-        initSkillsListView()
+        initSkillsRecyclerView()
         setVacancyInfo()
 
         vacancyCardGoBackButton.setOnClickListener { navigateToUserPage() }
@@ -69,15 +70,14 @@ class VacancyCardFragment : Fragment() {
         vacancyDescriptionTextView = view.findViewById(R.id.vacancy_card_description)
         vacancyCardGoBackButton = view.findViewById(R.id.vacancy_card_go_back_button)
         vacancyCardEditVacancyButton = view.findViewById(R.id.vacancy_card_edit_vacancy_button)
-        skillsListView = view.findViewById(R.id.vacancy_card_skills_list)
+        skillsRecyclerView = view.findViewById(R.id.vacancy_card_skills_list)
         db = FirebaseFirestore.getInstance()
     }
 
-
-    private fun initSkillsListView() {
-        skillsList = mutableListOf()
-        val adapter = VacancySkillsListAdapter(requireContext(), skillsList)
-        skillsListView.adapter = adapter
+    private fun initSkillsRecyclerView() {
+        skillsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = VacancySkillsListAdapter(requireContext())
+        skillsRecyclerView.adapter = adapter
     }
 
     private fun setVacancyInfo() {
@@ -116,19 +116,19 @@ class VacancyCardFragment : Fragment() {
 
     private fun updateSkillsList(skillsMap: Map<*, *>?, adapter: VacancySkillsListAdapter) {
         if (skillsMap != null) {
-            skillsList.clear()
+            val skillsList = mutableListOf<String>()
             for ((key, value) in skillsMap) {
                 if (value as Boolean) {
                     skillsList.add(key.toString())
                 }
             }
-            adapter.notifyDataSetChanged()
+            adapter.setSkillsList(skillsList)
         }
     }
 
     private fun updateVacancyInfo(snapshot: DocumentSnapshot) {
         val skillsMap = snapshot.get("vacancy_skills_list") as Map<*, *>?
-        updateSkillsList(skillsMap, skillsListView.adapter as VacancySkillsListAdapter)
+        updateSkillsList(skillsMap, skillsRecyclerView.adapter as VacancySkillsListAdapter)
 
         vacancyNameTextView.text = snapshot.getString("vacancy_name")
         companyNameTextView.text = snapshot.getString("organization_name")
@@ -147,50 +147,28 @@ class VacancyCardFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        val userType = document.getString("userType")
-                        if ((userType == "organizer") && (user.email == snapshot.getString("creator_email"))) {
-                            vacancyCardEditVacancyButton.visibility = View.VISIBLE
-                        } else {
-                            vacancyCardEditVacancyButton.visibility = View.GONE
-                        }
+                        val userType = document.getString("rights_type")
+                            if (userType == "admin" || userType == "company") {
+                                vacancyCardEditVacancyButton.visibility = View.VISIBLE
+                            }
                     } else {
-                        Log.d(TAG, "User document not found")
+                        Log.d(TAG, "User rights not found")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting user document", exception)
+                    Log.d(TAG, "Error getting user rights", exception)
                 }
         }
     }
 
     private fun navigateToUserPage() {
-        val user = FirebaseAuth.getInstance().currentUser
-        user?.email?.let { email ->
-            db.collection("user_rights").document(email)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        when (val userType = document.getString("userType")) {
-                            "user" -> controller.navigate(R.id.action_vacancyCardFragment_to_userPageFragment)
-                            "organizer" -> controller.navigate(R.id.action_vacancyCardFragment_to_organizerPageFragment)
-                            "moderator" -> controller.navigate(R.id.action_vacancyCardFragment_to_moderatorPageFragment)
-                            else -> Log.d(TAG, "Неккоректный userType: $userType")
-                        }
-                    } else {
-                        Log.d(TAG, "Документ не найден")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Ошибка получения документа", exception)
-                }
-        }
+        controller.popBackStack()
     }
 
     companion object {
-        private const val TAG = "VacancyCardActivity"
+        const val TAG = "VacancyCardFragment"
     }
 }
-
 
 
 

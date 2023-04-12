@@ -2,12 +2,15 @@ package com.siri_hate.findhelp.view.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ListView
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -15,52 +18,53 @@ import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
 import java.util.*
 
-class ModeratorPageFragment : Fragment(R.layout.fragment_moderator_page) {
+class ModeratorPageFragment : Fragment() {
 
     private lateinit var searchBar: SearchView
-    private lateinit var moderatorVacancyList: ListView
+    private lateinit var moderatorVacancyList: RecyclerView
 
     private val db = FirebaseFirestore.getInstance()
     private val offersRef = db.collection("vacancies_list")
     private lateinit var adapter: ModeratorVacancyListAdapter
     private var snapshotListener: ListenerRegistration? = null
-    private var offers: List<DocumentSnapshot> = emptyList()
     private var originalOffers: List<DocumentSnapshot> = emptyList()
     private lateinit var controller: NavController
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_moderator_page, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Переменные UI-элементов
         moderatorVacancyList = view.findViewById(R.id.moderator_vacancy_list)
         searchBar = view.findViewById(R.id.moderator_page_search_bar)
 
         controller = findNavController()
 
-        // Адаптер
-        adapter = ModeratorVacancyListAdapter(requireContext(), emptyList(), controller)
+        moderatorVacancyList.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter = ModeratorVacancyListAdapter(controller)
         moderatorVacancyList.adapter = adapter
 
-        // Слушатель изменения текста в searchBar
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Получение текста из SearchView
                 val query = newText?.lowercase(Locale.getDefault()) ?: ""
 
-                // Фильтрация списка вакансий по запросу
-                val filteredOffers = offers.filter {
+                val filteredOffers = originalOffers.filter {
                     it.getString("vacancy_name")?.lowercase(Locale.getDefault())
                         ?.startsWith(query) == true
                 }
 
-                // Обновление адаптера с отфильтрованным списком вакансий
-                adapter.clear()
-                adapter.addAll(filteredOffers)
-                adapter.notifyDataSetChanged()
+                adapter.submitList(filteredOffers)
 
                 return true
             }
@@ -73,23 +77,7 @@ class ModeratorPageFragment : Fragment(R.layout.fragment_moderator_page) {
             }
 
             originalOffers = snapshots?.documents?.toList() ?: emptyList()
-            offers = originalOffers
-            adapter.clear()
-            adapter.addAll(offers)
-            adapter.notifyDataSetChanged()
-        }
-
-        // Слушатель изменений коллекции Firestore
-        snapshotListener = offersRef.addSnapshotListener { snapshots, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
-            }
-
-            val offers = snapshots?.documents?.toList() ?: emptyList<DocumentSnapshot>()
-            adapter.clear()
-            adapter.addAll(offers)
-            adapter.notifyDataSetChanged()
+            adapter.submitList(originalOffers)
         }
     }
 
@@ -102,3 +90,5 @@ class ModeratorPageFragment : Fragment(R.layout.fragment_moderator_page) {
         private const val TAG = "ModeratorPageFragment"
     }
 }
+
+

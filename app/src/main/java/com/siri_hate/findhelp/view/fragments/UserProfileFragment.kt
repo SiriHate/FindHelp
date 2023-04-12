@@ -5,23 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.adapters.UserSkillsAdapter
+import com.siri_hate.findhelp.view.adapters.UserProfileSkillsAdapter
 
 class UserProfileFragment : Fragment() {
-    private lateinit var userProfileSkillList: ListView
-    private lateinit var adapter: UserSkillsAdapter
+    private lateinit var userProfileSkillList: RecyclerView
+    private lateinit var adapter: UserProfileSkillsAdapter
     private lateinit var controller: NavController
     private lateinit var userProfileMenu: BottomNavigationView
     private lateinit var cityInput: AutoCompleteTextView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +34,10 @@ class UserProfileFragment : Fragment() {
         userProfileSkillList = view.findViewById(R.id.user_profile_skill_list)
         userProfileMenu = view.findViewById(R.id.user_profile_menu)
         cityInput = view.findViewById(R.id.user_profile_city_input)
+
+
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        userProfileSkillList.layoutManager = layoutManager
 
         controller = findNavController()
         userProfileMenu.setupWithNavController(controller)
@@ -70,7 +76,7 @@ class UserProfileFragment : Fragment() {
             }
         }
 
-        adapter = UserSkillsAdapter(requireContext(), db, userEmail, emptyList())
+        adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, emptyList())
         userProfileSkillList.adapter = adapter
 
         db.collection("user_info").document(userEmail).get()

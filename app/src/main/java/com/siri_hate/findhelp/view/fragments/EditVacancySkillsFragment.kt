@@ -5,20 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
+import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancySkillsListApdater
 
 class EditVacancySkillsFragment : Fragment() {
 
     // объявление переменных
-    private lateinit var editVacancySecondFragmentList: ListView
-    private lateinit var adapter: CreateVacancySkillsListApdater
+    private lateinit var editVacancySecondFragmentList: RecyclerView
+    private lateinit var adapter: CreateAndEditVacancySkillsListApdater
     private lateinit var editVacancySecondFragmentCreateButton: Button
     private lateinit var controller: NavController
     private var isAtLeastOneCheckboxSelected = false
@@ -30,7 +31,7 @@ class EditVacancySkillsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // создание view
-        val view = inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_vacancy_skills, container, false)
         editVacancySecondFragmentList = view.findViewById(R.id.edit_vacancy_second_fragment_list)
         editVacancySecondFragmentCreateButton =
             view.findViewById(R.id.edit_vacancy_second_fragment_create_button)
@@ -44,8 +45,10 @@ class EditVacancySkillsFragment : Fragment() {
         // получение id документа
         val documentId = arguments?.getString("document_id") ?: ""
 
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        editVacancySecondFragmentList.layoutManager = layoutManager
         // создание адаптера
-        adapter = CreateVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
+        adapter = CreateAndEditVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
             isAtLeastOneCheckboxSelected = true
         }
         editVacancySecondFragmentList.adapter = adapter

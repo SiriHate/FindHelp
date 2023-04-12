@@ -36,7 +36,7 @@ class EditVacancyInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_edit_vacancy_skills, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
         bindViews(view)
         setupButtons()
         controller = findNavController()

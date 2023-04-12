@@ -5,19 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.adapters.CreateVacancySkillsListApdater
+import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancySkillsListApdater
 
 
 class CreateVacancySkillsFragment : Fragment() {
-    private lateinit var newVacancySecondFragmentList: ListView
-    private lateinit var adapter: CreateVacancySkillsListApdater
+    private lateinit var newVacancySecondFragmentList: RecyclerView
+    private lateinit var adapter: CreateAndEditVacancySkillsListApdater
     private lateinit var newVacancySecondFragmentCreateButton: Button
     private var isAtLeastOneCheckboxSelected = false
     private lateinit var controller: NavController
@@ -57,7 +58,9 @@ class CreateVacancySkillsFragment : Fragment() {
     private fun setUpAdapter() {
         val db = FirebaseFirestore.getInstance()
 
-        adapter = CreateVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        newVacancySecondFragmentList.layoutManager = layoutManager
+        adapter = CreateAndEditVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
             isAtLeastOneCheckboxSelected = true
         }
         newVacancySecondFragmentList.adapter = adapter

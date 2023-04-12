@@ -5,12 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -27,7 +28,7 @@ class UserPageFragment : Fragment() {
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
 
 
-    private lateinit var userPageVacancyList: ListView
+    private lateinit var userPageVacancyList: RecyclerView
     private lateinit var userPageSearchBar: SearchView
     private lateinit var controller: NavController
     private lateinit var userPageMenu: BottomNavigationView
@@ -90,6 +91,7 @@ class UserPageFragment : Fragment() {
                                 filteredVacancies.clear()
                                 value?.documents?.let { allVacancies.addAll(it) }
                                 filterVacancies("")
+                                userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
                                 val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
                                 userPageVacancyList.adapter = adapter
                             }
@@ -110,6 +112,7 @@ class UserPageFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filterVacancies(newText ?: "")
+                userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
                 val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
                 userPageVacancyList.adapter = adapter
                 return true

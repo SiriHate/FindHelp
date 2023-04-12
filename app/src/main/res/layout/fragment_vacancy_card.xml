@@ -7,7 +7,7 @@
     android:background="#313338"
     tools:context=".view.fragments.VacancyCardFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/vacancy_card_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -226,16 +226,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/vacancy_card_skills_list"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:overScrollMode="never">
-
-            </ListView>
+                android:overScrollMode="never" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>
