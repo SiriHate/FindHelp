@@ -16,6 +16,13 @@ class UserVacancyAdapter(
     private val controller: NavController
 ) : RecyclerView.Adapter<UserVacancyAdapter.ViewHolder>() {
 
+    companion object {
+        private const val DOCUMENT_ID = "document_id"
+        private const val VACANCY_NAME_FIELD = "vacancy_name"
+        private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+        private const val SKILLS_FIELD = "skills"
+    }
+
     override fun getItemCount(): Int {
         return vacancies.size
     }
@@ -37,18 +44,18 @@ class UserVacancyAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val vacancy = getItem(position)
 
-        holder.vacancyNameTextView.text = vacancy.getString("vacancy_name")
+        holder.vacancyNameTextView.text = vacancy.getString(VACANCY_NAME_FIELD)
 
         holder.vacancyNameTextView.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("document_id", vacancy.id)
+            bundle.putString(DOCUMENT_ID, vacancy.id)
             controller.navigate(R.id.action_userPageFragment_to_vacancyCardFragment, bundle)
         }
 
         @Suppress("UNCHECKED_CAST")
-        val vacancySkillsList = vacancy["vacancy_skills_list"] as? HashMap<String, Boolean>
+        val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
         @Suppress("UNCHECKED_CAST")
-        val userSkills = userDoc["skills"] as? HashMap<String, Boolean>
+        val userSkills = userDoc[SKILLS_FIELD] as? HashMap<String, Boolean>
         var matchCount = 0
         var vacancyCount = 0
 
@@ -68,7 +75,10 @@ class UserVacancyAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val vacancyNameTextView: TextView = itemView.findViewById(R.id.user_vacancies_list_item_vacancy_name)
-        val matchPercentTextView: TextView = itemView.findViewById(R.id.user_vacancies_list_item_match_percent)
+        val vacancyNameTextView: TextView =
+            itemView.findViewById(R.id.user_vacancies_list_item_vacancy_name)
+        val matchPercentTextView: TextView =
+            itemView.findViewById(R.id.user_vacancies_list_item_match_percent)
     }
 }
+

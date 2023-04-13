@@ -18,13 +18,21 @@ class UserProfileSkillsAdapter(
     private var skillsList: List<String>
 ) : RecyclerView.Adapter<UserProfileSkillsAdapter.ViewHolder>() {
 
+    companion object {
+        private const val COLLECTION_NAME = "user_info"
+        private const val SKILLS_FIELD = "skills"
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val skillNameTextView: TextView = view.findViewById(R.id.skill_item_name)
-        val skillCheckBox: CheckBox = view.findViewById(R.id.skill_item_checkbox)
+        val skillNameTextView: TextView =
+            view.findViewById(R.id.skill_item_name)
+        val skillCheckBox: CheckBox =
+            view.findViewById(R.id.skill_item_checkbox)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.skills_list_item, parent, false)
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.skills_list_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -32,16 +40,16 @@ class UserProfileSkillsAdapter(
         val skillName = skillsList[position]
         holder.skillNameTextView.text = skillName
 
-        db.collection("user_info").document(userEmail).get()
+        db.collection(COLLECTION_NAME).document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
                 @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot.get("skills") as Map<String, Boolean>
+                val skillsMap = documentSnapshot.get(SKILLS_FIELD) as Map<String, Boolean>
                 holder.skillCheckBox.isChecked = skillsMap[skillName] ?: false
             }
 
         holder.skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            db.collection("user_info").document(userEmail)
-                .update("skills.$skillName", isChecked)
+            db.collection(COLLECTION_NAME).document(userEmail)
+                .update("$SKILLS_FIELD.$skillName", isChecked)
         }
     }
 
@@ -84,6 +92,7 @@ class UserProfileSkillsAdapter(
         }
     }
 }
+
 
 
 

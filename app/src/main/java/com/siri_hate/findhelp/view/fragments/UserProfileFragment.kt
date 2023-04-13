@@ -1,10 +1,13 @@
 package com.siri_hate.findhelp.view.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -22,8 +25,14 @@ class UserProfileFragment : Fragment() {
     private lateinit var adapter: UserProfileSkillsAdapter
     private lateinit var controller: NavController
     private lateinit var userProfileMenu: BottomNavigationView
-    private lateinit var cityInput: AutoCompleteTextView
+    private lateinit var cityInput: EditText
 
+    companion object {
+        private const val SKILLS_COLLECTION = "skills"
+        private const val USER_INFO_COLLECTION = "user_info"
+        private const val USER_CITY_FIELD = "user_city"
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +45,8 @@ class UserProfileFragment : Fragment() {
         cityInput = view.findViewById(R.id.user_profile_city_input)
 
 
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         userProfileSkillList.layoutManager = layoutManager
 
         controller = findNavController()
@@ -44,11 +54,46 @@ class UserProfileFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
-        db.collection("user_info").document(userEmail).get()
+        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
-                val userCity = documentSnapshot.getString("user_city")
-                cityInput.setText(userCity)
+                val userCity = documentSnapshot.getString(USER_CITY_FIELD)
+                cityInput.apply {
+                    setText(userCity)
+                    setOnEditorActionListener { _, actionId, _ ->
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            val newCity = text.toString()
+                            db.collection(USER_INFO_COLLECTION).document(userEmail)
+                                .update(USER_CITY_FIELD, newCity)
+
+                            // Скрываем клавиатуру
+                            val inputMethodManager =
+                                requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                            inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+
+                            // Убираем фокус с EditText
+                            clearFocus()
+
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                    imeOptions =
+                        EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
+                }
+
             }
+
+        cityInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val newCity = cityInput.text.toString()
+                db.collection(USER_INFO_COLLECTION).document(userEmail)
+                    .update(USER_CITY_FIELD, newCity)
+                true
+            } else {
+                false
+            }
+        }
 
         userProfileMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -79,10 +124,10 @@ class UserProfileFragment : Fragment() {
         adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, emptyList())
         userProfileSkillList.adapter = adapter
 
-        db.collection("user_info").document(userEmail).get()
+        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
                 @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot?.get("skills") as? Map<String, Any>
+                val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Any>
                 val skillsList = skillsMap?.keys?.toList() ?: emptyList()
                 adapter.updateSkillsList(skillsList)
             }

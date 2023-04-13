@@ -21,6 +21,11 @@ class ModeratorVacancyListAdapter(
     ModeratorVacancyDiffCallback()
 ) {
 
+    companion object {
+        private const val DOCUMENT_ID = "document_id"
+        private const val VACANCY_NAME_FIELD = "vacancy_name"
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val vacancyItemName: TextView =
             view.findViewById(R.id.user_vacancies_list_item_vacancy_name)
@@ -36,14 +41,14 @@ class ModeratorVacancyListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val document: DocumentSnapshot = getItem(position)
-        holder.vacancyItemName.text = document.getString("vacancy_name")
+        holder.vacancyItemName.text = document.getString(VACANCY_NAME_FIELD)
         val documentRef = document.reference
 
         // Слушатель нажатия на элемент списка
         holder.vacancyItemName.setOnClickListener {
             document.id.let { documentId ->
                 val bundle = Bundle()
-                bundle.putString("document_id", documentId)
+                bundle.putString(DOCUMENT_ID, documentId)
                 controller.navigate(
                     R.id.action_moderatorPageFragment_to_vacancyCardFragment,
                     bundle

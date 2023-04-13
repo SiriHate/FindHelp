@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,45 +9,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.siri_hate.findhelp.R
 
 
-class VacancySkillsListAdapter(private val context: Context) :
+class VacancySkillsListAdapter(val skillsList: MutableList<String>) :
     RecyclerView.Adapter<VacancySkillsListAdapter.ViewHolder>() {
 
-    private var skillsList = mutableListOf<String>()
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val skillNameTextView: TextView = itemView.findViewById(R.id.vacancy_skills_list_item_name)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(context).inflate(R.layout.vacancy_card_skills_list_item, parent, false)
-        return ViewHolder(view)
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.vacancy_card_skills_list_item, parent, false)
+        return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(skillsList[position])
+        val skillName = skillsList[position]
+        holder.skillNameTextView.text = skillName
     }
 
     override fun getItemCount(): Int {
         return skillsList.size
     }
 
-    fun setSkillsList(newList: List<String>) {
-        val diffResult = DiffUtil.calculateDiff(VacancySkillsListDiffCallback(skillsList, newList))
-        skillsList.clear()
-        skillsList.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val skillTextView: TextView = itemView.findViewById(R.id.vacancy_skills_list_item_name)
-
-        fun bind(skill: String) {
-            skillTextView.text = skill
-        }
-    }
-
-    private class VacancySkillsListDiffCallback(
+    class SkillsDiffCallback(
         private val oldList: List<String>,
         private val newList: List<String>
-    ): DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
             return oldList.size
@@ -67,3 +53,5 @@ class VacancySkillsListAdapter(private val context: Context) :
         }
     }
 }
+
+

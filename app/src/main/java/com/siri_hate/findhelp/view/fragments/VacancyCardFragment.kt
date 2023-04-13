@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +22,19 @@ import com.siri_hate.findhelp.view.adapters.VacancySkillsListAdapter
 
 class VacancyCardFragment : Fragment() {
 
+    companion object {
+        private const val TAG = "VacancyCardActivity"
+        private const val DOCUMENT_ID_KEY = "document_id"
+        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+        private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+        private const val USER_RIGHTS_COLLECTION = "user_rights"
+        private const val USER_TYPE_FIELD = "userType"
+        private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
+        private const val CREATOR_EMAIL_FIELD = "creator_email"
+        private const val USER_TYPE_USER_VALUE = "user"
+        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
+    }
+
     private lateinit var vacancyNameTextView: TextView
     private lateinit var companyNameTextView: TextView
     private lateinit var contactPersonTextView: TextView
@@ -30,7 +43,8 @@ class VacancyCardFragment : Fragment() {
     private lateinit var vacancyDescriptionTextView: TextView
     private lateinit var vacancyCardGoBackButton: ImageButton
     private lateinit var vacancyCardEditVacancyButton: ImageButton
-    private lateinit var skillsRecyclerView: RecyclerView
+    private lateinit var skillsListView: RecyclerView
+    private lateinit var skillsList: MutableList<String>
     private lateinit var db: FirebaseFirestore
     private lateinit var controller: NavController
 
@@ -47,7 +61,7 @@ class VacancyCardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
-        initSkillsRecyclerView()
+        initSkillsListView()
         setVacancyInfo()
 
         vacancyCardGoBackButton.setOnClickListener { navigateToUserPage() }
@@ -55,9 +69,9 @@ class VacancyCardFragment : Fragment() {
     }
 
     private fun editVacancy() {
-        val documentId = arguments?.getString("document_id") ?: ""
+        val documentId = arguments?.getString(DOCUMENT_ID_KEY) ?: ""
         val bundle = Bundle()
-        bundle.putString("document_id", documentId)
+        bundle.putString(DOCUMENT_ID_KEY, documentId)
         controller.navigate(R.id.action_vacancyCardFragment_to_editVacancyMainFragment, bundle)
     }
 
@@ -70,18 +84,20 @@ class VacancyCardFragment : Fragment() {
         vacancyDescriptionTextView = view.findViewById(R.id.vacancy_card_description)
         vacancyCardGoBackButton = view.findViewById(R.id.vacancy_card_go_back_button)
         vacancyCardEditVacancyButton = view.findViewById(R.id.vacancy_card_edit_vacancy_button)
-        skillsRecyclerView = view.findViewById(R.id.vacancy_card_skills_list)
+        skillsListView = view.findViewById(R.id.vacancy_card_skills_list)
         db = FirebaseFirestore.getInstance()
     }
 
-    private fun initSkillsRecyclerView() {
-        skillsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = VacancySkillsListAdapter(requireContext())
-        skillsRecyclerView.adapter = adapter
+
+    private fun initSkillsListView() {
+        skillsList = mutableListOf()
+        skillsListView.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = VacancySkillsListAdapter(skillsList)
+        skillsListView.adapter = adapter
     }
 
     private fun setVacancyInfo() {
-        val documentId = arguments?.getString("document_id") ?: return
+        val documentId = arguments?.getString(DOCUMENT_ID_KEY) ?: return
         getVacancyDocument(documentId,
             { snapshot ->
                 updateVacancyInfo(snapshot)
@@ -100,7 +116,7 @@ class VacancyCardFragment : Fragment() {
         onSuccess: (snapshot: DocumentSnapshot) -> Unit,
         onFailure: (exception: Exception) -> Unit
     ) {
-        db.collection("vacancies_list").document(documentId)
+        db.collection(VACANCIES_LIST_COLLECTION).document(documentId)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
@@ -116,19 +132,27 @@ class VacancyCardFragment : Fragment() {
 
     private fun updateSkillsList(skillsMap: Map<*, *>?, adapter: VacancySkillsListAdapter) {
         if (skillsMap != null) {
-            val skillsList = mutableListOf<String>()
+            val newSkillsList = mutableListOf<String>()
             for ((key, value) in skillsMap) {
                 if (value as Boolean) {
-                    skillsList.add(key.toString())
+                    newSkillsList.add(key.toString())
                 }
             }
-            adapter.setSkillsList(skillsList)
+            val diffResult = DiffUtil.calculateDiff(
+                VacancySkillsListAdapter.SkillsDiffCallback(
+                    adapter.skillsList,
+                    newSkillsList
+                )
+            )
+            adapter.skillsList.clear()
+            adapter.skillsList.addAll(newSkillsList)
+            diffResult.dispatchUpdatesTo(adapter)
         }
     }
 
     private fun updateVacancyInfo(snapshot: DocumentSnapshot) {
-        val skillsMap = snapshot.get("vacancy_skills_list") as Map<*, *>?
-        updateSkillsList(skillsMap, skillsRecyclerView.adapter as VacancySkillsListAdapter)
+        val skillsMap = snapshot.get(VACANCY_SKILLS_LIST_FIELD) as Map<*, *>?
+        updateSkillsList(skillsMap, skillsListView.adapter as VacancySkillsListAdapter)
 
         vacancyNameTextView.text = snapshot.getString("vacancy_name")
         companyNameTextView.text = snapshot.getString("organization_name")
@@ -143,33 +167,51 @@ class VacancyCardFragment : Fragment() {
         snapshot: DocumentSnapshot
     ) {
         user.email?.let { email ->
-            db.collection("user_rights").document(email)
+            db.collection(USER_RIGHTS_COLLECTION).document(email)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        val userType = document.getString("rights_type")
-                            if (userType == "admin" || userType == "company") {
-                                vacancyCardEditVacancyButton.visibility = View.VISIBLE
-                            }
+                        val userType = document.getString(USER_TYPE_FIELD)
+                        if ((userType == USER_TYPE_ORGANIZER_VALUE) && (user.email == snapshot.getString(
+                                CREATOR_EMAIL_FIELD
+                            ))
+                        ) {
+                            vacancyCardEditVacancyButton.visibility = View.VISIBLE
+                        } else {
+                            vacancyCardEditVacancyButton.visibility = View.GONE
+                        }
                     } else {
-                        Log.d(TAG, "User rights not found")
+                        Log.d(TAG, "User document not found")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(TAG, "Error getting user rights", exception)
+                    Log.d(TAG, "Error getting user document", exception)
                 }
         }
     }
 
     private fun navigateToUserPage() {
-        controller.popBackStack()
-    }
-
-    companion object {
-        const val TAG = "VacancyCardFragment"
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.email?.let { email ->
+            db.collection(USER_RIGHTS_COLLECTION).document(email)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        when (val userType = document.getString(USER_TYPE_FIELD)) {
+                            USER_TYPE_USER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_userPageFragment)
+                            USER_TYPE_ORGANIZER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_organizerPageFragment)
+                            USER_TYPE_MODERATOR_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_moderatorPageFragment)
+                            else -> Log.d(TAG, "Неккоректный userType: $userType")
+                        }
+                    } else {
+                        Log.d(TAG, "Документ не найден")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Ошибка получения документа", exception)
+                }
+        }
     }
 }
-
-
 
 

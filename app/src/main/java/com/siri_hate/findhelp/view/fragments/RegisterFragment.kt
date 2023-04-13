@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -26,6 +25,22 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class RegisterFragment : Fragment() {
+
+    companion object {
+        private const val TAG = "RegisterPageFragment"
+        private const val ORGANIZATION_COLLECTION = "organization_info"
+        private const val ORGANIZATION_NAME = "organization_name"
+        private const val ORGANIZATION_PHONE = "organization_phone"
+        private const val CONTACT_PERSON = "contact_person"
+        private const val USER_TYPE_USER = "user"
+        private const val USER_TYPE_ORGANIZER = "organizer"
+        private const val USER_RIGHTS_COLLECTION = "user_rights"
+        private const val INIT_DATA_COLLECTION = "init_data"
+        private const val BASE_SKILLS_INIT = "base_skills_init"
+        private const val USER_CITY = "user_city"
+        private const val USER_INFO_COLLECTION = "user_info"
+    }
+
 
     // Переменные
     private lateinit var emailInput: EditText
@@ -54,15 +69,15 @@ class RegisterFragment : Fragment() {
         controller = findNavController()
         firebaseAuth = FirebaseAuth.getInstance()
         db = Firebase.firestore
-        orgInfoCollection = db.collection("organization_info")
+        orgInfoCollection = db.collection(ORGANIZATION_COLLECTION)
 
-        bindViews(view)
+        initViews(view)
         setupListeners()
 
         return view
     }
 
-    private fun bindViews(view: View) {
+    private fun initViews(view: View) {
         emailInput = view.findViewById(R.id.register_fragment_email_input)
         passwordInput = view.findViewById(R.id.register_fragment_password_input)
         passwordInputRepeat = view.findViewById(R.id.register_fragment_password_input_repeat)
@@ -143,13 +158,13 @@ class RegisterFragment : Fragment() {
 
     private suspend fun checkOrganizationNameExists(organizationName: String): Boolean {
         val querySnapshot =
-            orgInfoCollection.whereEqualTo("organization_name", organizationName).get().await()
+            orgInfoCollection.whereEqualTo(ORGANIZATION_NAME, organizationName).get().await()
         return querySnapshot.documents.isNotEmpty()
     }
 
     private suspend fun checkOrganizationPhoneExists(organizationPhone: String): Boolean {
         val querySnapshot =
-            orgInfoCollection.whereEqualTo("organization_phone", organizationPhone).get().await()
+            orgInfoCollection.whereEqualTo(ORGANIZATION_PHONE, organizationPhone).get().await()
         return querySnapshot.documents.isNotEmpty()
     }
 
@@ -208,7 +223,7 @@ class RegisterFragment : Fragment() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    registrationSuccess("user", email)
+                    registrationSuccess(USER_TYPE_USER, email)
                 } else {
                     registrationError(task.exception?.message)
                 }
@@ -225,18 +240,18 @@ class RegisterFragment : Fragment() {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    registrationSuccess("organizer", email)
+                    registrationSuccess(USER_TYPE_ORGANIZER, email)
 
                     val db = Firebase.firestore
 
                     // Сохраняем данные в Firestore
                     val data = hashMapOf(
-                        "organization_name" to organizationName,
-                        "contact_person" to contactPerson,
-                        "organization_phone" to organizationPhone
+                        ORGANIZATION_NAME to organizationName,
+                        CONTACT_PERSON to contactPerson,
+                        ORGANIZATION_PHONE to organizationPhone
                     )
 
-                    db.collection("organization_info").document(email).set(data)
+                    db.collection(ORGANIZATION_COLLECTION).document(email).set(data)
                         .addOnSuccessListener {
                             Log.d(TAG, "DocumentSnapshot added with ID: $email")
                         }
@@ -274,21 +289,21 @@ class RegisterFragment : Fragment() {
     private fun setUserAccessRights(userType: String, email: String, uid: String) {
         val user = User(uid = uid, userType = userType)
         val db = FirebaseFirestore.getInstance()
-        val userRef = db.collection("user_rights").document(email)
+        val userRef = db.collection(USER_RIGHTS_COLLECTION).document(email)
         userRef.set(user)
     }
 
     // Функция создания нового документа для пользователей типа "user" от базового списка навыков
     private fun initUserInfo(userType: String, email: String) {
-        if (userType == "user") {
+        if (userType == USER_TYPE_USER) {
             val db = FirebaseFirestore.getInstance()
-            val baseSkillsRef = db.collection("init_data").document("base_skills_init")
+            val baseSkillsRef = db.collection(INIT_DATA_COLLECTION).document(BASE_SKILLS_INIT)
             baseSkillsRef.get().addOnSuccessListener { documentSnapshot ->
                 val baseSkillsData = documentSnapshot.data
                 val userData = HashMap<String, Any>()
                 userData.putAll(baseSkillsData ?: return@addOnSuccessListener)
-                userData["user_city"] = "Не выбрано" // добавляем поле и значение
-                db.collection("user_info").document(email)
+                userData[USER_CITY] = "Не выбрано"
+                db.collection(USER_INFO_COLLECTION).document(email)
                     .set(userData)
                     .addOnSuccessListener { Log.d(TAG, "Документ успешно создан!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Ошибка при создании документа", e) }

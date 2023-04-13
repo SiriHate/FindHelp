@@ -19,6 +19,11 @@ class CreateAndEditVacancySkillsListApdater(
     private val onCheckboxSelected: () -> Unit
 ) : RecyclerView.Adapter<CreateAndEditVacancySkillsListApdater.ViewHolder>() {
 
+    companion object {
+        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+        private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+    }
+
     private var skillsList = mutableListOf<String>()
 
     init {
@@ -32,17 +37,17 @@ class CreateAndEditVacancySkillsListApdater(
         fun bind(skillName: String) {
             skillNameTextView.text = skillName
 
-            db.collection("vacancies_list").document(documentId).get()
+            db.collection(VACANCIES_LIST_COLLECTION).document(documentId).get()
                 .addOnSuccessListener { documentSnapshot ->
                     @Suppress("UNCHECKED_CAST")
                     val skillsMap =
-                        documentSnapshot.get("vacancy_skills_list") as Map<String, Boolean>
+                        documentSnapshot.get(VACANCY_SKILLS_LIST_FIELD) as Map<String, Boolean>
                     skillCheckBox.isChecked = skillsMap[skillName] ?: false
                 }
 
             skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                db.collection("vacancies_list").document(documentId)
-                    .update("vacancy_skills_list.$skillName", isChecked)
+                db.collection(VACANCIES_LIST_COLLECTION).document(documentId)
+                    .update("$VACANCY_SKILLS_LIST_FIELD.$skillName", isChecked)
                 onCheckboxSelected()
             }
         }
@@ -90,5 +95,4 @@ class CreateAndEditVacancySkillsListApdater(
             return true
         }
     }
-
 }

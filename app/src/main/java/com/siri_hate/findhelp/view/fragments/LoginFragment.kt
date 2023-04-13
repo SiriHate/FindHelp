@@ -20,7 +20,7 @@ import com.siri_hate.findhelp.R
 
 class LoginFragment : Fragment() {
 
-    // Переменные для UI
+
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var loginButton: Button
@@ -28,8 +28,15 @@ class LoginFragment : Fragment() {
     private lateinit var registerTextView: TextView
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var controller: NavController
-
     private lateinit var db: FirebaseFirestore
+
+    companion object {
+        const val USER_TYPE_USER = "user"
+        const val USER_TYPE_ORGANIZER = "organizer"
+        const val USER_TYPE_MODERATOR = "moderator"
+        const val USER_RIGHTS_COLLECTION = "user_rights"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,35 +48,14 @@ class LoginFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         controller = findNavController()
 
-        bindViews(view)
+        initViews(view)
         setupListeners()
         checkUserAccess()
 
         return view
     }
 
-    private fun checkUserAccess() {
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
-            // Получение прав доступа пользователя из базы данных Firebase Firestore
-            loadingProgressBar.visibility = View.VISIBLE
-            val userEmail = currentUser.email
-            if (!userEmail.isNullOrEmpty()) {
-                db.collection("user_rights").document(userEmail).get()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val userType = task.result?.get("userType") as? String
-                            loadingProgressBar.visibility = View.INVISIBLE
-                            startFragment(userType)
-                        } else {
-                            showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
-                        }
-                    }
-            }
-        }
-    }
-
-    private fun bindViews(view: View) {
+    private fun initViews(view: View) {
         emailInput = view.findViewById(R.id.login_fragment_login_input)
         passwordInput = view.findViewById(R.id.login_fragment_password_input)
         loginButton = view.findViewById(R.id.login_fragment_login_button)
@@ -78,37 +64,39 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        loginButton.setOnClickListener {
-            login()
-        }
+        loginButton.setOnClickListener { performLogin() }
+        registerTextView.setOnClickListener { navigateToRegistration() }
+    }
 
-        registerTextView.setOnClickListener {
-            controller.navigate(R.id.action_loginFragment_to_registerFragment)
+    private fun checkUserAccess() {
+        firebaseAuth.currentUser?.let { currentUser ->
+            showLoadingIndicator()
+            currentUser.email?.let { userEmail ->
+                getUserTypeFromFirestore(userEmail)
+            }
         }
     }
 
-    // Основная функция авторизации
-    private fun login() {
+    private fun performLogin() {
         val email = emailInput.text.toString().trim()
         val password = passwordInput.text.toString().trim()
 
-        if (fieldsAreEmpty(email, password)) {
+        if (inputFieldsAreEmpty(email, password)) {
             return
         }
 
-        loadingProgressBar.visibility = View.VISIBLE
+        showLoadingIndicator()
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    loginSuccessfull()
+                    loginSuccessful()
                 } else {
-                    loginFailed(task.exception)
+                    loginFailure(task.exception)
                 }
             }
     }
 
-    // Функция проверки заполненности полей
-    private fun fieldsAreEmpty(email: String, password: String): Boolean {
+    private fun inputFieldsAreEmpty(email: String, password: String): Boolean {
         var isEmpty = false
 
         if (email.isEmpty()) {
@@ -124,32 +112,42 @@ class LoginFragment : Fragment() {
         return isEmpty
     }
 
-    // Функция обработки данных в случае успешной авторизации
-    private fun loginSuccessfull() {
-        val user = firebaseAuth.currentUser
-        val email = user?.email
+    private fun navigateToRegistration() {
+        controller.navigate(R.id.action_loginFragment_to_registerFragment)
+    }
 
-        val db = FirebaseFirestore.getInstance()
-        email?.let { userEmail ->
-            db.collection("user_rights").document(userEmail).get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val userType = task.result?.get("userType") as? String
-                        if (!userType.isNullOrEmpty()) {
-                            startFragment(userType)
-                        } else {
-                            showErrorMessage("Не удалось определить права доступа")
-                        }
-                    } else {
-                        showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
-                    }
+    private fun getUserTypeFromFirestore(userEmail: String) {
+        db.collection(USER_RIGHTS_COLLECTION).document(userEmail).get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userType = task.result?.getString("userType")
+                    checkUserType(userType)
+                } else {
+                    showErrorMessage("Ошибка доступа к базе данных: " + task.exception?.message)
                 }
+            }
+    }
+
+    private fun checkUserType(userType: String?) {
+        hideLoadingIndicator()
+        if (!userType.isNullOrEmpty()) {
+            startUserPageFragment(userType)
+        } else {
+            showErrorMessage("Не удалось определить права доступа")
         }
     }
 
-    // Функция обработки ошибки в случае неуспешной авторизации
-    private fun loginFailed(exception: Exception?) {
-        loadingProgressBar.visibility = View.INVISIBLE
+    private fun loginSuccessful() {
+        val user = firebaseAuth.currentUser
+        val email = user?.email
+
+        email?.let { userEmail ->
+            getUserTypeFromFirestore(userEmail)
+        }
+    }
+
+    private fun loginFailure(exception: Exception?) {
+        hideLoadingIndicator()
         if (exception is FirebaseAuthInvalidCredentialsException) {
             showErrorMessage("Неверный email или пароль")
         } else {
@@ -157,19 +155,23 @@ class LoginFragment : Fragment() {
         }
     }
 
-    // Функция запуска главной страницы пользователя
-    private fun startFragment(rights: String?) {
-        val controller = findNavController()
-        when (rights) {
-            "user" -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)
-            "organizer" -> controller.navigate(R.id.action_loginFragment_to_organizerPageFragment)
-            "moderator" -> controller.navigate(R.id.action_loginFragment_to_moderatorPageFragment)
+    private fun startUserPageFragment(userType: String?) {
+        when (userType) {
+            USER_TYPE_USER -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)
+            USER_TYPE_ORGANIZER -> controller.navigate(R.id.action_loginFragment_to_organizerPageFragment)
+            USER_TYPE_MODERATOR -> controller.navigate(R.id.action_loginFragment_to_moderatorPageFragment)
             else -> showErrorMessage("Не удалось определить права доступа")
         }
+    }
+
+    private fun showLoadingIndicator() {
+        loadingProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoadingIndicator() {
         loadingProgressBar.visibility = View.INVISIBLE
     }
 
-    // Функция отображения ошибки
     private fun showErrorMessage(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }

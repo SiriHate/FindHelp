@@ -22,13 +22,18 @@ class EditVacancyInfoFragment : Fragment() {
     private lateinit var descriptionEditText: EditText
     private lateinit var continueButton: Button
     private lateinit var goBackButton: ImageButton
-    private lateinit var controller: NavController
+    private lateinit var navController: NavController
+
+    companion object {
+        private const val ARG_DOCUMENT_ID = "document_id"
+        private const val COLLECTION_VACANCIES_LIST = "vacancies_list"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        documentId = arguments?.getString("document_id") ?: ""
-        setVacancyValues()
+        arguments?.let {
+            documentId = it.getString(ARG_DOCUMENT_ID, "") ?: ""
+        }
     }
 
     override fun onCreateView(
@@ -36,23 +41,19 @@ class EditVacancyInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
-        bindViews(view)
+        return inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
         setupButtons()
-        controller = findNavController()
-        return view
+        setVacancyValues()
+        navController = findNavController()
     }
 
-    private fun setVacancyValues() {
-        FirebaseFirestore.getInstance().collection("vacancies_list").document(documentId).get()
-            .addOnSuccessListener { documentSnapshot ->
-                nameEditText.setText(documentSnapshot.getString("vacancy_name"))
-                cityEditText.setText(documentSnapshot.getString("vacancy_city"))
-                descriptionEditText.setText(documentSnapshot.getString("vacancy_description"))
-            }
-    }
-
-    private fun bindViews(view: View) {
+    private fun initViews(view: View) {
         nameEditText = view.findViewById(R.id.edit_vacancy_main_fragment_name_input)
         cityEditText = view.findViewById(R.id.edit_vacancy_main_fragment_fragment_city_input)
         descriptionEditText = view.findViewById(R.id.edit_vacancy_main_fragment_description_input)
@@ -62,9 +63,8 @@ class EditVacancyInfoFragment : Fragment() {
 
     private fun setupButtons() {
         goBackButton.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("document_id", documentId)
-            controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
+            val bundle = Bundle().apply { putString(ARG_DOCUMENT_ID, documentId) }
+            navController.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
         }
 
         continueButton.setOnClickListener {
@@ -76,41 +76,49 @@ class EditVacancyInfoFragment : Fragment() {
     }
 
     private fun isInputValid(): Boolean {
-        var isValid = true
-        if (nameEditText.text.isBlank()) {
-            nameEditText.error = "Поле не может быть пустым"
-            isValid = false
-        }
-        if (cityEditText.text.isBlank()) {
-            cityEditText.error = "Поле не может быть пустым"
-            isValid = false
-        }
-        if (descriptionEditText.text.isBlank()) {
-            descriptionEditText.error = "Поле не может быть пустым"
-            isValid = false
-        }
-        return isValid
+        val isEmptyName = nameEditText.text.isBlank()
+        val isEmptyCity = cityEditText.text.isBlank()
+        val isEmptyDescription = descriptionEditText.text.isBlank()
+
+        if (isEmptyName) nameEditText.error = "Поле не может быть пустым"
+        if (isEmptyCity) cityEditText.error = "Поле не может быть пустым"
+        if (isEmptyDescription) descriptionEditText.error = "Поле не может быть пустым"
+
+        return !isEmptyName && !isEmptyCity && !isEmptyDescription
+    }
+
+    private fun setVacancyValues() {
+        FirebaseFirestore.getInstance()
+            .collection(COLLECTION_VACANCIES_LIST)
+            .document(documentId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                nameEditText.setText(documentSnapshot.getString("vacancy_name"))
+                cityEditText.setText(documentSnapshot.getString("vacancy_city"))
+                descriptionEditText.setText(documentSnapshot.getString("vacancy_description"))
+            }
     }
 
     private fun updateVacancy() {
-        val vacancyRef =
-            FirebaseFirestore.getInstance().collection("vacancies_list").document(documentId)
-        val updates = hashMapOf<String, Any>(
+        val vacancyRef = FirebaseFirestore.getInstance()
+            .collection(COLLECTION_VACANCIES_LIST)
+            .document(documentId)
+
+        val updates = hashMapOf(
             "vacancy_name" to nameEditText.text.toString(),
             "vacancy_city" to cityEditText.text.toString(),
             "vacancy_description" to descriptionEditText.text.toString()
         )
-        vacancyRef.update(updates).addOnSuccessListener {
+
+        vacancyRef.update(updates as Map<String, Any>).addOnSuccessListener {
             Log.d("EditVacancyMainFragment", "Изменения сохранены")
         }
     }
 
     private fun navigateToSecondFragment() {
-        val bundle = Bundle()
-        bundle.putString("document_id", documentId)
-        controller.navigate(
-            R.id.action_editVacancyMainFragment_to_editVacancySecondFragment,
-            bundle
-        )
+        val bundle = Bundle().apply { putString(ARG_DOCUMENT_ID, documentId) }
+        navController.navigate(R.id.action_editVacancyMainFragment_to_editVacancySecondFragment, bundle)
     }
 }
+
+

@@ -22,35 +22,47 @@ class OrganizerVacancyListAdapter(
     private val controller: NavController
 ) : RecyclerView.Adapter<OrganizerVacancyListAdapter.OrganizerViewHolder>() {
 
+    companion object {
+        private const val DOCUMENT_ID = "document_id"
+        private const val VACANCY_NAME_FIELD = "vacancy_name"
+        private const val CREATOR_EMAIL_FIELD = "creator_email"
+    }
+
     private val auth = FirebaseAuth.getInstance()
     private val userEmail = auth.currentUser?.email
 
     private val changedPositions = mutableListOf<Int>()
 
     class OrganizerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val vacancyItemName: TextView = view.findViewById(R.id.user_vacancies_list_item_vacancy_name)
-        val vacancyItemDeleteButton: ImageButton = view.findViewById(R.id.vacancy_item_delete_button)
+        val vacancyItemName: TextView =
+            view.findViewById(R.id.user_vacancies_list_item_vacancy_name)
+        val vacancyItemDeleteButton: ImageButton =
+            view.findViewById(R.id.vacancy_item_delete_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrganizerViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.moderator_and_organizer_vacancies_list_item, parent, false)
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.moderator_and_organizer_vacancies_list_item, parent, false)
         return OrganizerViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: OrganizerViewHolder, position: Int) {
         val document = offers[position]
-        val creatorEmail = document.getString("creator_email")
+        val creatorEmail = document.getString(CREATOR_EMAIL_FIELD)
 
         if (creatorEmail == userEmail) {
-            holder.vacancyItemName.text = document.getString("vacancy_name")
+            holder.vacancyItemName.text = document.getString(VACANCY_NAME_FIELD)
             val documentRef = document.reference
 
             // Слушатель нажатия на элемент списка
             holder.vacancyItemName.setOnClickListener {
                 document.id.let { documentId ->
                     val bundle = Bundle()
-                    bundle.putString("document_id", documentId)
-                    controller.navigate(R.id.action_organizerPageFragment_to_vacancyCardFragment, bundle)
+                    bundle.putString(DOCUMENT_ID, documentId)
+                    controller.navigate(
+                        R.id.action_organizerPageFragment_to_vacancyCardFragment,
+                        bundle
+                    )
                 }
             }
 
@@ -121,3 +133,4 @@ class OrganizerVacancyListAdapter(
         }
     }
 }
+

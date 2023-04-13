@@ -1,6 +1,5 @@
 package com.siri_hate.findhelp.view.fragments
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,15 +19,26 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 
 class CreateVacancyInfoFragment : Fragment() {
-    private lateinit var vacancyNameInput: EditText
-    private lateinit var vacancyCityInput: EditText
-    private lateinit var vacancyDescriptionInput: EditText
+
+    // View elements
+    private lateinit var nameInput: EditText
+    private lateinit var cityInput: EditText
+    private lateinit var descriptionInput: EditText
     private lateinit var createVacancyButton: Button
-    private lateinit var newVacancyMainFragmentGoBackButton: ImageButton
+    private lateinit var goBackButton: ImageButton
     private lateinit var controller: NavController
 
+    // Firebase references
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val currentUserEmail: String? = FirebaseAuth.getInstance().currentUser?.email
+
+    // Constants
+    companion object {
+        const val ORGANIZATION_INFO_COLLECTION = "organization_info"
+        const val INIT_DATA_COLLECTION = "init_data"
+        const val BASE_SKILLS_INIT_DOC_ID = "base_skills_init"
+        const val TAG = "CreateVacancyInfoFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,15 +52,17 @@ class CreateVacancyInfoFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
-        vacancyNameInput = view.findViewById(R.id.create_vacancy_info_fragment_name_input)
-        vacancyCityInput = view.findViewById(R.id.create_vacancy_info_fragment_city_input)
-        vacancyDescriptionInput =
-            view.findViewById(R.id.create_vacancy_info_fragment_description_input)
+        nameInput = view.findViewById(R.id.create_vacancy_info_fragment_name_input)
+        cityInput = view.findViewById(R.id.create_vacancy_info_fragment_city_input)
+        descriptionInput = view.findViewById(R.id.create_vacancy_info_fragment_description_input)
         createVacancyButton = view.findViewById(R.id.create_vacancy_info_fragment_continue_button)
-        newVacancyMainFragmentGoBackButton =
-            view.findViewById(R.id.create_vacancy_info_fragment_go_back_button)
+        goBackButton = view.findViewById(R.id.create_vacancy_info_fragment_go_back_button)
 
-        newVacancyMainFragmentGoBackButton.setOnClickListener {
+        setClickListeners()
+    }
+
+    private fun setClickListeners() {
+        goBackButton.setOnClickListener {
             goBackToOrganizerPage()
         }
 
@@ -69,13 +81,12 @@ class CreateVacancyInfoFragment : Fragment() {
                                 "contact_person" to contactPerson,
                                 "organization_name" to organizationName,
                                 "organization_phone" to organizationPhone,
-                                "vacancy_name" to vacancyNameInput.text.toString(),
-                                "vacancy_city" to vacancyCityInput.text.toString(),
-                                "vacancy_description" to vacancyDescriptionInput.text.toString(),
+                                "vacancy_name" to nameInput.text.toString(),
+                                "vacancy_city" to cityInput.text.toString(),
+                                "vacancy_description" to descriptionInput.text.toString(),
                                 "vacancy_skills_list" to skills
                             )
                             vacancyDocRef.set(newVacancy).addOnSuccessListener {
-                                // Переключение на NewVacancySecondFragment с передачей ID документа
                                 val bundle = Bundle()
                                 bundle.putString("document_id", vacancyDocRef.id)
                                 controller.navigate(
@@ -93,12 +104,12 @@ class CreateVacancyInfoFragment : Fragment() {
     }
 
     private fun isInputValid(): Boolean {
-        return vacancyNameInput.text.toString().isNotEmpty() && vacancyCityInput.text.toString()
-            .isNotEmpty() && vacancyDescriptionInput.text.toString().isNotEmpty()
+        return nameInput.text.toString().isNotEmpty() && cityInput.text.toString()
+            .isNotEmpty() && descriptionInput.text.toString().isNotEmpty()
     }
 
     private fun fetchOrganizationInfoDoc(): DocumentReference {
-        return firestore.collection("organization_info").document(currentUserEmail!!)
+        return firestore.collection(ORGANIZATION_INFO_COLLECTION).document(currentUserEmail!!)
     }
 
     private fun getOrganizationInfo(orgInfoDoc: DocumentSnapshot): Triple<String, String, String> {
@@ -110,7 +121,8 @@ class CreateVacancyInfoFragment : Fragment() {
     }
 
     private fun fetchInitData(callback: (HashMap<String, Any>) -> Unit) {
-        val initdataDocRef = firestore.collection("init_data").document("base_skills_init")
+        val initdataDocRef =
+            firestore.collection(INIT_DATA_COLLECTION).document(BASE_SKILLS_INIT_DOC_ID)
         initdataDocRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot != null && documentSnapshot.exists()) {
                 @Suppress("UNCHECKED_CAST")

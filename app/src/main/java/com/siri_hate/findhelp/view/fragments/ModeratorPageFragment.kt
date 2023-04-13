@@ -24,11 +24,20 @@ class ModeratorPageFragment : Fragment() {
     private lateinit var moderatorVacancyList: RecyclerView
 
     private val db = FirebaseFirestore.getInstance()
-    private val offersRef = db.collection("vacancies_list")
+    private val offersRef = db.collection(COLLECTION_NAME)
+
     private lateinit var adapter: ModeratorVacancyListAdapter
     private var snapshotListener: ListenerRegistration? = null
     private var originalOffers: List<DocumentSnapshot> = emptyList()
+
     private lateinit var controller: NavController
+
+    companion object {
+        private const val TAG = "ModeratorPageFragment"
+        private const val VACANCY_NAME = "vacancy_name"
+        private const val COLLECTION_NAME = "vacancies_list"
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +56,6 @@ class ModeratorPageFragment : Fragment() {
         controller = findNavController()
 
         moderatorVacancyList.layoutManager = LinearLayoutManager(requireContext())
-
         adapter = ModeratorVacancyListAdapter(controller)
         moderatorVacancyList.adapter = adapter
 
@@ -60,7 +68,7 @@ class ModeratorPageFragment : Fragment() {
                 val query = newText?.lowercase(Locale.getDefault()) ?: ""
 
                 val filteredOffers = originalOffers.filter {
-                    it.getString("vacancy_name")?.lowercase(Locale.getDefault())
+                    it.getString(VACANCY_NAME)?.lowercase(Locale.getDefault())
                         ?.startsWith(query) == true
                 }
 
@@ -84,10 +92,6 @@ class ModeratorPageFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         snapshotListener?.remove()
-    }
-
-    companion object {
-        private const val TAG = "ModeratorPageFragment"
     }
 }
 

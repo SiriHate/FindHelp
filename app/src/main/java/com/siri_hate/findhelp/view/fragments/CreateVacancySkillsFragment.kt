@@ -17,11 +17,18 @@ import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancySkillsListApdate
 
 
 class CreateVacancySkillsFragment : Fragment() {
+
+    private companion object {
+        const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+        const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+    }
+
     private lateinit var newVacancySecondFragmentList: RecyclerView
     private lateinit var adapter: CreateAndEditVacancySkillsListApdater
     private lateinit var newVacancySecondFragmentCreateButton: Button
-    private var isAtLeastOneCheckboxSelected = false
     private lateinit var controller: NavController
+
+    private var isAtLeastOneCheckboxSelected = false
     private lateinit var documentId: String
 
     override fun onCreateView(
@@ -31,8 +38,7 @@ class CreateVacancySkillsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_vacancy_skills, container, false)
         newVacancySecondFragmentList = view.findViewById(R.id.new_vacancy_second_fragment_list)
-        newVacancySecondFragmentCreateButton =
-            view.findViewById(R.id.new_vacancy_second_fragment_create_button)
+        newVacancySecondFragmentCreateButton = view.findViewById(R.id.new_vacancy_second_fragment_create_button)
         controller = findNavController()
         documentId = arguments?.getString("document_id") ?: ""
         return view
@@ -46,6 +52,7 @@ class CreateVacancySkillsFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         fetchSkillsListFromFirestore(db, documentId)
 
+        // Handle button click event
         newVacancySecondFragmentCreateButton.setOnClickListener {
             if (!isAtLeastOneCheckboxSelected) {
                 showNoSkillsSelectedToast()
@@ -67,10 +74,10 @@ class CreateVacancySkillsFragment : Fragment() {
     }
 
     private fun fetchSkillsListFromFirestore(db: FirebaseFirestore, documentId: String) {
-        db.collection("vacancies_list").document(documentId).get()
+        db.collection(VACANCIES_LIST_COLLECTION).document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
                 @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean>
+                val skillsMap = documentSnapshot.get(VACANCY_SKILLS_LIST_FIELD) as? Map<String, Boolean>
                     ?: emptyMap()
                 val skillsList = skillsMap.keys.toList()
                 adapter.updateSkillsList(skillsList)

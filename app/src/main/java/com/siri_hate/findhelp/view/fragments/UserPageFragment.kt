@@ -33,6 +33,15 @@ class UserPageFragment : Fragment() {
     private lateinit var controller: NavController
     private lateinit var userPageMenu: BottomNavigationView
 
+    companion object {
+        private const val TAG = "UserPageFragment"
+        private const val VACANCY_CITY_FIELD = "vacancy_city"
+        private const val USER_CITY_FIELD = "user_city"
+        private const val VACANCY_NAME_FIELD = "vacancy_name"
+        private const val USER_INFO_COLLECTION = "user_info"
+        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,13 +83,13 @@ class UserPageFragment : Fragment() {
 
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         (currentUserEmail)?.let { it ->
-            db.collection("user_info")
+            db.collection(USER_INFO_COLLECTION)
                 .document(it)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         userDoc = document
-                        db.collection("vacancies_list")
+                        db.collection(VACANCIES_LIST_COLLECTION)
                             .addSnapshotListener { value, error ->
                                 if (error != null) {
                                     Log.w(TAG, "Listen failed.", error)
@@ -125,18 +134,14 @@ class UserPageFragment : Fragment() {
     // Функция для фильтрации вакансий
     private fun filterVacancies(query: String) {
         filteredVacancies = allVacancies.filter {
-            val vacancyCity = it.getString("vacancy_city")
-            vacancyCity == userDoc.getString("user_city")
+            val vacancyCity = it.getString(VACANCY_CITY_FIELD)
+            vacancyCity == userDoc.getString(USER_CITY_FIELD)
         }.toMutableList()
         if (query.isNotEmpty()) {
             filteredVacancies = filteredVacancies.filter {
-                val vacancyName = it.getString("vacancy_name") ?: ""
+                val vacancyName = it.getString(VACANCY_NAME_FIELD) ?: ""
                 vacancyName.startsWith(query, ignoreCase = true)
             }.toMutableList()
         }
-    }
-
-    companion object {
-        private const val TAG = "UserPageFragment"
     }
 }

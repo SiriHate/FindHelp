@@ -17,68 +17,70 @@ import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancySkillsListApdate
 
 class EditVacancySkillsFragment : Fragment() {
 
-    // объявление переменных
-    private lateinit var editVacancySecondFragmentList: RecyclerView
-    private lateinit var adapter: CreateAndEditVacancySkillsListApdater
-    private lateinit var editVacancySecondFragmentCreateButton: Button
+    private lateinit var skillsRecyclerView: RecyclerView
+    private lateinit var createButton: Button
     private lateinit var controller: NavController
     private var isAtLeastOneCheckboxSelected = false
     private val db = FirebaseFirestore.getInstance()
+
+    companion object {
+        const val DOCUMENT_ID_KEY = "document_id"
+        const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+        const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // создание view
-        val view = inflater.inflate(R.layout.fragment_edit_vacancy_skills, container, false)
-        editVacancySecondFragmentList = view.findViewById(R.id.edit_vacancy_second_fragment_list)
-        editVacancySecondFragmentCreateButton =
-            view.findViewById(R.id.edit_vacancy_second_fragment_create_button)
-        controller = findNavController()
-        return view
+        return inflater.inflate(R.layout.fragment_edit_vacancy_skills, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // получение id документа
-        val documentId = arguments?.getString("document_id") ?: ""
+        // Настройка RecyclerView
+        skillsRecyclerView = view.findViewById(R.id.edit_vacancy_second_fragment_list)
+        createButton = view.findViewById(R.id.edit_vacancy_second_fragment_create_button)
 
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        editVacancySecondFragmentList.layoutManager = layoutManager
-        // создание адаптера
-        adapter = CreateAndEditVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
+        controller = findNavController()
+        skillsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        val documentId = arguments?.getString(DOCUMENT_ID_KEY) ?: ""
+
+        val skillsAdapter = CreateAndEditVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
             isAtLeastOneCheckboxSelected = true
         }
-        editVacancySecondFragmentList.adapter = adapter
+        skillsRecyclerView.adapter = skillsAdapter
 
-        // загрузка списка навыков в адаптер из Firestore
-        db.collection("vacancies_list").document(documentId).get()
+        // Загрузка списка навыков из Firestore
+        db.collection(VACANCIES_LIST_COLLECTION).document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
                 @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot.get("vacancy_skills_list") as? Map<String, Boolean>
+                val skillsMap = documentSnapshot.get(VACANCY_SKILLS_LIST_FIELD) as? Map<String, Boolean>
                     ?: emptyMap()
                 val skillsList = skillsMap.keys.toList()
-                adapter.updateSkillsList(skillsList)
+                skillsAdapter.updateSkillsList(skillsList)
             }
 
-        // установка обработчика нажатия на кнопку
-        editVacancySecondFragmentCreateButton.setOnClickListener {
-            // проверка, что хотя бы один чекбокс выбран
+        // Настройка кнопки создания вакансии
+        createButton.setOnClickListener {
             if (!isAtLeastOneCheckboxSelected) {
                 Toast.makeText(
                     requireContext(),
                     "Необходимо выбрать хотя бы один навык",
                     Toast.LENGTH_SHORT
                 ).show()
-                return@setOnClickListener
             } else {
-                val bundle = Bundle()
-                bundle.putString("document_id", documentId)
+                val bundle = Bundle().apply {
+                    putString(DOCUMENT_ID_KEY, documentId)
+                }
                 controller.navigate(R.id.action_editVacancySecondFragment_to_vacancyCardFragment, bundle)
             }
         }
-
     }
 }
+
+
+

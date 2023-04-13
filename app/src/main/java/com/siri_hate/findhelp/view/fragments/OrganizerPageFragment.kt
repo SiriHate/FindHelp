@@ -29,6 +29,13 @@ class OrganizerPageFragment : Fragment() {
     private lateinit var controller: NavController
     private lateinit var organizerPageSearchBar: SearchView
 
+    companion object {
+        private const val TAG = "OrganizerPageFragment"
+        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+        private const val CREATOR_EMAIL_FIELD = "creator_email"
+        private const val VACANCY_NAME_FIELD = "vacancy_name"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,7 +62,7 @@ class OrganizerPageFragment : Fragment() {
             controller.navigate(R.id.action_organizerPageFragment_to_createVacancyMainFragment)
         }
 
-        database.collection("vacancies_list")
+        database.collection(VACANCIES_LIST_COLLECTION)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.w(TAG, "Listen failed.", error)
@@ -68,7 +75,7 @@ class OrganizerPageFragment : Fragment() {
                 }
 
                 val filteredOffers = offers.filter {
-                    it.getString("creator_email") == userEmail
+                    it.getString(CREATOR_EMAIL_FIELD) == userEmail
                 }
 
                 adapter.updateVacancies(filteredOffers)
@@ -80,7 +87,7 @@ class OrganizerPageFragment : Fragment() {
 
                     override fun onQueryTextChange(newText: String): Boolean {
                         val filteredList = filteredOffers.filter {
-                            it.getString("vacancy_name")
+                            it.getString(VACANCY_NAME_FIELD)
                                 ?.startsWith(newText, ignoreCase = true) ?: false
                         }
 
@@ -89,9 +96,5 @@ class OrganizerPageFragment : Fragment() {
                     }
                 })
             }
-    }
-
-    companion object {
-        private const val TAG = "OrganizerPageFragment"
     }
 }
