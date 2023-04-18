@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#2b2d31">
 
     <TextView
         android:id="@+id/vacancy_skills_list_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="#2b2d31"
         android:gravity="center_horizontal"
         android:text="Волонтер мед-помощник"
         android:textColor="#dfe0e3"

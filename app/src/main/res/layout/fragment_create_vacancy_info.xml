@@ -11,19 +11,8 @@
         android:id="@+id/create_vacancy_info_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/create_vacancy_info_fragment_go_back_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="10dp"
-            android:background="#313338"
-            android:src="@drawable/go_back"
-            app:tint="#FFFFFF"
-            android:contentDescription="@string/create_vacancy_info_fragment_go_back_button" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/create_vacancy_info_fragment_name_tittle"

@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -31,8 +31,6 @@ class VacancyCardFragment : Fragment() {
         private const val USER_TYPE_FIELD = "userType"
         private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
         private const val CREATOR_EMAIL_FIELD = "creator_email"
-        private const val USER_TYPE_USER_VALUE = "user"
-        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
     }
 
     private lateinit var vacancyNameTextView: TextView
@@ -41,8 +39,7 @@ class VacancyCardFragment : Fragment() {
     private lateinit var organizationPhoneTextView: TextView
     private lateinit var organizationCityTextView: TextView
     private lateinit var vacancyDescriptionTextView: TextView
-    private lateinit var vacancyCardGoBackButton: ImageButton
-    private lateinit var vacancyCardEditVacancyButton: ImageButton
+    private lateinit var vacancyCardEditVacancyButton: Button
     private lateinit var skillsListView: RecyclerView
     private lateinit var skillsList: MutableList<String>
     private lateinit var db: FirebaseFirestore
@@ -64,7 +61,6 @@ class VacancyCardFragment : Fragment() {
         initSkillsListView()
         setVacancyInfo()
 
-        vacancyCardGoBackButton.setOnClickListener { navigateToUserPage() }
         vacancyCardEditVacancyButton.setOnClickListener { editVacancy() }
     }
 
@@ -82,7 +78,6 @@ class VacancyCardFragment : Fragment() {
         organizationPhoneTextView = view.findViewById(R.id.vacancy_card_organization_phone)
         organizationCityTextView = view.findViewById(R.id.vacancy_card_organization_city)
         vacancyDescriptionTextView = view.findViewById(R.id.vacancy_card_description)
-        vacancyCardGoBackButton = view.findViewById(R.id.vacancy_card_go_back_button)
         vacancyCardEditVacancyButton = view.findViewById(R.id.vacancy_card_edit_vacancy_button)
         skillsListView = view.findViewById(R.id.vacancy_card_skills_list)
         db = FirebaseFirestore.getInstance()
@@ -186,29 +181,6 @@ class VacancyCardFragment : Fragment() {
                 }
                 .addOnFailureListener { exception ->
                     Log.d(TAG, "Error getting user document", exception)
-                }
-        }
-    }
-
-    private fun navigateToUserPage() {
-        val user = FirebaseAuth.getInstance().currentUser
-        user?.email?.let { email ->
-            db.collection(USER_RIGHTS_COLLECTION).document(email)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        when (val userType = document.getString(USER_TYPE_FIELD)) {
-                            USER_TYPE_USER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_userPageFragment)
-                            USER_TYPE_ORGANIZER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_organizerPageFragment)
-                            USER_TYPE_MODERATOR_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_moderatorPageFragment)
-                            else -> Log.d(TAG, "Неккоректный userType: $userType")
-                        }
-                    } else {
-                        Log.d(TAG, "Документ не найден")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Ошибка получения документа", exception)
                 }
         }
     }

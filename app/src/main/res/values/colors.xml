@@ -11,4 +11,8 @@
     <color name="material_gray_400">#BDBDBD</color>
     <color name="bottom_menu_selected_button">#36383c</color>
     <color name="bottom_menu_not_selected_button">#2b2c30</color>
+    <color name="red_indicator">#7c2529</color>
+    <color name="yellow_indicator">#FFEF96</color>
+    <color name="green_indicator">#1b4d3e</color>
+
 </resources>

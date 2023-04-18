@@ -1,31 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="75dp"
-    android:background="#2b2d31">
+    android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/user_vacancies_list_item_match_percent"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:gravity="center_vertical"
-        android:text="55% (5/5)"
-        android:textColor="#dfe0e3"
-        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/user_vacancies_list_item_vacancy_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:text="Волонтер мед-помощник"
-        android:textColor="#dfe0e3"
-        android:textSize="14sp"
-        app:autoSizeMinTextSize="8sp" />
+        android:background="#2b2d31"
+        android:orientation="horizontal">
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/user_vacancies_list_item_indicator"
+            android:layout_width="105dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:background="#1b4d3e"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/user_vacancies_list_item_match_percent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="100% (5/5)"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_vacancies_list_item_vacancy_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:text="Волонтер мед-помощник"
+            android:textColor="#dfe0e3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:autoSizeMinTextSize="8sp" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

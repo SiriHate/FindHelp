@@ -2,29 +2,48 @@ package com.siri_hate.findhelp.view.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
-
+import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.view.fragments.VacancyCardFragment
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val USER_RIGHTS_COLLECTION = "user_rights"
+        private const val USER_TYPE_FIELD = "userType"
+        private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
+        private const val USER_TYPE_USER_VALUE = "user"
+        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
+        private const val DOCUMENT_ID = "document_id"
+    }
+
     private lateinit var mainLogoutButton: ImageButton
+    private lateinit var mainGoBackButton: ImageButton
     private lateinit var controller: NavController
     private lateinit var navHostFragment: NavHostFragment
+    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mainLogoutButton = findViewById(R.id.main_logout_button)
+        mainGoBackButton = findViewById(R.id.main_go_back_button)
+
+
 
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
 
         controller = navHostFragment.navController
+
+        db = FirebaseFirestore.getInstance()
 
         controller.addOnDestinationChangedListener { _, destination, _ ->
             if (
@@ -39,12 +58,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        controller.addOnDestinationChangedListener { _, destination, _ ->
+            if (
+                destination.id == R.id.registerFragment ||
+                destination.id == R.id.createVacancyMainFragment ||
+                destination.id == R.id.editVacancyMainFragment ||
+                destination.id == R.id.vacancyCardFragment
+            ) {
+                mainGoBackButton.visibility = View.VISIBLE
+            } else {
+                mainGoBackButton.visibility = View.GONE
+            }
+        }
+
         mainLogoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             navigateToLoginFragment()
         }
 
+        mainGoBackButton.setOnClickListener {
+            goBack()
+        }
 
+
+    }
+
+    private fun goBack() {
+        when (controller.currentDestination?.id) {
+            R.id.registerFragment -> controller.navigate(R.id.action_registerFragment_to_loginFragment)
+            R.id.createVacancyMainFragment -> controller.navigate(R.id.action_createVacancyMainFragment_to_organizerPageFragment)
+            R.id.editVacancyMainFragment -> editVacancyCardExit()
+            R.id.vacancyCardFragment -> vacancyCardExit()
+        }
     }
 
     private fun navigateToLoginFragment() {
@@ -54,6 +99,37 @@ class MainActivity : AppCompatActivity() {
             R.id.userProfileFragment -> controller.navigate(R.id.action_userProfileFragment_to_loginFragment)
             R.id.moderatorPageFragment -> controller.navigate(R.id.action_moderatorPageFragment_to_loginFragment)
             R.id.organizerPageFragment -> controller.navigate(R.id.action_organizerPageFragment_to_loginFragment)
+        }
+    }
+
+    private fun editVacancyCardExit() {
+        val fragment = VacancyCardFragment()
+        val documentID = fragment.arguments?.getString(DOCUMENT_ID)
+        val bundle = Bundle()
+        bundle.putString(DOCUMENT_ID, documentID)
+        controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
+    }
+
+    private fun vacancyCardExit() {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.email?.let { email ->
+            db.collection(USER_RIGHTS_COLLECTION).document(email)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        when (val userType = document.getString(USER_TYPE_FIELD)) {
+                            USER_TYPE_USER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_userPageFragment)
+                            USER_TYPE_ORGANIZER_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_organizerPageFragment)
+                            USER_TYPE_MODERATOR_VALUE -> controller.navigate(R.id.action_vacancyCardFragment_to_moderatorPageFragment)
+                            else -> Log.d(TAG, "Неккоректный userType: $userType")
+                        }
+                    } else {
+                        Log.d(TAG, "Документ не найден")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Ошибка получения документа", exception)
+                }
         }
     }
 }

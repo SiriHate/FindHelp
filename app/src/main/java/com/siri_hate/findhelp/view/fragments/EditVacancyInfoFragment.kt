@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -21,7 +20,6 @@ class EditVacancyInfoFragment : Fragment() {
     private lateinit var cityEditText: EditText
     private lateinit var descriptionEditText: EditText
     private lateinit var continueButton: Button
-    private lateinit var goBackButton: ImageButton
     private lateinit var navController: NavController
 
     companion object {
@@ -58,14 +56,9 @@ class EditVacancyInfoFragment : Fragment() {
         cityEditText = view.findViewById(R.id.edit_vacancy_main_fragment_fragment_city_input)
         descriptionEditText = view.findViewById(R.id.edit_vacancy_main_fragment_description_input)
         continueButton = view.findViewById(R.id.edit_vacancy_main_fragment_continue_button)
-        goBackButton = view.findViewById(R.id.edit_vacancy_main_fragment_go_back_button)
     }
 
     private fun setupButtons() {
-        goBackButton.setOnClickListener {
-            val bundle = Bundle().apply { putString(ARG_DOCUMENT_ID, documentId) }
-            navController.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
-        }
 
         continueButton.setOnClickListener {
             if (isInputValid()) {
@@ -73,6 +66,7 @@ class EditVacancyInfoFragment : Fragment() {
                 navigateToSecondFragment()
             }
         }
+
     }
 
     private fun isInputValid(): Boolean {

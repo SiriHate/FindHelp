@@ -23,48 +23,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/vacancy_card_top_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/vacancy_card_top_left_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/vacancy_card_go_back_button"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="#313338"
-                        app:srcCompat="@drawable/go_back"
-                        app:tint="#FFFFFF" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/vacancy_card_top_right_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/vacancy_card_edit_vacancy_button"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="#313338"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/edit"
-                        app:tint="#FFFFFF" />
-                </LinearLayout>
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/vacancy_card_name"
                 android:layout_width="match_parent"
@@ -233,6 +191,17 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:overScrollMode="never" />
+
+            <Button
+                android:id="@+id/vacancy_card_edit_vacancy_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:text="Редактировать вакансию"
+                android:visibility="gone"
+                app:icon="@drawable/edit" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -38,6 +38,7 @@
                 android:textSize="16sp"
                 app:iconifiedByDefault="false"
                 app:queryHint="Введите поисковой запрос"
+                app:queryBackground="@null"
                 />
 
         </LinearLayout>
@@ -46,11 +47,11 @@
             android:id="@+id/user_page_vacancy_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:divider="#333439"
-            android:dividerHeight="5dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
             android:overScrollMode="never" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView

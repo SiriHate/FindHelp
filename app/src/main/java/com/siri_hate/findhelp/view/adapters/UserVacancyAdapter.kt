@@ -72,6 +72,12 @@ class UserVacancyAdapter(
         val matchPercent = if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         val text = holder.itemView.context.getString(R.string.match_count, matchPercent, matchCount, vacancyCount)
         holder.matchPercentTextView.text = text
+
+        when (matchPercent) {
+            in 0..39 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.red_indicator))
+            in 40..69 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.yellow_indicator))
+            in 70..100 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.green_indicator))
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

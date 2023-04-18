@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.Button
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -20,7 +20,7 @@ import com.siri_hate.findhelp.view.adapters.OrganizerVacancyListAdapter
 
 class OrganizerPageFragment : Fragment() {
 
-    private lateinit var organizerPageAddVacancyButton: ImageButton
+    private lateinit var organizerPageAddVacancyButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: OrganizerVacancyListAdapter
     private lateinit var database: FirebaseFirestore

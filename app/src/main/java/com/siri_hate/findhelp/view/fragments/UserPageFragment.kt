@@ -20,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserVacancyAdapter
 
+
 class UserPageFragment : Fragment() {
 
     private val db by lazy { Firebase.firestore }
@@ -40,6 +41,10 @@ class UserPageFragment : Fragment() {
         private const val VACANCY_NAME_FIELD = "vacancy_name"
         private const val USER_INFO_COLLECTION = "user_info"
         private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
+
+        // Константы для сортировки вакансий
+        private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
+        private const val SKILLS_FIELD = "skills"
     }
 
     override fun onCreateView(
@@ -47,7 +52,6 @@ class UserPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user_page, container, false)
-
 
         userPageVacancyList = view.findViewById(R.id.user_page_vacancy_list)
         userPageSearchBar = view.findViewById(R.id.user_page_search_bar)
@@ -89,6 +93,8 @@ class UserPageFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         userDoc = document
+
+                        // Обновляем список вакансий при изменении в Firestore
                         db.collection(VACANCIES_LIST_COLLECTION)
                             .addSnapshotListener { value, error ->
                                 if (error != null) {
@@ -98,11 +104,12 @@ class UserPageFragment : Fragment() {
 
                                 allVacancies.clear()
                                 filteredVacancies.clear()
+
+                                // Заполняем список всеми вакансиями из Firestore
                                 value?.documents?.let { allVacancies.addAll(it) }
-                                filterVacancies("")
-                                userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
-                                val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
-                                userPageVacancyList.adapter = adapter
+
+                                // Фильтруем и сортируем вакансии и отображаем их в RecyclerView
+                                filterAndSortVacancies("")
                             }
                     } else {
                         Log.d(TAG, "No such document")
@@ -120,10 +127,7 @@ class UserPageFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filterVacancies(newText ?: "")
-                userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
-                val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
-                userPageVacancyList.adapter = adapter
+                filterAndSortVacancies(newText ?: "")
                 return true
             }
         })
@@ -131,17 +135,44 @@ class UserPageFragment : Fragment() {
         return view
     }
 
-    // Функция для фильтрации вакансий
-    private fun filterVacancies(query: String) {
+    // Функция для фильтрации и сортировки вакансий
+    private fun filterAndSortVacancies(query: String) {
         filteredVacancies = allVacancies.filter {
             val vacancyCity = it.getString(VACANCY_CITY_FIELD)
             vacancyCity == userDoc.getString(USER_CITY_FIELD)
         }.toMutableList()
+
         if (query.isNotEmpty()) {
             filteredVacancies = filteredVacancies.filter {
                 val vacancyName = it.getString(VACANCY_NAME_FIELD) ?: ""
                 vacancyName.startsWith(query, ignoreCase = true)
             }.toMutableList()
         }
+
+// Сортируем список вакансий по процентному соотношению совпадения навыков в порядке убывания
+        filteredVacancies.sortByDescending { vacancy ->
+            @Suppress("UNCHECKED_CAST")
+            val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
+            @Suppress("UNCHECKED_CAST")
+            val userSkills = userDoc[SKILLS_FIELD] as? HashMap<String, Boolean>
+            var matchCount = 0
+            var vacancyCount = 0
+
+            vacancySkillsList?.forEach { (skill, value) ->
+                if (value && userSkills?.get(skill) == true) {
+                    matchCount++
+                }
+                if (value) {
+                    vacancyCount++
+                }
+            }
+
+            if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
+        }
+
+        // Обновляем RecyclerView с отфильтрованными и отсортированными вакансиями
+        userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
+        val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
+        userPageVacancyList.adapter = adapter
     }
 }

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.navigation.NavController
@@ -50,7 +49,6 @@ class RegisterFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var userTypeChip: Chip
     private lateinit var organizerTypeChip: Chip
-    private lateinit var goBackButton: ImageButton
     private lateinit var organizationNameInput: EditText
     private lateinit var contactPersonInput: EditText
     private lateinit var organizationPhoneInput: EditText
@@ -84,7 +82,6 @@ class RegisterFragment : Fragment() {
         registerButton = view.findViewById(R.id.register_fragment_register_button)
         userTypeChip = view.findViewById(R.id.register_fragment_user_type_chip)
         organizerTypeChip = view.findViewById(R.id.register_fragment_organaizer_type_chip)
-        goBackButton = view.findViewById(R.id.register_fragment_go_back_button)
         organizationNameInput = view.findViewById(R.id.register_fragment_organization_name_input)
         contactPersonInput = view.findViewById(R.id.register_fragment_Contact_person_input)
         organizationPhoneInput = view.findViewById(R.id.register_fragment_organization_phone_input)
@@ -92,10 +89,6 @@ class RegisterFragment : Fragment() {
     }
 
     private fun setupListeners() {
-
-        goBackButton.setOnClickListener {
-            goBack()
-        }
 
         registerButton.setOnClickListener {
             registration()
@@ -114,11 +107,6 @@ class RegisterFragment : Fragment() {
                 organizerLayout.visibility = View.VISIBLE
             }
         }
-    }
-
-    // Функция возврата на экран авторизации
-    private fun goBack() {
-        controller.navigate(R.id.action_registerFragment_to_loginFragment)
     }
 
     // Функция регистрации

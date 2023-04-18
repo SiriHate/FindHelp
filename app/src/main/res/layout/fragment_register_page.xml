@@ -8,194 +8,206 @@
     tools:context=".view.fragments.RegisterFragment">
 
     <LinearLayout
-        android:id="@+id/register_fragment_main_layout"
+        android:id="@+id/register_fragment_registration_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <ImageButton
-            android:id="@+id/register_fragment_go_back_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        <TextView
+            android:id="@+id/register_fragment_email_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textColor="#efefef"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_fragment_email_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:backgroundTint="#313338"
-            android:src="@drawable/go_back"
-            app:tint="#FFFFFF" />
+            android:layout_marginBottom="10dp"
+            android:background="#d7d8d9"
+            android:drawableStart="@drawable/email"
+            android:drawablePadding="5dp"
+            android:hint="Введите вашу почту"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/register_fragment_password_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Пароль:"
+            android:textColor="#efefef"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_fragment_password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="10dp"
+            android:background="#d7d8d9"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="5dp"
+            android:hint="Введите пароль"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/register_fragment_password_tittle_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Повторите пароль:"
+            android:textColor="#efefef"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/register_fragment_password_input_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="10dp"
+            android:background="#d7d8d9"
+            android:drawableStart="@drawable/password"
+            android:drawablePadding="5dp"
+            android:hint="Введите пароль еще раз"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <LinearLayout
-            android:id="@+id/register_fragment_registration_layout"
+            android:id="@+id/register_fragment_organizer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/register_fragment_email_tittle"
+                android:id="@+id/register_fragment_organization_name_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Введите ваш email:"
-                android:textColor="#BFBFBF"
+                android:text="Название организации:"
+                android:textColor="#efefef"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/register_fragment_email_input"
-                android:layout_width="320dp"
+                android:id="@+id/register_fragment_organization_name_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Почта"
-                android:inputType="textEmailAddress"
+                android:layout_marginBottom="10dp"
+                android:background="#d7d8d9"
+                android:drawableStart="@drawable/company_input"
+                android:drawablePadding="5dp"
+                android:hint="Название организации"
+                android:inputType="text"
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/register_fragment_password_tittle"
+                android:id="@+id/register_fragment_contact_person_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Введите ваш пароль:"
-                android:textColor="#BFBFBF"
+                android:text="Полное имя:"
+                android:textColor="#efefef"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/register_fragment_password_input"
-                android:layout_width="320dp"
+                android:id="@+id/register_fragment_Contact_person_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Пароль"
-                android:inputType="textPassword"
+                android:layout_marginBottom="10dp"
+                android:background="#d7d8d9"
+                android:drawableStart="@drawable/contact_person_input"
+                android:drawablePadding="5dp"
+                android:hint="Введите ваше имя"
+                android:inputType="text"
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/register_fragment_password_tittle_repeat"
+                android:id="@+id/register_fragment_organization_phone_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Повторите ваш пароль:"
-                android:textColor="#BFBFBF"
+                android:text="Телефон организации:"
+                android:textColor="#efefef"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/register_fragment_password_input_repeat"
-                android:layout_width="320dp"
+                android:id="@+id/register_fragment_organization_phone_input"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/edittext_background"
-                android:hint="Пароль еще раз"
-                android:inputType="textPassword"
+                android:layout_marginBottom="10dp"
+                android:background="#d7d8d9"
+                android:drawableStart="@drawable/phone_input"
+                android:drawablePadding="5dp"
+                android:hint="Введите телефон вашей организации"
+                android:inputType="phone"
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textSize="16sp" />
+        </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/register_fragment_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="false">
 
             <LinearLayout
-                android:id="@+id/register_fragment_organizer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/register_fragment_organization_name_tittle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Введите название вашей организации:"
-                    android:textColor="#BFBFBF"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/register_fragment_organization_name_input"
-                    android:layout_width="320dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="Название организации"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/register_fragment_contact_person_tittle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Введите ваше ФИО:"
-                    android:textColor="#BFBFBF"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/register_fragment_Contact_person_input"
-                    android:layout_width="320dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="ФИО"
-                    android:inputType="text"
-                    android:padding="16dp"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/register_fragment_organization_phone_tittle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Введите телефон вашей организации:"
-                    android:textColor="#BFBFBF"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/register_fragment_organization_phone_input"
-                    android:layout_width="320dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/edittext_background"
-                    android:hint="Телефон организации"
-                    android:inputType="phone"
-                    android:padding="16dp"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/register_fragment_chip_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:selectionRequired="false"
-                app:singleSelection="true">
+                android:gravity="center">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/register_fragment_user_type_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
                     android:checkable="true"
-                    android:text="Я пользователь" />
+                    android:checked="true"
+                    android:text="Я пользователь"
+                    android:textAlignment="center" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/register_fragment_organaizer_type_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
                     android:checkable="true"
-                    android:text="Я организатор" />
-            </com.google.android.material.chip.ChipGroup>
+                    android:text="Я организатор"
+                    android:textAlignment="center" />
 
-            <Button
-                android:id="@+id/register_fragment_register_button"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_gravity="start"
-                android:layout_marginTop="15dp"
-                android:backgroundTint="#4FB3BF"
-                android:text="Зарегистрироваться" />
+            </LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
 
-        </LinearLayout>
+
+        <Button
+            android:id="@+id/register_fragment_register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#3f458f"
+            android:text="Зарегистрироваться"
+            android:textColor="#efefef" />
+
     </LinearLayout>
 
 </FrameLayout>
