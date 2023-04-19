@@ -21,41 +21,48 @@
         <LinearLayout
             android:id="@+id/organizer_page_search_layout"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="#1e1f22"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/organizer_page_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:background="@drawable/edittext_background"
                 android:queryHint="Введите поисковой запрос"
                 android:textColor="#000000"
                 android:textSize="16sp"
-                app:iconifiedByDefault="false" />
+                app:iconifiedByDefault="true" />
         </LinearLayout>
 
         <Button
             android:id="@+id/organizer_page_add_vacancy_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="5dp"
-            android:backgroundTint="#5f93e4"
-            android:text="Создать вакансию"
-            android:textSize="16sp"
-            app:icon="@drawable/add" />
+            android:backgroundTint="@color/Secondary_color_800"
+            android:drawableLeft="@drawable/add"
+            android:drawablePadding="5dp"
+            android:drawableTint="#efefef"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Добавить вакансию"
+            android:textColor="#efefef"
+            android:textSize="16sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/organizer_page_vacancy_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:divider="#313338"
             android:dividerHeight="5dp"

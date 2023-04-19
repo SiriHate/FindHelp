@@ -10,7 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.view.fragments.VacancyCardFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
         private const val USER_TYPE_USER_VALUE = "user"
         private const val USER_TYPE_MODERATOR_VALUE = "moderator"
-        private const val DOCUMENT_ID = "document_id"
     }
 
     private lateinit var mainLogoutButton: ImageButton
@@ -54,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 mainLogoutButton.visibility = View.VISIBLE
             } else {
-                mainLogoutButton.visibility = View.GONE
+                mainLogoutButton.visibility = View.INVISIBLE
             }
         }
 
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 mainGoBackButton.visibility = View.VISIBLE
             } else {
-                mainGoBackButton.visibility = View.GONE
+                mainGoBackButton.visibility = View.INVISIBLE
             }
         }
 
@@ -103,10 +101,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun editVacancyCardExit() {
-        val fragment = VacancyCardFragment()
-        val documentID = fragment.arguments?.getString(DOCUMENT_ID)
-        val bundle = Bundle()
-        bundle.putString(DOCUMENT_ID, documentID)
+        val currentFragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
+        val bundle = currentFragment?.arguments
         controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
     }
 

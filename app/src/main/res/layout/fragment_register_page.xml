@@ -19,6 +19,8 @@
             android:id="@+id/register_fragment_email_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
             android:text="Email:"
             android:textColor="#efefef"
             android:textSize="18sp" />
@@ -32,6 +34,7 @@
             android:background="#d7d8d9"
             android:drawableStart="@drawable/email"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/roboto_regular"
             android:hint="Введите вашу почту"
             android:inputType="textEmailAddress"
             android:padding="16dp"
@@ -42,6 +45,8 @@
             android:id="@+id/register_fragment_password_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
             android:text="Пароль:"
             android:textColor="#efefef"
             android:textSize="18sp" />
@@ -55,6 +60,7 @@
             android:background="#d7d8d9"
             android:drawableStart="@drawable/password"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/roboto_regular"
             android:hint="Введите пароль"
             android:inputType="textPassword"
             android:padding="16dp"
@@ -65,6 +71,8 @@
             android:id="@+id/register_fragment_password_tittle_repeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
             android:text="Повторите пароль:"
             android:textColor="#efefef"
             android:textSize="18sp" />
@@ -78,6 +86,7 @@
             android:background="#d7d8d9"
             android:drawableStart="@drawable/password"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/roboto_regular"
             android:hint="Введите пароль еще раз"
             android:inputType="textPassword"
             android:padding="16dp"
@@ -88,6 +97,7 @@
             android:id="@+id/register_fragment_organizer_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -95,6 +105,8 @@
                 android:id="@+id/register_fragment_organization_name_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Название организации:"
                 android:textColor="#efefef"
                 android:textSize="18sp" />
@@ -108,6 +120,7 @@
                 android:background="#d7d8d9"
                 android:drawableStart="@drawable/company_input"
                 android:drawablePadding="5dp"
+                android:fontFamily="@font/roboto_regular"
                 android:hint="Название организации"
                 android:inputType="text"
                 android:padding="16dp"
@@ -118,6 +131,8 @@
                 android:id="@+id/register_fragment_contact_person_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Полное имя:"
                 android:textColor="#efefef"
                 android:textSize="18sp" />
@@ -131,6 +146,7 @@
                 android:background="#d7d8d9"
                 android:drawableStart="@drawable/contact_person_input"
                 android:drawablePadding="5dp"
+                android:fontFamily="@font/roboto_regular"
                 android:hint="Введите ваше имя"
                 android:inputType="text"
                 android:padding="16dp"
@@ -141,6 +157,8 @@
                 android:id="@+id/register_fragment_organization_phone_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_bold"
                 android:text="Телефон организации:"
                 android:textColor="#efefef"
                 android:textSize="18sp" />
@@ -150,10 +168,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="10dp"
                 android:background="#d7d8d9"
                 android:drawableStart="@drawable/phone_input"
                 android:drawablePadding="5dp"
+                android:fontFamily="@font/roboto_regular"
                 android:hint="Введите телефон вашей организации"
                 android:inputType="phone"
                 android:padding="16dp"
@@ -181,6 +199,7 @@
                     android:layout_weight="1"
                     android:checkable="true"
                     android:checked="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="Я пользователь"
                     android:textAlignment="center" />
 
@@ -191,10 +210,12 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:checkable="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="Я организатор"
                     android:textAlignment="center" />
 
             </LinearLayout>
+
         </com.google.android.material.chip.ChipGroup>
 
 
@@ -203,10 +224,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="#3f458f"
+            android:fontFamily="@font/roboto_bold"
             android:text="Зарегистрироваться"
-            android:textColor="#efefef" />
+            android:textColor="#efefef"
+            android:textSize="16sp" />
 
     </LinearLayout>
 

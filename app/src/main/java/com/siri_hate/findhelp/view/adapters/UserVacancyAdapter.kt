@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +47,7 @@ class UserVacancyAdapter(
 
         holder.vacancyNameTextView.text = vacancy.getString(VACANCY_NAME_FIELD)
 
-        holder.vacancyNameTextView.setOnClickListener {
+        holder.userVacanciesListItemLayout.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(DOCUMENT_ID, vacancy.id)
             controller.navigate(R.id.action_userPageFragment_to_vacancyCardFragment, bundle)
@@ -74,9 +75,9 @@ class UserVacancyAdapter(
         holder.matchPercentTextView.text = text
 
         when (matchPercent) {
-            in 0..39 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.red_indicator))
-            in 40..69 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.yellow_indicator))
-            in 70..100 -> holder.itemView.findViewById<View>(R.id.user_vacancies_list_item_indicator).setBackgroundColor(holder.itemView.context.getColor(R.color.green_indicator))
+            in 0..39 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.red_indicator))
+            in 40..69 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.yellow_indicator))
+            in 70..100 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.green_indicator))
         }
     }
 
@@ -84,7 +85,9 @@ class UserVacancyAdapter(
         val vacancyNameTextView: TextView =
             itemView.findViewById(R.id.user_vacancies_list_item_vacancy_name)
         val matchPercentTextView: TextView =
-            itemView.findViewById(R.id.user_vacancies_list_item_match_percent)
+            itemView.findViewById(R.id.user_vacancies_list_item_match_percent_num)
+        val userVacanciesListItemLayout: LinearLayout =
+            itemView.findViewById(R.id.user_vacancies_list_item_layout)
     }
 }
 

@@ -30,6 +30,7 @@ class VacancyCardFragment : Fragment() {
         private const val USER_RIGHTS_COLLECTION = "user_rights"
         private const val USER_TYPE_FIELD = "userType"
         private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
+        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
         private const val CREATOR_EMAIL_FIELD = "creator_email"
     }
 
@@ -68,6 +69,7 @@ class VacancyCardFragment : Fragment() {
         val documentId = arguments?.getString(DOCUMENT_ID_KEY) ?: ""
         val bundle = Bundle()
         bundle.putString(DOCUMENT_ID_KEY, documentId)
+        Log.d("doc_send", documentId)
         controller.navigate(R.id.action_vacancyCardFragment_to_editVacancyMainFragment, bundle)
     }
 
@@ -167,7 +169,7 @@ class VacancyCardFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val userType = document.getString(USER_TYPE_FIELD)
-                        if ((userType == USER_TYPE_ORGANIZER_VALUE) && (user.email == snapshot.getString(
+                        if (userType == USER_TYPE_MODERATOR_VALUE || (userType == USER_TYPE_ORGANIZER_VALUE && user.email == snapshot.getString(
                                 CREATOR_EMAIL_FIELD
                             ))
                         ) {

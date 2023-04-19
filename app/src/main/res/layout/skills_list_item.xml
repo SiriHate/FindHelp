@@ -19,6 +19,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_regular"
             android:text="Базовое знание английского языка"
             android:textColor="#dfe0e3"
             android:textSize="18sp" />
@@ -30,8 +31,7 @@
             android:layout_gravity="center"
             android:buttonTint="#a8c8ff"
             android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:buttonIconTint="#673AB7" />
+            android:focusableInTouchMode="false" />
     </LinearLayout>
 
 

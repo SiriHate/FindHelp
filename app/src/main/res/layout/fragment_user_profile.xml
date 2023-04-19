@@ -21,9 +21,11 @@
             android:id="@+id/user_profile_city_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_bold"
             android:gravity="center_horizontal"
             android:text="Ваш город:"
-            android:textColor="#BFBFBF"
+            android:textColor="#efefef"
             android:textSize="24sp" />
 
         <LinearLayout
@@ -36,8 +38,9 @@
                 android:id="@+id/user_profile_city_input"
                 android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/edittext_background"
+                android:fontFamily="@font/roboto_regular"
                 android:hint="Введите название вашего города"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
@@ -50,10 +53,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/roboto_bold"
             android:gravity="center_horizontal"
             android:text="Список ваших навыков:"
-            android:textColor="#BFBFBF"
+            android:textColor="#efefef"
             android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -62,6 +66,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:overScrollMode="never" />
 

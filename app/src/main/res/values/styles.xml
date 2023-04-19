@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@color/status_bar</item>
+    </style>
+
     <style name="EditTextStyle">
     <item name="android:layout_width">320dp</item>
     <item name="android:layout_height">wrap_content</item>

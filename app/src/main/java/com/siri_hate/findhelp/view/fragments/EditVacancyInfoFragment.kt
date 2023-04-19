@@ -23,14 +23,14 @@ class EditVacancyInfoFragment : Fragment() {
     private lateinit var navController: NavController
 
     companion object {
-        private const val ARG_DOCUMENT_ID = "document_id"
+        private const val DOCUMENT_ID_KEY = "document_id"
         private const val COLLECTION_VACANCIES_LIST = "vacancies_list"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            documentId = it.getString(ARG_DOCUMENT_ID, "") ?: ""
+            documentId = it.getString(DOCUMENT_ID_KEY, "") ?: ""
         }
     }
 
@@ -110,7 +110,7 @@ class EditVacancyInfoFragment : Fragment() {
     }
 
     private fun navigateToSecondFragment() {
-        val bundle = Bundle().apply { putString(ARG_DOCUMENT_ID, documentId) }
+        val bundle = Bundle().apply { putString(DOCUMENT_ID_KEY, documentId) }
         navController.navigate(R.id.action_editVacancyMainFragment_to_editVacancySecondFragment, bundle)
     }
 }

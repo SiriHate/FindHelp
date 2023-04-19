@@ -11,8 +11,31 @@
     <color name="material_gray_400">#BDBDBD</color>
     <color name="bottom_menu_selected_button">#36383c</color>
     <color name="bottom_menu_not_selected_button">#2b2c30</color>
+    <color name="status_bar">#111111</color>
     <color name="red_indicator">#7c2529</color>
     <color name="yellow_indicator">#FFEF96</color>
     <color name="green_indicator">#1b4d3e</color>
+
+    <color name="Primary_color_900">#313338</color>
+    <color name="Primary_color_800">#44484f</color>
+    <color name="Primary_color_700">#555a65</color>
+    <color name="Primary_color_600">#676e7c</color>
+    <color name="Primary_color_500">#757c8d</color>
+    <color name="Primary_color_400">#8a8f9d</color>
+    <color name="Primary_color_300">#9fa4ae</color>
+    <color name="Primary_color_200">#bbbec4</color>
+    <color name="Primary_color_100">#d7d8d9</color>
+    <color name="Primary_color_50">#efefef</color>
+
+    <color name="Secondary_color_900">#3f458f</color>
+    <color name="Secondary_color_800">#4b62b0</color>
+    <color name="Secondary_color_700">#5173c3</color>
+    <color name="Secondary_color_600">#5985d6</color>
+    <color name="Secondary_color_500">#5f93e4</color>
+    <color name="Secondary_color_400">#6ba2e9</color>
+    <color name="Secondary_color_300">#7fb2ed</color>
+    <color name="Secondary_color_200">#9fc8f4</color>
+    <color name="Secondary_color_100">#c3ddf8</color>
+    <color name="Secondary_color_50">#e6f1fc</color>
 
 </resources>

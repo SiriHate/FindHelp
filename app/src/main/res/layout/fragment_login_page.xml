@@ -19,6 +19,7 @@
             android:id="@+id/login_fragment_email_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
             android:text="Email:"
             android:textColor="#efefef"
             android:textSize="20sp" />
@@ -31,6 +32,7 @@
             android:background="#d7d8d9"
             android:drawableStart="@drawable/email"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/roboto_regular"
             android:hint="Введите вашу почту"
             android:inputType="textEmailAddress"
             android:padding="16dp"
@@ -42,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_bold"
             android:text="Пароль:"
             android:textColor="#efefef"
             android:textSize="20sp" />
@@ -54,6 +57,7 @@
             android:background="#d7d8d9"
             android:drawableStart="@drawable/password"
             android:drawablePadding="5dp"
+            android:fontFamily="@font/roboto_regular"
             android:hint="Введите ваш пароль"
             android:inputType="textPassword"
             android:padding="16dp"
@@ -66,8 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:backgroundTint="#5f93e4"
+            android:fontFamily="@font/roboto_bold"
             android:text="Войти"
-            android:textColor="#efefef"
             android:textSize="18sp" />
 
         <TextView
@@ -77,6 +81,7 @@
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
+            android:fontFamily="@font/roboto_regular"
             android:gravity="center_horizontal|center_vertical"
             android:text="Еще не зарегистрировались?"
             android:textColor="#efefef"
@@ -88,7 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="invisible" />
+            android:indeterminateTint="@color/Secondary_color_200"
+            android:visibility="gone" />
 
     </LinearLayout>
 

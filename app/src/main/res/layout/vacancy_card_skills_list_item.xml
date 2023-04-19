@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#2b2d31">
+    android:layout_marginBottom="8dp">
 
     <TextView
         android:id="@+id/vacancy_skills_list_item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/Primary_color_800"
+        android:fontFamily="@font/roboto_regular"
         android:gravity="center_horizontal"
         android:text="Волонтер мед-помощник"
         android:textColor="#dfe0e3"
         android:textSize="18sp" />
-</LinearLayout>
+
+</androidx.cardview.widget.CardView>

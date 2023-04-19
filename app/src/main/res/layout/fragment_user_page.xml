@@ -20,26 +20,23 @@
         <LinearLayout
             android:id="@+id/user_page_search_layout"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="wrap_content"
             android:background="#1e1f22"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/user_page_search_bar"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/edittext_background"
-                android:padding="16dp"
                 android:textColor="#000000"
                 android:textSize="16sp"
-                app:iconifiedByDefault="false"
-                app:queryHint="Введите поисковой запрос"
+                app:iconifiedByDefault="true"
                 app:queryBackground="@null"
-                />
+                app:queryHint="Введите поисковой запрос" />
 
         </LinearLayout>
 
@@ -48,9 +45,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_weight="1"
             android:overScrollMode="never" />
 
