@@ -16,14 +16,12 @@ import com.siri_hate.findhelp.viewmodel.fragments.CreateVacancyInfoViewModel
 
 class CreateVacancyInfoFragment : Fragment() {
 
-    // View elements
     private lateinit var nameInput: EditText
     private lateinit var cityInput: EditText
     private lateinit var descriptionInput: EditText
     private lateinit var createVacancyButton: Button
     private lateinit var controller: NavController
 
-    // ViewModel
     private lateinit var viewModel: CreateVacancyInfoViewModel
 
     override fun onCreateView(
@@ -45,7 +43,6 @@ class CreateVacancyInfoFragment : Fragment() {
 
         setClickListeners()
 
-        // Initialize ViewModel
         viewModel = ViewModelProvider(requireActivity())[CreateVacancyInfoViewModel::class.java]
     }
 

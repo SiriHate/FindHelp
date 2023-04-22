@@ -1,73 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:context=".view.fragments.OrganizerPageFragment">
 
-
     <LinearLayout
-        android:id="@+id/organizer_page_main_layout"
+        android:id="@+id/organizer_page_search_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="#1e1f22"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:id="@+id/organizer_page_search_layout"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/organizer_page_search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="#1e1f22"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/organizer_page_search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittext_background"
-                android:queryHint="Введите поисковой запрос"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                app:iconifiedByDefault="true" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/organizer_page_add_vacancy_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/Secondary_color_800"
-            android:drawableLeft="@drawable/add"
-            android:drawablePadding="5dp"
-            android:drawableTint="#efefef"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Добавить вакансию"
-            android:textColor="#efefef"
-            android:textSize="16sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/organizer_page_vacancy_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="1"
-            android:divider="#313338"
-            android:dividerHeight="5dp"
-            android:overScrollMode="never" />
-
-
+            android:background="@drawable/edittext_background"
+            android:queryHint="Введите поисковой запрос"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:iconifiedByDefault="true" />
     </LinearLayout>
-</FrameLayout>
+
+    <Button
+        android:id="@+id/organizer_page_add_vacancy_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/Secondary_color_800"
+        android:drawableLeft="@drawable/add"
+        android:drawablePadding="5dp"
+        android:drawableTint="#efefef"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/organizer_page_add_vacancy_button"
+        android:textColor="#efefef"
+        android:textSize="16sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/organizer_page_vacancy_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:divider="#313338"
+        android:dividerHeight="5dp"
+        android:overScrollMode="never" />
+
+
+</LinearLayout>

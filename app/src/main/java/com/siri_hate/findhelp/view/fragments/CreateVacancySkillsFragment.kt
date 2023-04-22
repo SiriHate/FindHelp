@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,14 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancySkillsListApdater
+import com.siri_hate.findhelp.viewmodel.fragments.CreateVacancySkillsViewModel
 
 
 class CreateVacancySkillsFragment : Fragment() {
-
-    private companion object {
-        const val VACANCIES_LIST_COLLECTION = "vacancies_list"
-        const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
-    }
 
     private lateinit var newVacancySecondFragmentList: RecyclerView
     private lateinit var adapter: CreateAndEditVacancySkillsListApdater
@@ -31,14 +28,16 @@ class CreateVacancySkillsFragment : Fragment() {
     private var isAtLeastOneCheckboxSelected = false
     private lateinit var documentId: String
 
+    private lateinit var viewModel: CreateVacancySkillsViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_vacancy_skills, container, false)
-        newVacancySecondFragmentList = view.findViewById(R.id.new_vacancy_second_fragment_list)
-        newVacancySecondFragmentCreateButton = view.findViewById(R.id.new_vacancy_second_fragment_create_button)
+        newVacancySecondFragmentList = view.findViewById(R.id.create_vacancy_skills_fragment_list)
+        newVacancySecondFragmentCreateButton = view.findViewById(R.id.create_vacancy_skills_fragment_create_button)
         controller = findNavController()
         documentId = arguments?.getString("document_id") ?: ""
         return view
@@ -47,10 +46,11 @@ class CreateVacancySkillsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[CreateVacancySkillsViewModel::class.java]
         setUpAdapter()
 
         val db = FirebaseFirestore.getInstance()
-        fetchSkillsListFromFirestore(db, documentId)
+        viewModel.fetchSkillsListFromFirestore(db, documentId)
 
         // Handle button click event
         newVacancySecondFragmentCreateButton.setOnClickListener {
@@ -70,18 +70,10 @@ class CreateVacancySkillsFragment : Fragment() {
         adapter = CreateAndEditVacancySkillsListApdater(requireContext(), db, documentId, emptyList()) {
             isAtLeastOneCheckboxSelected = true
         }
+        viewModel.skillsList.observe(viewLifecycleOwner) { skillsList ->
+            adapter.updateSkillsList(skillsList)
+        }
         newVacancySecondFragmentList.adapter = adapter
-    }
-
-    private fun fetchSkillsListFromFirestore(db: FirebaseFirestore, documentId: String) {
-        db.collection(VACANCIES_LIST_COLLECTION).document(documentId).get()
-            .addOnSuccessListener { documentSnapshot ->
-                @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot.get(VACANCY_SKILLS_LIST_FIELD) as? Map<String, Boolean>
-                    ?: emptyMap()
-                val skillsList = skillsMap.keys.toList()
-                adapter.updateSkillsList(skillsList)
-            }
     }
 
     private fun showNoSkillsSelectedToast() {

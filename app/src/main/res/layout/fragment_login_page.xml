@@ -1,101 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
-    tools:context=".view.fragments.LoginFragment">
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".view.fragments.LoginPageFragment">
 
-    <LinearLayout
-        android:id="@+id/login_fragment_main_layout"
+    <TextView
+        android:id="@+id/login_fragment_email_tittle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/login_fragment_email_tittle"
+        android:textColor="#efefef"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/login_fragment_email_tittle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Email:"
-            android:textColor="#efefef"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/login_fragment_login_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#d7d8d9"
+        android:drawableStart="@drawable/email"
+        android:drawablePadding="5dp"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="@string/login_fragment_login_input"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:importantForAutofill="no" />
 
-        <EditText
-            android:id="@+id/login_fragment_login_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="#d7d8d9"
-            android:drawableStart="@drawable/email"
-            android:drawablePadding="5dp"
-            android:fontFamily="@font/roboto_regular"
-            android:hint="Введите вашу почту"
-            android:inputType="textEmailAddress"
-            android:padding="16dp"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/login_fragment_password_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/login_fragment_password_tittle"
+        android:textColor="#efefef"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/login_fragment_password_tittle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Пароль:"
-            android:textColor="#efefef"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/login_fragment_password_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#d7d8d9"
+        android:drawableStart="@drawable/password"
+        android:drawablePadding="5dp"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="@string/login_fragment_password_input"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:importantForAutofill="no" />
 
-        <EditText
-            android:id="@+id/login_fragment_password_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="#d7d8d9"
-            android:drawableStart="@drawable/password"
-            android:drawablePadding="5dp"
-            android:fontFamily="@font/roboto_regular"
-            android:hint="Введите ваш пароль"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+    <Button
+        android:id="@+id/login_fragment_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#5f93e4"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/login_fragment_login_button"
+        android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/login_fragment_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#5f93e4"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Войти"
-            android:textSize="18sp" />
+    <TextView
+        android:id="@+id/login_fragment_registration_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/login_fragment_registration_button"
+        android:textColor="#efefef"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/login_fragment_registration_button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/roboto_regular"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="Еще не зарегистрировались?"
-            android:textColor="#efefef"
-            android:textSize="18sp" />
+    <ProgressBar
+        android:id="@+id/login_fragment_registration_login_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:indeterminateTint="@color/Secondary_color_200"
+        android:visibility="gone" />
 
-        <ProgressBar
-            android:id="@+id/login_fragment_registration_login_progress_bar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:indeterminateTint="@color/Secondary_color_200"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

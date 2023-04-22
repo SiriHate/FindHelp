@@ -149,7 +149,7 @@ class UserPageFragment : Fragment() {
             }.toMutableList()
         }
 
-// Сортируем список вакансий по процентному соотношению совпадения навыков в порядке убывания
+        // Сортируем список вакансий по процентному соотношению совпадения навыков в порядке убывания
         filteredVacancies.sortByDescending { vacancy ->
             @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>

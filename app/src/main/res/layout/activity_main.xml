@@ -11,12 +11,12 @@
         android:id="@+id/main_top_layout"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:animateLayoutChanges="false"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/main_fragment_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:animateLayoutChanges="false">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#1e1f22"
+            android:contentDescription="@string/main_app_logo"
             app:srcCompat="@drawable/logo" />
 
         <ImageButton
@@ -33,6 +34,7 @@
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="8dp"
             android:background="#1e1f22"
+            android:contentDescription="@string/main_logout_button"
             android:visibility="invisible"
             app:srcCompat="@drawable/logout"
             app:tint="#FFFFFF" />
@@ -44,6 +46,7 @@
             android:layout_gravity="start|center_vertical"
             android:layout_marginStart="8dp"
             android:background="#1e1f22"
+            android:contentDescription="@string/main_go_back_button"
             android:visibility="invisible"
             app:srcCompat="@drawable/go_back"
             app:tint="#FFFFFF" />
@@ -63,4 +66,5 @@
         app:layout_constraintTop_toBottomOf="@+id/main_top_layout"
         app:navGraph="@navigation/nav_graph"
         tools:layout="@layout/fragment_login_page" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

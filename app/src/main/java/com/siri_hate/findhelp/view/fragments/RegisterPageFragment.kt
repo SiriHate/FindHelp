@@ -23,7 +23,7 @@ import com.siri_hate.findhelp.model.User
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
-class RegisterFragment : Fragment() {
+class RegisterPageFragment : Fragment() {
 
     companion object {
         private const val TAG = "RegisterPageFragment"

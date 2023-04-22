@@ -1,19 +1,106 @@
 <resources>
+
     <string name="app_name">FindHelp</string>
-
-
     <string name="match_count">%1$d%% (%2$d/%3$d)</string>
 
+    <!-- MainActivity -->
+    <string name="main_app_logo">Логотип приложения</string>
+    <string name="main_logout_button">Выйти из аккаунта</string>
+    <string name="main_go_back_button">Вернуться назад</string>
 
     <!-- CreateVacancyInfoFragment -->
-    <string name="create_vacancy_info_fragment_name_tittle">Введите название вакансии:</string>
-    <string name="create_vacancy_info_fragment_name_input">Название вакансии</string>
-    <string name="create_vacancy_info_fragment_city_tittle">Введите город вакансии:</string>
-    <string name="create_vacancy_info_fragment_city_input">Город вакансии</string>
-    <string name="create_vacancy_info_fragment_description_tittle">Введите описание вакансии:</string>
-    <string name="create_vacancy_info_fragment_description_input">Описание вакансии</string>
+    <string name="create_vacancy_info_fragment_main_tittle">Укажите основную информацию о вакансии</string>
+    <string name="create_vacancy_info_fragment_name_tittle">Название вакансии:</string>
+    <string name="create_vacancy_info_fragment_name_input">Введите название вакансии</string>
+    <string name="create_vacancy_info_fragment_city_tittle">Город вакансии:</string>
+    <string name="create_vacancy_info_fragment_city_input">Введите город вакансии</string>
+    <string name="create_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
+    <string name="create_vacancy_info_fragment_description_input">Введите описание вакансии</string>
     <string name="create_vacancy_info_fragment_continue_button">Дальше</string>
-    <string name="create_vacancy_info_fragment_go_back_button">Кнопка "назад"</string>
+
+    <!-- CreateVacancySkillsFragment -->
+    <string name="create_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
+    <string name="create_vacancy_skills_fragment_create_button">Создать вакансию</string>
+
+    <!-- EditVacancyInfoFragment -->
+    <string name="edit_vacancy_info_fragment_main_tittle">Укажите основную информацию о вакансии</string>
+    <string name="edit_vacancy_info_fragment_name_tittle">Название вакансии:</string>
+    <string name="edit_vacancy_info_fragment_name_input">Введите название вакансии</string>
+    <string name="edit_vacancy_info_fragment_city_tittle">Город вакансии:</string>
+    <string name="edit_vacancy_info_fragment_city_input">Введите город вакансии</string>
+    <string name="edit_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
+    <string name="edit_vacancy_info_fragment_description_input">Введите описание вакансии</string>
+    <string name="edit_vacancy_info_fragment_continue_button">Дальше</string>
+
+    <!-- EditVacancySkillsFragment -->
+    <string name="edit_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
+    <string name="edit_vacancy_skills_fragment_create_button">Завершить редактирование</string>
+
+    <!-- LoginPageFragment -->
+    <string name="login_fragment_email_tittle">Email:</string>
+    <string name="login_fragment_login_input">Введите вашу почту</string>
+    <string name="login_fragment_password_tittle">Пароль:</string>
+    <string name="login_fragment_password_input">Введите ваш пароль</string>
+    <string name="login_fragment_login_button">Войти</string>
+    <string name="login_fragment_registration_button">Еще не зарегистрировались?</string>
+
+    <!-- ModeratorPageFragment -->
+    <string name="moderator_page_search_bar">Введите поисковой запрос</string>
+
+    <!-- OrganizerPageFragment -->
+    <string name="organizer_page_add_vacancy_button">Добавить вакансию</string>
+
+    <!-- RegisterPageFragment -->
+    <string name="register_fragment_email_tittle">Email:</string>
+    <string name="register_fragment_email_input">Введите вашу почту</string>
+    <string name="register_fragment_password_tittle">Пароль:</string>
+    <string name="register_fragment_password_input">Введите пароль</string>
+    <string name="register_fragment_password_tittle_repeat">Повторите пароль:</string>
+    <string name="register_fragment_password_input_repeat">Введите пароль еще раз</string>
+    <string name="register_fragment_organization_name_tittle">Название организации:</string>
+    <string name="register_fragment_organization_name_input">Название организации</string>
+    <string name="register_fragment_contact_person_tittle">Полное имя:</string>
+    <string name="register_fragment_Contact_person_input">Введите ваше имя</string>
+    <string name="register_fragment_organization_phone_tittle">Телефон организации:</string>
+    <string name="register_fragment_organization_phone_input">Введите телефон вашей организации</string>
+    <string name="register_fragment_user_type_chip">Я пользователь</string>
+    <string name="register_fragment_organaizer_type_chip">Я организатор</string>
+    <string name="register_fragment_register_button">Зарегистрироваться</string>
+
+    <!-- UserProfilePageFragment -->
+    <string name="user_profile_city_tittle">Ваш город:</string>
+    <string name="user_profile_skill_list_tittle">Список ваших навыков:</string>
+    <string name="user_profile_city_input">Введите название вашего города</string>
+
+    <!-- VacancyCardFragment -->
+    <string name="vacancy_card_name">Волонтер мед-помощник</string>
+    <string name="vacancy_card_main_info_tittle">ОСНОВНАЯ ИНФОРМАЦИЯ:</string>
+    <string name="vacancy_card_organization_city">г. Москва</string>
+    <string name="vacancy_card_company_name">ООО Добрый волонтер</string>
+    <string name="vacancy_card_organization_phone">+7(495)545–25–35</string>
+    <string name="vacancy_card_contact_person">Костылев Владимир Александрович</string>
+    <string name="vacancy_card_description_tittle">ОПИСАНИЕ ВАКАНСИИ:</string>
+    <string name="vacancy_card_description">Необходимо помогать мед персоналу в оказании мед помощи пострадавшим в результате пожара</string>
+    <string name="vacancy_card_skills_list_tittle">НЕОБХОДИМЫЕ НАВЫКИ:</string>
+    <string name="vacancy_card_edit_vacancy_button">Редактировать вакансию</string>
+    <string name="vacancy_card_city_icon">Город вакансии</string>
+    <string name="vacancy_card_phone_icon">Телефон организации</string>
+    <string name="vacancy_card_company_icon">Название организации</string>
+    <string name="vacancy_card_contact_person_icon">Представитель организации</string>
+
+    <!-- VacancyItem -->
+    <string name="vacancy_item_delete_button">Удалить вакансию</string>
+
+    <!-- SkillItem -->
+    <string name="skill_item_name">Базовое знание английского языка</string>
+
+    <!-- UserVacanciesListItem -->
+    <string name="user_vacancies_list_item_vacancy_name">Волонтер мед-помощник</string>
+    <string name="user_vacancies_list_item_match_percent_tittle">Совпадение навыков:</string>
+    <string name="user_vacancies_list_item_match_percent_num">100% (5/5)</string>
+
+    <!-- VacancySkillsListItem -->
+    <string name="vacancy_skills_list_item_name">Водительское удостоверение категории B</string>
 
 
 </resources>

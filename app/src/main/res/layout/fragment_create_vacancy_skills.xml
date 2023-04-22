@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#313338"
     tools:context=".view.fragments.CreateVacancySkillsFragment">
 
-    <LinearLayout
-        android:id="@+id/new_vacancy_second_fragment_main_layout"
+    <TextView
+        android:id="@+id/create_vacancy_skills_fragment_list_tittle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@color/Secondary_color_900"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="@string/create_vacancy_skills_fragment_list_tittle"
+        android:textColor="#efefef"
+        android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/new_vacancy_second_fragment_list_tittle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@color/Secondary_color_900"
-            android:fontFamily="@font/roboto_bold"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:text="Укажите навыки необходимые для вакансии"
-            android:textColor="#efefef"
-            android:textSize="22sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/create_vacancy_skills_fragment_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:overScrollMode="never" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/new_vacancy_second_fragment_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:overScrollMode="never" />
-
-        <Button
-            android:id="@+id/new_vacancy_second_fragment_create_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/Secondary_color_600"
-            android:fontFamily="@font/roboto_bold"
-            android:text="Создать новую вакансию"
-            android:textSize="16sp" />
-    </LinearLayout>
-</FrameLayout>
+    <Button
+        android:id="@+id/create_vacancy_skills_fragment_create_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/Secondary_color_600"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/create_vacancy_skills_fragment_create_button"
+        android:textSize="16sp" />
+</LinearLayout>

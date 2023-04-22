@@ -1,123 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#313338"
+    android:orientation="vertical"
     tools:context=".view.fragments.EditVacancyInfoFragment">
 
+    <TextView
+        android:id="@+id/edit_vacancy_info_fragment_main_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Secondary_color_900"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="@string/edit_vacancy_info_fragment_main_tittle"
+        android:textColor="#efefef"
+        android:textSize="22sp" />
+
     <LinearLayout
-        android:id="@+id/edit_vacancy_main_fragment_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/edit_vacancy_info_fragment_name_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Secondary_color_900"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto_bold"
             android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:text="Укажите основную информацию о вакансии"
+            android:text="@string/edit_vacancy_info_fragment_name_tittle"
             android:textColor="#efefef"
             android:textSize="22sp" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/edit_vacancy_info_fragment_name_input"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="@string/edit_vacancy_info_fragment_name_input"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/edit_vacancy_main_fragment_name_tittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center_horizontal"
-                android:text="Название вакансии:"
-                android:textColor="#efefef"
-                android:textSize="22sp" />
+        <TextView
+            android:id="@+id/edit_vacancy_info_fragment_city_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_horizontal"
+            android:text="@string/edit_vacancy_info_fragment_city_tittle"
+            android:textColor="#efefef"
+            android:textSize="22sp" />
 
-            <EditText
-                android:id="@+id/edit_vacancy_main_fragment_name_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="@drawable/edittext_background"
-                android:fontFamily="@font/roboto_regular"
-                android:hint="Введите название вакансии"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+        <EditText
+            android:id="@+id/edit_vacancy_info_fragment_city_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="@string/edit_vacancy_info_fragment_city_input"
+            android:importantForAutofill="no"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/edit_vacancy_main_fragment_city_tittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center_horizontal"
-                android:text="Город вакансии:"
-                android:textColor="#efefef"
-                android:textSize="22sp" />
+        <TextView
+            android:id="@+id/edit_vacancy_info_fragment_description_tittle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:gravity="center_horizontal"
+            android:text="@string/edit_vacancy_info_fragment_description_tittle"
+            android:textColor="#efefef"
+            android:textSize="22sp" />
 
-            <EditText
-                android:id="@+id/edit_vacancy_main_fragment_fragment_city_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="@drawable/edittext_background"
-                android:fontFamily="@font/roboto_regular"
-                android:hint="Введите город вакансии"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+        <EditText
+            android:id="@+id/edit_vacancy_info_fragment_description_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="top|start"
+            android:hint="@string/edit_vacancy_info_fragment_description_input"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:lines="15"
+            android:padding="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/edit_vacancy_main_fragment_description_tittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="@font/roboto_bold"
-                android:gravity="center_horizontal"
-                android:text="Описание вакансии:"
-                android:textColor="#efefef"
-                android:textSize="22sp" />
-
-            <EditText
-                android:id="@+id/edit_vacancy_main_fragment_description_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edittext_background"
-                android:fontFamily="@font/roboto_regular"
-                android:gravity="top|start"
-                android:hint="Введите описание вакансии"
-                android:inputType="textMultiLine"
-                android:lines="15"
-                android:padding="16dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/edit_vacancy_main_fragment_continue_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/Secondary_color_600"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Дальше"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/edit_vacancy_info_fragment_continue_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/Secondary_color_600"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/edit_vacancy_info_fragment_continue_button"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

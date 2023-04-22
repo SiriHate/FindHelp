@@ -1,21 +1,20 @@
 package com.siri_hate.findhelp.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
+import com.siri_hate.findhelp.viewmodel.fragments.ModeratorPageViewModel
 import java.util.*
 
 class ModeratorPageFragment : Fragment() {
@@ -23,21 +22,10 @@ class ModeratorPageFragment : Fragment() {
     private lateinit var searchBar: SearchView
     private lateinit var moderatorVacancyList: RecyclerView
 
-    private val db = FirebaseFirestore.getInstance()
-    private val offersRef = db.collection(COLLECTION_NAME)
-
+    private lateinit var viewModel: ModeratorPageViewModel
     private lateinit var adapter: ModeratorVacancyListAdapter
-    private var snapshotListener: ListenerRegistration? = null
-    private var originalOffers: List<DocumentSnapshot> = emptyList()
 
     private lateinit var controller: NavController
-
-    companion object {
-        private const val TAG = "ModeratorPageFragment"
-        private const val VACANCY_NAME = "vacancy_name"
-        private const val COLLECTION_NAME = "vacancies_list"
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +47,17 @@ class ModeratorPageFragment : Fragment() {
         adapter = ModeratorVacancyListAdapter(controller)
         moderatorVacancyList.adapter = adapter
 
+        viewModel = ViewModelProvider(this)[ModeratorPageViewModel::class.java]
+        viewModel.initSnapshotListener()
+
+        viewModel.offersLiveData.observe(viewLifecycleOwner) { offers ->
+            adapter.submitList(offers)
+        }
+
+        viewModel.errorMessageLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+        }
+
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -66,32 +65,15 @@ class ModeratorPageFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 val query = newText?.lowercase(Locale.getDefault()) ?: ""
-
-                val filteredOffers = originalOffers.filter {
-                    it.getString(VACANCY_NAME)?.lowercase(Locale.getDefault())
-                        ?.startsWith(query) == true
-                }
-
-                adapter.submitList(filteredOffers)
-
+                viewModel.filterOffers(query)
                 return true
             }
         })
-
-        snapshotListener = offersRef.addSnapshotListener { snapshots, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
-            }
-
-            originalOffers = snapshots?.documents?.toList() ?: emptyList()
-            adapter.submitList(originalOffers)
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        snapshotListener?.remove()
+        viewModel.clear()
     }
 }
 

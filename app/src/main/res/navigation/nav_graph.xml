@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.LoginFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.LoginPageFragment"
         android:label="login_fragment"
         tools:layout="@layout/fragment_login_page" >
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.RegisterFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.RegisterPageFragment"
         android:label="register_fragment"
         tools:layout="@layout/fragment_register_page" >
         <action
@@ -108,7 +108,7 @@
     </fragment>
     <fragment
         android:id="@+id/vacancyCardFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.VacancyCardFragment"
+        android:name="com.siri_hate.findhelp.view.fragments.VacancyCardPageFragment"
         android:label="vacancy_card_fragment"
         tools:layout="@layout/fragment_vacancy_card" >
         <action

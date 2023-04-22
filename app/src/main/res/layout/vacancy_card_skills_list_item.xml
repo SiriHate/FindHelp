@@ -12,7 +12,8 @@
         android:background="@color/Primary_color_800"
         android:fontFamily="@font/roboto_regular"
         android:gravity="center_horizontal"
-        android:text="Волонтер мед-помощник"
+        android:padding="8dp"
+        android:text="@string/vacancy_skills_list_item_name"
         android:textColor="#dfe0e3"
         android:textSize="18sp" />
 
