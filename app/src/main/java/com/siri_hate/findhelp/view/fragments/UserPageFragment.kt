@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -20,14 +19,12 @@ import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.UserVacancyAdapter
 
-
 class UserPageFragment : Fragment() {
 
     private val db by lazy { Firebase.firestore }
     private lateinit var userDoc: DocumentSnapshot
     private var allVacancies = mutableListOf<DocumentSnapshot>()
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
-
 
     private lateinit var userPageVacancyList: RecyclerView
     private lateinit var userPageSearchBar: SearchView
@@ -41,11 +38,11 @@ class UserPageFragment : Fragment() {
         private const val VACANCY_NAME_FIELD = "vacancy_name"
         private const val USER_INFO_COLLECTION = "user_info"
         private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
-
-        // Константы для сортировки вакансий
         private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
         private const val SKILLS_FIELD = "skills"
     }
+
+    private lateinit var adapter: UserVacancyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,7 +91,9 @@ class UserPageFragment : Fragment() {
                     if (document != null) {
                         userDoc = document
 
-                        // Обновляем список вакансий при изменении в Firestore
+                        adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
+                        userPageVacancyList.adapter = adapter
+
                         db.collection(VACANCIES_LIST_COLLECTION)
                             .addSnapshotListener { value, error ->
                                 if (error != null) {
@@ -105,10 +104,8 @@ class UserPageFragment : Fragment() {
                                 allVacancies.clear()
                                 filteredVacancies.clear()
 
-                                // Заполняем список всеми вакансиями из Firestore
                                 value?.documents?.let { allVacancies.addAll(it) }
 
-                                // Фильтруем и сортируем вакансии и отображаем их в RecyclerView
                                 filterAndSortVacancies("")
                             }
                     } else {
@@ -120,7 +117,6 @@ class UserPageFragment : Fragment() {
                 }
         }
 
-        // Обработчик изменения текста в EditText
         userPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -135,7 +131,6 @@ class UserPageFragment : Fragment() {
         return view
     }
 
-    // Функция для фильтрации и сортировки вакансий
     private fun filterAndSortVacancies(query: String) {
         filteredVacancies = allVacancies.filter {
             val vacancyCity = it.getString(VACANCY_CITY_FIELD)
@@ -149,7 +144,6 @@ class UserPageFragment : Fragment() {
             }.toMutableList()
         }
 
-        // Сортируем список вакансий по процентному соотношению совпадения навыков в порядке убывания
         filteredVacancies.sortByDescending { vacancy ->
             @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
@@ -170,9 +164,6 @@ class UserPageFragment : Fragment() {
             if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         }
 
-        // Обновляем RecyclerView с отфильтрованными и отсортированными вакансиями
-        userPageVacancyList.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
-        userPageVacancyList.adapter = adapter
+        adapter.updateList(filteredVacancies)
     }
 }

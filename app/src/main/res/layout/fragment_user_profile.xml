@@ -64,7 +64,10 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/user_profile_menu"

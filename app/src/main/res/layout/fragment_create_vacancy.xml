@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     android:background="#313338"
     android:orientation="vertical"
-    tools:context=".view.fragments.EditVacancyInfoFragment">
+    tools:context=".view.fragments.CreateVacancyFragment">
 
     <TextView
-        android:id="@+id/edit_vacancy_info_fragment_main_tittle"
+        android:id="@+id/create_vacancy_info_fragment_main_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Secondary_color_900"
         android:fontFamily="@font/roboto_bold"
         android:gravity="center_horizontal"
         android:padding="8dp"
-        android:text="@string/edit_vacancy_info_fragment_main_tittle"
+        android:text="@string/create_vacancy_info_fragment_main_tittle"
         android:textColor="#efefef"
         android:textSize="22sp" />
 
@@ -26,30 +26,31 @@
         android:overScrollMode="never">
 
         <LinearLayout
+            android:id="@+id/create_vacancy_info_fragment_second_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_name_tittle"
+                android:id="@+id/create_vacancy_info_fragment_name_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center_horizontal"
-                android:text="@string/edit_vacancy_info_fragment_name_tittle"
+                android:text="@string/create_vacancy_info_fragment_name_tittle"
                 android:textColor="#efefef"
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_name_input"
+                android:id="@+id/create_vacancy_info_fragment_name_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="start"
                 android:background="@drawable/edittext_background"
                 android:fontFamily="@font/roboto_regular"
-                android:hint="@string/edit_vacancy_info_fragment_name_input"
+                android:hint="@string/create_vacancy_info_fragment_name_input"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
@@ -57,25 +58,25 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_city_tittle"
+                android:id="@+id/create_vacancy_info_fragment_city_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center_horizontal"
-                android:text="@string/edit_vacancy_info_fragment_city_tittle"
+                android:text="@string/create_vacancy_info_fragment_city_tittle"
                 android:textColor="#efefef"
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_city_input"
+                android:id="@+id/create_vacancy_info_fragment_city_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="start"
                 android:background="@drawable/edittext_background"
                 android:fontFamily="@font/roboto_regular"
-                android:hint="@string/edit_vacancy_info_fragment_city_input"
+                android:hint="@string/create_vacancy_info_fragment_city_input"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:padding="16dp"
@@ -83,25 +84,25 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_description_tittle"
+                android:id="@+id/create_vacancy_info_fragment_description_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center_horizontal"
-                android:text="@string/edit_vacancy_info_fragment_description_tittle"
+                android:text="@string/create_vacancy_info_fragment_description_tittle"
                 android:textColor="#efefef"
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_description_input"
+                android:id="@+id/create_vacancy_info_fragment_description_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_background"
                 android:fontFamily="@font/roboto_regular"
                 android:gravity="top|start"
-                android:hint="@string/edit_vacancy_info_fragment_description_input"
+                android:hint="@string/create_vacancy_info_fragment_description_input"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:lines="15"
@@ -110,32 +111,33 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/edit_vacancy_fragment_skills_list_tittle"
+                android:id="@+id/create_vacancy_skills_list_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/roboto_bold"
                 android:gravity="center_horizontal"
-                android:text="@string/edit_vacancy_fragment_skills_list_tittle"
+                android:text="@string/create_vacancy_skills_list_tittle"
                 android:textColor="#efefef"
                 android:textSize="22sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/edit_vacancy_fragment_skills_list"
+                android:id="@+id/create_vacancy_skills_list"
                 android:layout_width="match_parent"
                 android:layout_height="450dp"
-                android:overScrollMode="never"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:overScrollMode="never" />
 
             <Button
-                android:id="@+id/edit_vacancy_info_fragment_continue_button"
+                android:id="@+id/create_vacancy_info_fragment_continue_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
                 android:backgroundTint="@color/Secondary_color_600"
                 android:fontFamily="@font/roboto_bold"
-                android:text="@string/edit_vacancy_info_fragment_continue_button"
+                android:text="@string/create_vacancy_info_fragment_continue_button"
+                android:textColor="#efefef"
                 android:textSize="16sp" />
 
         </LinearLayout>

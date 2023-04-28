@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
 
 class UserVacancyAdapter(
-    private val vacancies: MutableList<DocumentSnapshot>,
+    private var vacancies: List<DocumentSnapshot>,
     private val userDoc: DocumentSnapshot,
     private val controller: NavController
 ) : RecyclerView.Adapter<UserVacancyAdapter.ViewHolder>() {
@@ -74,11 +75,34 @@ class UserVacancyAdapter(
         val text = holder.itemView.context.getString(R.string.match_count, matchPercent, matchCount, vacancyCount)
         holder.matchPercentTextView.text = text
 
-        when (matchPercent) {
-            in 0..39 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.red_indicator))
-            in 40..69 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.yellow_indicator))
-            in 70..100 -> holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num).setTextColor(holder.itemView.context.getColor(R.color.green_indicator))
+        val color = when (matchPercent) {
+            in 0..39 -> R.color.red_indicator
+            in 40..69 -> R.color.yellow_indicator
+            else -> R.color.green_indicator
         }
+        holder.itemView.findViewById<TextView>(R.id.user_vacancies_list_item_match_percent_num)
+            .let { textView ->
+                textView.setTextColor(textView.context.getColor(color))
+            }
+    }
+
+    fun updateList(newVacancies: List<DocumentSnapshot>) {
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = vacancies.size
+
+            override fun getNewListSize(): Int = newVacancies.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return vacancies[oldItemPosition].id == newVacancies[newItemPosition].id
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return vacancies[oldItemPosition] == newVacancies[newItemPosition]
+            }
+        })
+
+        vacancies = newVacancies
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -10,7 +10,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.OrganizerVacancyListAdapter
@@ -45,7 +44,6 @@ class OrganizerPageFragment : Fragment() {
 
         adapter = OrganizerVacancyListAdapter(requireContext(), emptyList(), controller)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel = ViewModelProvider(this)[OrganizerPageViewModel::class.java]
         viewModel.initVacanciesListener()

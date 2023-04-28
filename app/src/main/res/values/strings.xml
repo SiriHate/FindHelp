@@ -16,7 +16,7 @@
     <string name="create_vacancy_info_fragment_city_input">Введите город вакансии</string>
     <string name="create_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
     <string name="create_vacancy_info_fragment_description_input">Введите описание вакансии</string>
-    <string name="create_vacancy_info_fragment_continue_button">Дальше</string>
+    <string name="create_vacancy_info_fragment_continue_button">Создать вакансию</string>
 
     <!-- CreateVacancySkillsFragment -->
     <string name="create_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
@@ -30,7 +30,7 @@
     <string name="edit_vacancy_info_fragment_city_input">Введите город вакансии</string>
     <string name="edit_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
     <string name="edit_vacancy_info_fragment_description_input">Введите описание вакансии</string>
-    <string name="edit_vacancy_info_fragment_continue_button">Дальше</string>
+    <string name="edit_vacancy_info_fragment_continue_button">Изменить вакансию</string>
 
     <!-- EditVacancySkillsFragment -->
     <string name="edit_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
@@ -101,6 +101,8 @@
 
     <!-- VacancySkillsListItem -->
     <string name="vacancy_skills_list_item_name">Водительское удостоверение категории B</string>
+    <string name="create_vacancy_skills_list_tittle">Необходимые навыки:</string>
+    <string name="edit_vacancy_fragment_skills_list_tittle">Необходимые навыки:</string>
 
 
 </resources>

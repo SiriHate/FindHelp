@@ -2,6 +2,7 @@ package com.siri_hate.findhelp.view.fragments
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +10,16 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.model.Skill
 import com.siri_hate.findhelp.view.adapters.UserProfileSkillsAdapter
-import com.siri_hate.findhelp.viewmodel.fragments.UserProfileViewModel
 
 class UserProfileFragment : Fragment() {
     private lateinit var userProfileSkillList: RecyclerView
@@ -29,7 +28,11 @@ class UserProfileFragment : Fragment() {
     private lateinit var userProfileMenu: BottomNavigationView
     private lateinit var cityInput: EditText
 
-    private lateinit var viewModel: UserProfileViewModel
+    companion object {
+        private const val SKILLS_COLLECTION = "skills"
+        private const val USER_INFO_COLLECTION = "user_info"
+        private const val USER_CITY_FIELD = "user_city"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,58 +44,50 @@ class UserProfileFragment : Fragment() {
         userProfileMenu = view.findViewById(R.id.user_profile_menu)
         cityInput = view.findViewById(R.id.user_profile_city_input)
 
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        userProfileSkillList.layoutManager = layoutManager
-
         controller = findNavController()
         userProfileMenu.setupWithNavController(controller)
-
-        viewModel = ViewModelProvider(this)[UserProfileViewModel::class.java]
-
         val db = FirebaseFirestore.getInstance()
         val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
-        viewModel.loadUserCity(userEmail)
-        viewModel.userCityLiveData.observe(viewLifecycleOwner) { userCity ->
-            cityInput.apply {
-                setText(userCity)
-                setOnEditorActionListener { _, actionId, _ ->
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        val newCity = text.toString()
-                        viewModel.updateUserCity(newCity, userEmail)
+        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
+            .addOnSuccessListener { documentSnapshot ->
+                val userCity = documentSnapshot.getString(USER_CITY_FIELD)
+                cityInput.apply {
+                    setText(userCity)
+                    setOnEditorActionListener { _, actionId, _ ->
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            val newCity = text.toString()
+                            db.collection(USER_INFO_COLLECTION).document(userEmail)
+                                .update(USER_CITY_FIELD, newCity)
 
-                        // Скрываем клавиатуру
-                        val inputMethodManager =
-                            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+                            // Скрываем клавиатуру
+                            val inputMethodManager =
+                                requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                            inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 
-                        // Убираем фокус с EditText
-                        clearFocus()
+                            // Убираем фокус с EditText
+                            clearFocus()
 
-                        true
-                    } else {
-                        false
+                            true
+                        } else {
+                            false
+                        }
                     }
+                    imeOptions =
+                        EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
                 }
-                imeOptions =
-                    EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
+
             }
-        }
 
         cityInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val newCity = cityInput.text.toString()
-                viewModel.updateUserCity(newCity, userEmail)
+                db.collection(USER_INFO_COLLECTION).document(userEmail)
+                    .update(USER_CITY_FIELD, newCity)
                 true
             } else {
                 false
             }
-        }
-
-        viewModel.loadSkillsList(userEmail)
-        viewModel.skillsListLiveData.observe(viewLifecycleOwner) { skillsList ->
-            adapter.updateSkillsList(skillsList)
         }
 
         userProfileMenu.setOnItemSelectedListener { item ->
@@ -121,8 +116,14 @@ class UserProfileFragment : Fragment() {
             }
         }
 
-        adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, emptyList())
-        userProfileSkillList.adapter = adapter
+        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
+            .addOnSuccessListener { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
+                val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Boolean>
+                val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
+                adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, skillsList)
+                userProfileSkillList.adapter = adapter
+            }
 
         return view
     }

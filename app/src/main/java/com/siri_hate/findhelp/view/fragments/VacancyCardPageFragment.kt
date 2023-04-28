@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -34,6 +35,8 @@ class VacancyCardPageFragment : Fragment() {
     private lateinit var skillsListView: RecyclerView
     private lateinit var viewModel: VacancyCardViewModel
     private lateinit var controller: NavController
+    private lateinit var vacancyCardLoadingBar: ProgressBar
+    private lateinit var vacancyCard: CardView
     private var user: FirebaseUser? = null
 
     override fun onCreateView(
@@ -52,6 +55,16 @@ class VacancyCardPageFragment : Fragment() {
 
         arguments?.getString(DOCUMENT_ID_KEY)?.let { documentId ->
             viewModel.loadVacancyInfo(documentId, user)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                vacancyCardLoadingBar.visibility = View.VISIBLE
+                vacancyCard.visibility = View.GONE
+            } else {
+                vacancyCardLoadingBar.visibility = View.GONE
+                vacancyCard.visibility = View.VISIBLE
+            }
         }
 
         viewModel.skillsList.observe(viewLifecycleOwner) { skillsList ->
@@ -96,6 +109,8 @@ class VacancyCardPageFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
+        vacancyCardLoadingBar = view.findViewById(R.id.vacancy_card_loading_bar)
+        vacancyCard = view.findViewById(R.id.vacancy_card)
         vacancyNameTextView = view.findViewById(R.id.vacancy_card_name)
         companyNameTextView = view.findViewById(R.id.vacancy_card_company_name)
         contactPersonTextView = view.findViewById(R.id.vacancy_card_contact_person)
@@ -105,8 +120,7 @@ class VacancyCardPageFragment : Fragment() {
         vacancyCardEditVacancyButton = view.findViewById(R.id.vacancy_card_edit_vacancy_button)
         skillsListView = view.findViewById(R.id.vacancy_card_skills_list)
 
-        viewModel = ViewModelProvider(
-            this,
+        viewModel = ViewModelProvider(this,
             ViewModelProvider.NewInstanceFactory()
         )[VacancyCardViewModel::class.java]
 
@@ -114,7 +128,6 @@ class VacancyCardPageFragment : Fragment() {
             user = FirebaseAuth.getInstance().currentUser
         }
 
-        skillsListView.layoutManager = LinearLayoutManager(requireContext())
         skillsListView.adapter = VacancySkillsListAdapter()
     }
 }

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
@@ -43,7 +42,6 @@ class ModeratorPageFragment : Fragment() {
 
         controller = findNavController()
 
-        moderatorVacancyList.layoutManager = LinearLayoutManager(requireContext())
         adapter = ModeratorVacancyListAdapter(controller)
         moderatorVacancyList.adapter = adapter
 

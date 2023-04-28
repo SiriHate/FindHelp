@@ -44,7 +44,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/user_page_menu"

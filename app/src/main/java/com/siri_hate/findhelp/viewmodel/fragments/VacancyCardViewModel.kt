@@ -29,6 +29,10 @@ class VacancyCardViewModel : ViewModel() {
     val vacancyName: LiveData<String>
         get() = _vacancyName
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     private val _companyName = MutableLiveData<String>()
     val companyName: LiveData<String>
         get() = _companyName
@@ -54,15 +58,18 @@ class VacancyCardViewModel : ViewModel() {
         get() = _isEditButtonVisible
 
     fun loadVacancyInfo(documentId: String, user: FirebaseUser?) {
+        _isLoading.postValue(true)
         getVacancyDocument(documentId,
             { snapshot ->
                 updateVacancyInfo(snapshot)
                 user?.let {
                     checkUserRightsAndSetEditButtonVisibility(it, snapshot)
                 }
+                _isLoading.postValue(false)
             },
             { exception ->
                 Log.d("VacancyCardViewModel", "Error getting vacancy document", exception)
+                _isLoading.postValue(false)
             }
         )
     }

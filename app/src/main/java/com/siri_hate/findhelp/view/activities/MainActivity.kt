@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
         controller.addOnDestinationChangedListener { _, destination, _ ->
             if (
                 destination.id == R.id.registerFragment ||
-                destination.id == R.id.createVacancyMainFragment ||
-                destination.id == R.id.editVacancyMainFragment ||
+                destination.id == R.id.createVacancyFragment ||
+                destination.id == R.id.editVacancyFragment ||
                 destination.id == R.id.vacancyCardFragment
             ) {
                 mainGoBackButton.visibility = View.VISIBLE
@@ -84,8 +84,8 @@ class MainActivity : AppCompatActivity() {
     private fun goBack() {
         when (controller.currentDestination?.id) {
             R.id.registerFragment -> controller.navigate(R.id.action_registerFragment_to_loginFragment)
-            R.id.createVacancyMainFragment -> controller.navigate(R.id.action_createVacancyMainFragment_to_organizerPageFragment)
-            R.id.editVacancyMainFragment -> editVacancyCardExit()
+            R.id.createVacancyFragment -> controller.navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
+            R.id.editVacancyFragment -> editVacancyCardExit()
             R.id.vacancyCardFragment -> vacancyCardExit()
         }
     }
