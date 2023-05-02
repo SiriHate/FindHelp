@@ -4,35 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.databinding.FragmentLoginPageBinding
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.viewmodel.fragments.LoginPageViewModel
 import com.siri_hate.findhelp.viewmodel.factory.LoginPageViewModelFactory
 
 
 class LoginPageFragment : Fragment() {
 
-    private lateinit var emailInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var loginButton: Button
-    private lateinit var registerTextView: TextView
-    private lateinit var loadingProgressBar: ProgressBar
     private lateinit var controller: NavController
+    private lateinit var binding: FragmentLoginPageBinding
 
     private val viewModel: LoginPageViewModel by viewModels {
         LoginPageViewModelFactory(
-            FirebaseAuth.getInstance(),
-            FirebaseFirestore.getInstance()
+            FirebaseAuthModel(),
+            FirebaseFirestoreModel()
         )
     }
 
@@ -40,12 +34,11 @@ class LoginPageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_login_page, container, false)
+    ): View {
+        binding = FragmentLoginPageBinding.inflate(inflater, container, false)
 
         controller = findNavController()
 
-        initViews(view)
         setupListeners()
         observeErrorMessage()
 
@@ -64,25 +57,17 @@ class LoginPageFragment : Fragment() {
             }
         }
 
-        return view
-    }
-
-    private fun initViews(view: View) {
-        emailInput = view.findViewById(R.id.login_fragment_login_input)
-        passwordInput = view.findViewById(R.id.login_fragment_password_input)
-        loginButton = view.findViewById(R.id.login_fragment_login_button)
-        registerTextView = view.findViewById(R.id.login_fragment_registration_button)
-        loadingProgressBar = view.findViewById(R.id.login_fragment_registration_login_progress_bar)
+        return binding.root
     }
 
     private fun setupListeners() {
-        loginButton.setOnClickListener { performLogin() }
-        registerTextView.setOnClickListener { navigateToRegistration() }
+        binding.loginFragmentLoginButton.setOnClickListener { performLogin() }
+        binding.loginFragmentRegistrationButton.setOnClickListener { navigateToRegistration() }
     }
 
     private fun performLogin() {
-        val email = emailInput.text.toString().trim()
-        val password = passwordInput.text.toString().trim()
+        val email = binding.loginFragmentLoginInput.text.toString().trim()
+        val password = binding.loginFragmentPasswordInput.text.toString().trim()
 
         if (inputFieldsAreEmpty(email, password)) {
             return
@@ -116,12 +101,12 @@ class LoginPageFragment : Fragment() {
         var isEmpty = false
 
         if (email.isEmpty()) {
-            emailInput.error = "Введите email"
+            binding.loginFragmentLoginInput.error = "Введите email"
             isEmpty = true
         }
 
         if (password.isEmpty()) {
-            passwordInput.error = "Введите пароль"
+            binding.loginFragmentPasswordInput.error = "Введите пароль"
             isEmpty = true
         }
 
@@ -139,10 +124,10 @@ class LoginPageFragment : Fragment() {
     }
 
     private fun showLoadingIndicator() {
-        loadingProgressBar.visibility = View.VISIBLE
+        binding.loginFragmentRegistrationLoginProgressBar.visibility = View.VISIBLE
     }
 
     private fun hideLoadingIndicator() {
-        loadingProgressBar.visibility = View.INVISIBLE
+        binding.loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
     }
 }

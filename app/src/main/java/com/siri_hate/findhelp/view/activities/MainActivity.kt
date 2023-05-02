@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var controller: NavController
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var db: FirebaseFirestore
+    private lateinit var binding: ActivityMainBinding
 
     companion object {
         private const val TAG = "MainActivity"
@@ -22,19 +27,10 @@ class MainActivity : AppCompatActivity() {
         private const val USER_TYPE_MODERATOR_VALUE = "moderator"
     }
 
-    private lateinit var mainLogoutButton: ImageButton
-    private lateinit var mainGoBackButton: ImageButton
-    private lateinit var controller: NavController
-    private lateinit var navHostFragment: NavHostFragment
-    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        mainLogoutButton = findViewById(R.id.main_logout_button)
-        mainGoBackButton = findViewById(R.id.main_go_back_button)
-
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
@@ -50,9 +46,9 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.moderatorPageFragment ||
                 destination.id == R.id.organizerPageFragment
             ) {
-                mainLogoutButton.visibility = View.VISIBLE
+                binding.mainLogoutButton.visibility = View.VISIBLE
             } else {
-                mainLogoutButton.visibility = View.INVISIBLE
+                binding.mainLogoutButton.visibility = View.INVISIBLE
             }
         }
 
@@ -63,21 +59,20 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.editVacancyFragment ||
                 destination.id == R.id.vacancyCardFragment
             ) {
-                mainGoBackButton.visibility = View.VISIBLE
+                binding.mainGoBackButton.visibility = View.VISIBLE
             } else {
-                mainGoBackButton.visibility = View.INVISIBLE
+                binding.mainGoBackButton.visibility = View.INVISIBLE
             }
         }
 
-        mainLogoutButton.setOnClickListener {
+        binding.mainLogoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             navigateToLoginFragment()
         }
 
-        mainGoBackButton.setOnClickListener {
+        binding.mainGoBackButton.setOnClickListener {
             goBack()
         }
-
 
     }
 

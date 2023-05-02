@@ -40,7 +40,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/Secondary_color_800"
+        android:backgroundTint="@color/Secondary_color_600"
         android:drawableLeft="@drawable/add"
         android:drawablePadding="5dp"
         android:drawableTint="#efefef"
@@ -48,6 +48,21 @@
         android:text="@string/organizer_page_add_vacancy_button"
         android:textColor="#efefef"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/organizer_page_empty_list_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="@string/empty_list_message"
+        android:textColor="#BEBEBE"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:drawableEndCompat="@drawable/think" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/organizer_page_vacancy_list"
@@ -61,7 +76,20 @@
         android:divider="#313338"
         android:dividerHeight="5dp"
         android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/organizer_page_loading_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:indeterminateTint="@color/Secondary_color_200"
+        android:visibility="gone" />
 
 
 </LinearLayout>

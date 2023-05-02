@@ -4,30 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
-import com.siri_hate.findhelp.model.Vacancy
+import com.siri_hate.findhelp.databinding.FragmentCreateVacancyBinding
+import com.siri_hate.findhelp.model.models.Skill
+import com.siri_hate.findhelp.model.models.Vacancy
 import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancyAdapter
 
 
 class CreateVacancyFragment : Fragment() {
 
     private lateinit var adapter: CreateAndEditVacancyAdapter
-    private lateinit var recyclerViewList: RecyclerView
-    private lateinit var nameInput: EditText
-    private lateinit var cityInput: EditText
-    private lateinit var descriptionInput: EditText
-    private lateinit var continueButton: Button
-
     private lateinit var db: FirebaseFirestore
+    private lateinit var binding: FragmentCreateVacancyBinding
 
     companion object {
         private const val SKILLS_COLLECTION = "skills"
@@ -39,27 +32,18 @@ class CreateVacancyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_create_vacancy, container, false)
+        binding = FragmentCreateVacancyBinding.inflate(inflater, container, false)
 
         db = FirebaseFirestore.getInstance()
 
-        initViews(view)
         setupLisListeners()
         getInitData()
 
-        return view
-    }
-
-    private fun initViews(view: View) {
-        recyclerViewList = view.findViewById(R.id.create_vacancy_skills_list)
-        nameInput = view.findViewById(R.id.create_vacancy_info_fragment_name_input)
-        cityInput = view.findViewById(R.id.create_vacancy_info_fragment_city_input)
-        descriptionInput = view.findViewById(R.id.create_vacancy_info_fragment_description_input)
-        continueButton = view.findViewById(R.id.create_vacancy_info_fragment_continue_button)
+        return binding.root
     }
 
     private fun setupLisListeners() {
-        continueButton.setOnClickListener {
+        binding.createVacancyFragmentCreateButton.setOnClickListener {
             if (validateInputs() && validateSkills()) {
                 createVacancy()
             }
@@ -72,8 +56,15 @@ class CreateVacancyFragment : Fragment() {
                 @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Boolean>
                 val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
-                adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
-                recyclerViewList.adapter = adapter
+
+                if (skillsList.isEmpty()) {
+                    binding.createVacancyFragmentSkillsList.visibility = View.GONE
+                    binding.createVacancyEmptyListMessage.visibility = View.VISIBLE
+                } else {
+                    adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
+                    binding.createVacancyFragmentSkillsList.adapter = adapter
+                    binding.createVacancyEmptyListMessage.visibility = View.GONE
+                }
             }
     }
 
@@ -90,15 +81,16 @@ class CreateVacancyFragment : Fragment() {
                     contact_person = contactPerson,
                     organization_name = orgName,
                     organization_phone = orgPhone,
-                    vacancy_name = nameInput.text.toString(),
-                    vacancy_city = cityInput.text.toString(),
-                    vacancy_description = descriptionInput.text.toString(),
+                    vacancy_name = binding.createVacancyFragmentNameInput.text.toString(),
+                    vacancy_city = binding.createVacancyFragmentCityInput.text.toString(),
+                    vacancy_description = binding.createVacancyFragmentDescriptionInput.text.toString(),
                     vacancy_skills_list = getSelectedSkillsMap()
                 )
 
                 db.collection(VACANCIES_LIST_COLLECTION)
                     .add(vacancy)
                     .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Вакансия успешно добавлена!", Toast.LENGTH_SHORT).show()
                         findNavController().navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
                     }
                     .addOnFailureListener {}
@@ -116,16 +108,16 @@ class CreateVacancyFragment : Fragment() {
 
     private fun validateInputs(): Boolean {
         var isValid = true
-        if (nameInput.text.isBlank()) {
-            nameInput.error = "Введите имя вакансии!"
+        if (binding.createVacancyFragmentNameInput.text.isBlank()) {
+            binding.createVacancyFragmentNameInput.error = "Введите имя вакансии!"
             isValid = false
         }
-        if (cityInput.text.isBlank()) {
-            cityInput.error = "Введите город вакансии!"
+        if (binding.createVacancyFragmentCityInput.text.isBlank()) {
+            binding.createVacancyFragmentCityInput.error = "Введите город вакансии!"
             isValid = false
         }
-        if (descriptionInput.text.isBlank()) {
-            descriptionInput.error = "Введите описание вакансии!"
+        if (binding.createVacancyFragmentDescriptionInput.text.isBlank()) {
+            binding.createVacancyFragmentDescriptionInput.error = "Введите описание вакансии!"
             isValid = false
         }
         return isValid

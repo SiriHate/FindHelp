@@ -2,31 +2,25 @@ package com.siri_hate.findhelp.view.fragments
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
+import com.siri_hate.findhelp.databinding.FragmentUserProfileBinding
+import com.siri_hate.findhelp.model.models.Skill
 import com.siri_hate.findhelp.view.adapters.UserProfileSkillsAdapter
 
 class UserProfileFragment : Fragment() {
-    private lateinit var userProfileSkillList: RecyclerView
     private lateinit var adapter: UserProfileSkillsAdapter
     private lateinit var controller: NavController
-    private lateinit var userProfileMenu: BottomNavigationView
-    private lateinit var cityInput: EditText
+    private lateinit var binding: FragmentUserProfileBinding
 
     companion object {
         private const val SKILLS_COLLECTION = "skills"
@@ -38,21 +32,20 @@ class UserProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
+        binding = FragmentUserProfileBinding.inflate(inflater, container, false)
 
-        userProfileSkillList = view.findViewById(R.id.user_profile_skill_list)
-        userProfileMenu = view.findViewById(R.id.user_profile_menu)
-        cityInput = view.findViewById(R.id.user_profile_city_input)
+        loading(true)
 
         controller = findNavController()
-        userProfileMenu.setupWithNavController(controller)
+
         val db = FirebaseFirestore.getInstance()
         val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
         db.collection(USER_INFO_COLLECTION).document(userEmail).get()
             .addOnSuccessListener { documentSnapshot ->
+                loading(false)
                 val userCity = documentSnapshot.getString(USER_CITY_FIELD)
-                cityInput.apply {
+                binding.userProfileCityInput.apply {
                     setText(userCity)
                     setOnEditorActionListener { _, actionId, _ ->
                         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -60,7 +53,6 @@ class UserProfileFragment : Fragment() {
                             db.collection(USER_INFO_COLLECTION).document(userEmail)
                                 .update(USER_CITY_FIELD, newCity)
 
-                            // Скрываем клавиатуру
                             val inputMethodManager =
                                 requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                             inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
@@ -79,9 +71,9 @@ class UserProfileFragment : Fragment() {
 
             }
 
-        cityInput.setOnEditorActionListener { _, actionId, _ ->
+        binding.userProfileCityInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val newCity = cityInput.text.toString()
+                val newCity = binding.userProfileCityInput.text.toString()
                 db.collection(USER_INFO_COLLECTION).document(userEmail)
                     .update(USER_CITY_FIELD, newCity)
                 true
@@ -90,7 +82,7 @@ class UserProfileFragment : Fragment() {
             }
         }
 
-        userProfileMenu.setOnItemSelectedListener { item ->
+        binding.userProfileMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_navigation_item_home -> {
                     controller.navigate(R.id.action_userProfileFragment_to_userPageFragment)
@@ -107,10 +99,10 @@ class UserProfileFragment : Fragment() {
         controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
-                    userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
+                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
                 }
                 R.id.userProfileFragment -> {
-                    userProfileMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
+                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
                         true
                 }
             }
@@ -121,10 +113,26 @@ class UserProfileFragment : Fragment() {
                 @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Boolean>
                 val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
-                adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, skillsList)
-                userProfileSkillList.adapter = adapter
+
+                if (skillsList.isEmpty()) {
+                    binding.userProfileSkillList.visibility = View.GONE
+                    binding.userProfileEmptyListMessage.visibility = View.VISIBLE
+                } else {
+                    adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, skillsList)
+                    binding.userProfileSkillList.adapter = adapter
+                }
             }
 
-        return view
+        return binding.root
+    }
+
+    private fun loading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.userProfileLoadingProgressBar.visibility = View.VISIBLE
+            binding.userProfileMainLayout.visibility = View.GONE
+        } else {
+            binding.userProfileLoadingProgressBar.visibility = View.GONE
+            binding.userProfileMainLayout.visibility = View.VISIBLE
+        }
     }
 }

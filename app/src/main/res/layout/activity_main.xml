@@ -29,11 +29,11 @@
 
         <ImageButton
             android:id="@+id/main_logout_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="8dp"
-            android:background="#1e1f22"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/main_logout_button"
             android:visibility="invisible"
             app:srcCompat="@drawable/logout"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_marginStart="8dp"
-            android:background="#1e1f22"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/main_go_back_button"
             android:visibility="invisible"
             app:srcCompat="@drawable/go_back"

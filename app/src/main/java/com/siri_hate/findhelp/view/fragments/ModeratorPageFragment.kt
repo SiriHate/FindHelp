@@ -10,40 +10,34 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.databinding.FragmentModeratorPageBinding
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
 import com.siri_hate.findhelp.viewmodel.fragments.ModeratorPageViewModel
 import java.util.*
 
 class ModeratorPageFragment : Fragment() {
 
-    private lateinit var searchBar: SearchView
-    private lateinit var moderatorVacancyList: RecyclerView
-
     private lateinit var viewModel: ModeratorPageViewModel
     private lateinit var adapter: ModeratorVacancyListAdapter
-
     private lateinit var controller: NavController
+    private lateinit var binding: FragmentModeratorPageBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_moderator_page, container, false)
+        binding = FragmentModeratorPageBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        moderatorVacancyList = view.findViewById(R.id.moderator_vacancy_list)
-        searchBar = view.findViewById(R.id.moderator_page_search_bar)
-
         controller = findNavController()
 
         adapter = ModeratorVacancyListAdapter(controller)
-        moderatorVacancyList.adapter = adapter
+        binding.moderatorVacancyList.adapter = adapter
 
         viewModel = ViewModelProvider(this)[ModeratorPageViewModel::class.java]
         viewModel.initSnapshotListener()
@@ -56,7 +50,27 @@ class ModeratorPageFragment : Fragment() {
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
         }
 
-        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        viewModel.emptyListLiveData.observe(viewLifecycleOwner) { isEmpty ->
+            if (isEmpty) {
+                binding.moderatorPageEmptyListMessage.visibility = View.VISIBLE
+                binding.moderatorVacancyList.visibility = View.GONE
+            } else {
+                binding.moderatorPageEmptyListMessage.visibility = View.GONE
+                binding.moderatorVacancyList.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.loading.observe(viewLifecycleOwner) { LoadingStatus ->
+            if (LoadingStatus) {
+                binding.moderatorPageLoadingProgressBar.visibility = View.VISIBLE
+                binding.moderatorVacancyList.visibility = View.GONE
+            } else {
+                binding.moderatorPageLoadingProgressBar.visibility = View.GONE
+                binding.moderatorVacancyList.visibility = View.VISIBLE
+            }
+        }
+
+        binding.moderatorPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }

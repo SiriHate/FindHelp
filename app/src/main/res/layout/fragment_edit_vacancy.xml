@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="#313338"
     android:orientation="vertical"
-    tools:context=".view.fragments.EditVacancyInfoFragment">
+    tools:context=".view.fragments.EditVacancyFragment">
 
     <TextView
-        android:id="@+id/edit_vacancy_info_fragment_main_tittle"
+        android:id="@+id/edit_vacancy_fragment_main_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Secondary_color_900"
@@ -20,10 +20,22 @@
         android:textColor="#efefef"
         android:textSize="22sp" />
 
-    <ScrollView
+    <ProgressBar
+        android:id="@+id/edit_vacancy_page_loading_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:indeterminateTint="@color/Secondary_color_200"
+        android:visibility="gone" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/edit_vacancy_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +44,7 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_name_tittle"
+                android:id="@+id/edit_vacancy_fragment_name_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -43,7 +55,7 @@
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_name_input"
+                android:id="@+id/edit_vacancy_fragment_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -57,7 +69,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_city_tittle"
+                android:id="@+id/edit_vacancy_fragment_city_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -69,7 +81,7 @@
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_city_input"
+                android:id="@+id/edit_vacancy_fragment_city_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -83,7 +95,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/edit_vacancy_info_fragment_description_tittle"
+                android:id="@+id/edit_vacancy_fragment_description_tittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -95,7 +107,7 @@
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/edit_vacancy_info_fragment_description_input"
+                android:id="@+id/edit_vacancy_fragment_description_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_background"
@@ -121,6 +133,20 @@
                 android:textColor="#efefef"
                 android:textSize="22sp" />
 
+            <TextView
+                android:id="@+id/edit_vacancy_empty_list_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/empty_list_message"
+                android:textColor="#BEBEBE"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:drawableEndCompat="@drawable/think" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_vacancy_fragment_skills_list"
                 android:layout_width="match_parent"
@@ -129,7 +155,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <Button
-                android:id="@+id/edit_vacancy_info_fragment_continue_button"
+                android:id="@+id/edit_vacancy_info_fragment_edit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -139,6 +165,6 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

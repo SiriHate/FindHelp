@@ -57,6 +57,9 @@ class VacancyCardViewModel : ViewModel() {
     val isEditButtonVisible: LiveData<Boolean>
         get() = _isEditButtonVisible
 
+    private val _isSkillsListEmpty = MutableLiveData<Boolean>()
+    val isSkillsListEmpty: LiveData<Boolean> = _isSkillsListEmpty
+
     fun loadVacancyInfo(documentId: String, user: FirebaseUser?) {
         _isLoading.postValue(true)
         getVacancyDocument(documentId,
@@ -101,6 +104,7 @@ class VacancyCardViewModel : ViewModel() {
             }
         }
         _skillsList.postValue(newSkillsList)
+        _isSkillsListEmpty.postValue(newSkillsList.isEmpty())
     }
 
     private fun updateVacancyInfo(snapshot: DocumentSnapshot) {

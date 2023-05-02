@@ -35,6 +35,33 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/user_page_loading_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:indeterminateTint="@color/Secondary_color_200"
+        android:maxHeight="8dp"
+        android:minHeight="8dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/user_page_empty_list_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="@string/empty_list_message"
+        android:textColor="#BEBEBE"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:drawableEndCompat="@drawable/think" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_page_vacancy_list"
         android:layout_width="match_parent"
@@ -45,8 +72,8 @@
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/user_page_menu"

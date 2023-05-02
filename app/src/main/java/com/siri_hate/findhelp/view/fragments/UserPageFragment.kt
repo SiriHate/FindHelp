@@ -5,18 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.databinding.FragmentUserPageBinding
 import com.siri_hate.findhelp.view.adapters.UserVacancyAdapter
 
 class UserPageFragment : Fragment() {
@@ -25,11 +24,9 @@ class UserPageFragment : Fragment() {
     private lateinit var userDoc: DocumentSnapshot
     private var allVacancies = mutableListOf<DocumentSnapshot>()
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
-
-    private lateinit var userPageVacancyList: RecyclerView
-    private lateinit var userPageSearchBar: SearchView
     private lateinit var controller: NavController
-    private lateinit var userPageMenu: BottomNavigationView
+    private lateinit var adapter: UserVacancyAdapter
+    private lateinit var binding:FragmentUserPageBinding
 
     companion object {
         private const val TAG = "UserPageFragment"
@@ -42,22 +39,17 @@ class UserPageFragment : Fragment() {
         private const val SKILLS_FIELD = "skills"
     }
 
-    private lateinit var adapter: UserVacancyAdapter
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_user_page, container, false)
+    ): View {
+        binding = FragmentUserPageBinding.inflate(inflater, container, false)
 
-        userPageVacancyList = view.findViewById(R.id.user_page_vacancy_list)
-        userPageSearchBar = view.findViewById(R.id.user_page_search_bar)
-        userPageMenu = view.findViewById(R.id.user_page_menu)
+        loading(true)
 
         controller = findNavController()
-        userPageMenu.setupWithNavController(controller)
 
-        userPageMenu.setOnItemSelectedListener { item ->
+        binding.userPageMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_navigation_item_home -> {
                     // Nothing
@@ -74,10 +66,10 @@ class UserPageFragment : Fragment() {
         controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
-                    userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
                 }
                 R.id.userProfileFragment -> {
-                    userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked = true
                 }
             }
         }
@@ -92,7 +84,7 @@ class UserPageFragment : Fragment() {
                         userDoc = document
 
                         adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
-                        userPageVacancyList.adapter = adapter
+                        binding.userPageVacancyList.adapter = adapter
 
                         db.collection(VACANCIES_LIST_COLLECTION)
                             .addSnapshotListener { value, error ->
@@ -107,17 +99,20 @@ class UserPageFragment : Fragment() {
                                 value?.documents?.let { allVacancies.addAll(it) }
 
                                 filterAndSortVacancies("")
+
+                                loading(false)
                             }
                     } else {
                         Log.d(TAG, "No such document")
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(TAG, "get failed with ", exception)
+                    Log.d(TAG, "Ошибка: ", exception)
+                    Toast.makeText(context, "Ошибка загрузки списка", Toast.LENGTH_SHORT).show()
                 }
         }
 
-        userPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.userPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -128,7 +123,24 @@ class UserPageFragment : Fragment() {
             }
         })
 
-        return view
+        return binding.root
+    }
+
+    private fun loading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.userPageLoadingProgressBar.visibility = View.VISIBLE
+            binding.userPageVacancyList.visibility = View.GONE
+            binding.userPageEmptyListMessage.visibility = View.GONE
+        } else {
+            if (filteredVacancies.isEmpty()) {
+                binding.userPageEmptyListMessage.visibility = View.VISIBLE
+                binding.userPageVacancyList.visibility = View.GONE
+            } else {
+                binding.userPageEmptyListMessage.visibility = View.GONE
+                binding.userPageVacancyList.visibility = View.VISIBLE
+            }
+            binding.userPageLoadingProgressBar.visibility = View.GONE
+        }
     }
 
     private fun filterAndSortVacancies(query: String) {
@@ -164,6 +176,7 @@ class UserPageFragment : Fragment() {
             if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         }
 
-        adapter.updateList(filteredVacancies)
+        val newVacancies = ArrayList(filteredVacancies)
+        adapter.updateList(newVacancies)
     }
 }

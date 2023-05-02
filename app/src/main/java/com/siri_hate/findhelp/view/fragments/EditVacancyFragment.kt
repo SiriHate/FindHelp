@@ -4,28 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
+import com.siri_hate.findhelp.databinding.FragmentEditVacancyBinding
+import com.siri_hate.findhelp.model.models.Skill
+import com.siri_hate.findhelp.model.models.Vacancy
 import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancyAdapter
 
-class EditVacancyInfoFragment : Fragment() {
+class EditVacancyFragment : Fragment() {
 
     private lateinit var adapter: CreateAndEditVacancyAdapter
     private lateinit var documentId: String
-    private lateinit var nameEditText: EditText
-    private lateinit var cityEditText: EditText
-    private lateinit var descriptionEditText: EditText
-    private lateinit var continueButton: Button
-    private lateinit var recyclerView: RecyclerView
-
     private lateinit var db: FirebaseFirestore
+    private lateinit var binding: FragmentEditVacancyBinding
 
     companion object {
         private const val DOCUMENT_ID_KEY = "document_id"
@@ -42,16 +36,18 @@ class EditVacancyInfoFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_edit_vacancy_info, container, false)
+    ): View {
+        binding = FragmentEditVacancyBinding.inflate(inflater, container, false)
 
         db = FirebaseFirestore.getInstance()
 
-        initViews(view)
+        binding.editVacancyMainLayout.visibility = View.GONE
+        binding.editVacancyPageLoadingProgressBar.visibility = View.VISIBLE
+
         getVacancyData()
         getSkillsListData()
 
-        continueButton.setOnClickListener {
+        binding.editVacancyInfoFragmentEditButton.setOnClickListener {
             if (areInputsValid() && validateSkillsList()) {
                 updateVacancyData()
                 val bundle = Bundle()
@@ -63,44 +59,35 @@ class EditVacancyInfoFragment : Fragment() {
             }
         }
 
-        return view
+        return binding.root
     }
 
     private fun areInputsValid(): Boolean {
         var isValid = true
 
-        if (nameEditText.text.isNullOrEmpty()) {
-            nameEditText.error = "Введите название вакансии!"
+        if (binding.editVacancyFragmentNameInput.text.isNullOrEmpty()) {
+            binding.editVacancyFragmentNameInput.error = "Введите название вакансии!"
             isValid = false
         }
 
-        if (cityEditText.text.isNullOrEmpty()) {
-            cityEditText.error = "Введите город вакансии!"
+        if (binding.editVacancyFragmentCityInput.text.isNullOrEmpty()) {
+            binding.editVacancyFragmentCityInput.error = "Введите город вакансии!"
             isValid = false
         }
 
-        if (descriptionEditText.text.isNullOrEmpty()) {
-            descriptionEditText.error = "Введите описание вакансии!"
+        if (binding.editVacancyFragmentDescriptionInput.text.isNullOrEmpty()) {
+            binding.editVacancyFragmentDescriptionInput.error = "Введите описание вакансии!"
             isValid = false
         }
 
         return isValid
     }
-
-    private fun initViews(view: View) {
-        nameEditText = view.findViewById(R.id.edit_vacancy_info_fragment_name_input)
-        cityEditText = view.findViewById(R.id.edit_vacancy_info_fragment_city_input)
-        descriptionEditText = view.findViewById(R.id.edit_vacancy_info_fragment_description_input)
-        continueButton = view.findViewById(R.id.edit_vacancy_info_fragment_continue_button)
-        recyclerView = view.findViewById(R.id.edit_vacancy_fragment_skills_list)
-    }
-
     private fun getVacancyData() {
         db.collection("vacancies_list").document(documentId).get()
             .addOnSuccessListener { documentSnapshot ->
-                nameEditText.setText(documentSnapshot.getString("vacancy_name"))
-                cityEditText.setText(documentSnapshot.getString("vacancy_city"))
-                descriptionEditText.setText(documentSnapshot.getString("vacancy_description"))
+                binding.editVacancyFragmentNameInput.setText(documentSnapshot.getString("vacancy_name"))
+                binding.editVacancyFragmentCityInput.setText(documentSnapshot.getString("vacancy_city"))
+                binding.editVacancyFragmentDescriptionInput.setText(documentSnapshot.getString("vacancy_description"))
             }
     }
 
@@ -110,8 +97,18 @@ class EditVacancyInfoFragment : Fragment() {
                 @Suppress("UNCHECKED_CAST")
                 val skillsMap = documentSnapshot?.get("vacancy_skills_list") as? Map<String, Boolean>
                 val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
-                adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
-                recyclerView.adapter = adapter
+
+                if (skillsList.isEmpty()) {
+                    binding.editVacancyFragmentSkillsList.visibility = View.GONE
+                    binding.editVacancyEmptyListMessage.visibility = View.VISIBLE
+                } else {
+                    adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
+                    binding.editVacancyFragmentSkillsList.adapter = adapter
+                    binding.editVacancyEmptyListMessage.visibility = View.GONE
+
+                    binding.editVacancyMainLayout.visibility = View.VISIBLE
+                    binding.editVacancyPageLoadingProgressBar.visibility = View.GONE
+                }
             }
     }
 
@@ -133,15 +130,15 @@ class EditVacancyInfoFragment : Fragment() {
     }
 
     private fun updateVacancyData() {
-        val vacancy = hashMapOf(
-            "vacancy_name" to nameEditText.text.toString(),
-            "vacancy_city" to cityEditText.text.toString(),
-            "vacancy_description" to descriptionEditText.text.toString(),
-            "vacancy_skills_list" to getSelectedSkillsMap()
+        val vacancy = Vacancy(
+            vacancy_name = binding.editVacancyFragmentNameInput.text.toString(),
+            vacancy_city = binding.editVacancyFragmentCityInput.text.toString(),
+            vacancy_description = binding.editVacancyFragmentDescriptionInput.text.toString(),
+            vacancy_skills_list = getSelectedSkillsMap()
         )
 
         db.collection("vacancies_list").document(documentId)
-            .update(vacancy)
+            .update(vacancy.toMap())
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Вакансия успешно изменена!", Toast.LENGTH_SHORT).show()
             }

@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
+import com.siri_hate.findhelp.model.models.Skill
 
 class UserProfileSkillsAdapter(
     private val context: Context,

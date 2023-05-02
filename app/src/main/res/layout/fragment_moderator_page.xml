@@ -34,6 +34,21 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/moderator_page_empty_list_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="@string/empty_list_message"
+        android:textColor="#BEBEBE"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:drawableEndCompat="@drawable/think" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moderator_vacancy_list"
         android:layout_width="match_parent"
@@ -44,6 +59,19 @@
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/moderator_page_loading_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:indeterminateTint="@color/Secondary_color_200"
+        android:visibility="gone" />
 
 </LinearLayout>

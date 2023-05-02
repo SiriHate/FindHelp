@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
 
 class ModeratorVacancyListAdapter(
+
     private val controller: NavController
 ) : ListAdapter<DocumentSnapshot, ModeratorVacancyListAdapter.ViewHolder>(
     ModeratorVacancyDiffCallback()
@@ -44,7 +45,6 @@ class ModeratorVacancyListAdapter(
         holder.vacancyItemName.text = document.getString(VACANCY_NAME_FIELD)
         val documentRef = document.reference
 
-        // Слушатель нажатия на элемент списка
         holder.vacancyItemName.setOnClickListener {
             document.id.let { documentId ->
                 val bundle = Bundle()
@@ -57,18 +57,15 @@ class ModeratorVacancyListAdapter(
         }
 
         holder.vacancyItemDeleteButton.setOnClickListener {
-            // Создание всплывающего окна
             val dialog = AlertDialog.Builder(holder.itemView.context)
                 .setTitle("Удаление вакансии")
                 .setMessage("Вы точно хотите удалить эту вакансию?")
                 .setPositiveButton("Да") { _, _ ->
-                    // Удаление элемента
                     documentRef.delete()
                 }
                 .setNegativeButton("Нет", null)
                 .show()
 
-            // изменение цвета кнопок
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
         }

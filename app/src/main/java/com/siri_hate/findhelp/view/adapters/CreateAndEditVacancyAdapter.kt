@@ -8,7 +8,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.siri_hate.findhelp.R
-import com.siri_hate.findhelp.model.Skill
+import com.siri_hate.findhelp.model.models.Skill
 
 class CreateAndEditVacancyAdapter(
     private val context: Context,

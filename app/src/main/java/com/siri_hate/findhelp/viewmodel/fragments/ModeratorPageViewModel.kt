@@ -21,6 +21,12 @@ class ModeratorPageViewModel : ViewModel() {
     private val _errorMessageLiveData = MutableLiveData<String>()
     val errorMessageLiveData: LiveData<String> = _errorMessageLiveData
 
+    private var _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> = _loading
+
+    private val _emptyListLiveData = MutableLiveData<Boolean>()
+    val emptyListLiveData: LiveData<Boolean> = _emptyListLiveData
+
     private var snapshotListener: ListenerRegistration? = null
 
     companion object {
@@ -29,21 +35,36 @@ class ModeratorPageViewModel : ViewModel() {
     }
 
     fun initSnapshotListener() {
-        offersRef.addSnapshotListener { snapshots, e ->
+        _loading.value = true
+
+        snapshotListener = offersRef.addSnapshotListener { snapshots, e ->
             if (e != null) {
                 _errorMessageLiveData.postValue("Listen failed.")
                 return@addSnapshotListener
             }
 
             originalOffers = snapshots?.documents?.toList() ?: emptyList()
+            checkIfListEmpty(originalOffers)
             _offersLiveData.postValue(originalOffers)
+
+            _loading.value = false
         }
+    }
+
+    private fun checkIfListEmpty(list: List<DocumentSnapshot>) {
+        _emptyListLiveData.postValue(list.isEmpty())
     }
 
     fun filterOffers(query: String) {
         val filteredOffers = originalOffers.filter {
             it.getString(VACANCY_NAME)?.lowercase(Locale.getDefault())
                 ?.startsWith(query) == true
+        }
+
+        if (filteredOffers.isEmpty()) {
+            _emptyListLiveData.postValue(true)
+        } else {
+            _emptyListLiveData.postValue(false)
         }
 
         _offersLiveData.postValue(filteredOffers)

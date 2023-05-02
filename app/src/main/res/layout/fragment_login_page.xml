@@ -10,7 +10,7 @@
     tools:context=".view.fragments.LoginPageFragment">
 
     <TextView
-        android:id="@+id/login_fragment_email_tittle"
+        android:id="@+id/login_fragment_login_tittle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"

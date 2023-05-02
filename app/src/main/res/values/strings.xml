@@ -1,14 +1,17 @@
 <resources>
 
+    <!-- App -->
     <string name="app_name">FindHelp</string>
-    <string name="match_count">%1$d%% (%2$d/%3$d)</string>
 
     <!-- MainActivity -->
     <string name="main_app_logo">Логотип приложения</string>
     <string name="main_logout_button">Выйти из аккаунта</string>
     <string name="main_go_back_button">Вернуться назад</string>
 
-    <!-- CreateVacancyInfoFragment -->
+    <!-- UserPageFragment -->
+    <string name="match_count">%1$d%% (%2$d/%3$d)</string>
+
+    <!-- CreateVacancyFragment -->
     <string name="create_vacancy_info_fragment_main_tittle">Укажите основную информацию о вакансии</string>
     <string name="create_vacancy_info_fragment_name_tittle">Название вакансии:</string>
     <string name="create_vacancy_info_fragment_name_input">Введите название вакансии</string>
@@ -17,12 +20,11 @@
     <string name="create_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
     <string name="create_vacancy_info_fragment_description_input">Введите описание вакансии</string>
     <string name="create_vacancy_info_fragment_continue_button">Создать вакансию</string>
-
-    <!-- CreateVacancySkillsFragment -->
     <string name="create_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
     <string name="create_vacancy_skills_fragment_create_button">Создать вакансию</string>
+    <string name="create_vacancy_skills_list_tittle">Необходимые навыки:</string>
 
-    <!-- EditVacancyInfoFragment -->
+    <!-- EditVacancyFragment -->
     <string name="edit_vacancy_info_fragment_main_tittle">Укажите основную информацию о вакансии</string>
     <string name="edit_vacancy_info_fragment_name_tittle">Название вакансии:</string>
     <string name="edit_vacancy_info_fragment_name_input">Введите название вакансии</string>
@@ -31,10 +33,9 @@
     <string name="edit_vacancy_info_fragment_description_tittle">Описание вакансии:</string>
     <string name="edit_vacancy_info_fragment_description_input">Введите описание вакансии</string>
     <string name="edit_vacancy_info_fragment_continue_button">Изменить вакансию</string>
-
-    <!-- EditVacancySkillsFragment -->
     <string name="edit_vacancy_skills_fragment_list_tittle">Укажите навыки необходимые для вакансии</string>
     <string name="edit_vacancy_skills_fragment_create_button">Завершить редактирование</string>
+    <string name="edit_vacancy_fragment_skills_list_tittle">Необходимые навыки:</string>
 
     <!-- LoginPageFragment -->
     <string name="login_fragment_email_tittle">Email:</string>
@@ -101,8 +102,6 @@
 
     <!-- VacancySkillsListItem -->
     <string name="vacancy_skills_list_item_name">Водительское удостоверение категории B</string>
-    <string name="create_vacancy_skills_list_tittle">Необходимые навыки:</string>
-    <string name="edit_vacancy_fragment_skills_list_tittle">Необходимые навыки:</string>
-
+    <string name="empty_list_message">Здесь пока ничего нет</string>
 
 </resources>

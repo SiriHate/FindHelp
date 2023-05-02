@@ -19,7 +19,13 @@ class OrganizerPageViewModel : ViewModel() {
     private val _errorMessageLiveData = MutableLiveData<String>()
     val errorMessageLiveData: LiveData<String> = _errorMessageLiveData
 
+    private var _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> = _loading
+
     private var snapshotListener: ListenerRegistration? = null
+
+    private val _emptyListLiveData = MutableLiveData<Boolean>()
+    val emptyListLiveData: LiveData<Boolean> = _emptyListLiveData
 
     companion object {
         private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
@@ -29,6 +35,8 @@ class OrganizerPageViewModel : ViewModel() {
 
     fun initVacanciesListener() {
         val userEmail = auth.currentUser?.email ?: ""
+
+        _loading.value = true
 
         db.collection(VACANCIES_LIST_COLLECTION)
             .addSnapshotListener { value, error ->
@@ -46,7 +54,10 @@ class OrganizerPageViewModel : ViewModel() {
                     it.getString(CREATOR_EMAIL_FIELD) == userEmail
                 }
 
+                _emptyListLiveData.postValue(filteredOffers.isEmpty())
                 _vacanciesLiveData.postValue(filteredOffers)
+
+                _loading.value = false
             }
     }
 

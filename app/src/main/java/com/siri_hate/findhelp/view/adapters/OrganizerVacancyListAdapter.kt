@@ -54,7 +54,6 @@ class OrganizerVacancyListAdapter(
             holder.vacancyItemName.text = document.getString(VACANCY_NAME_FIELD)
             val documentRef = document.reference
 
-            // Слушатель нажатия на элемент списка
             holder.vacancyItemName.setOnClickListener {
                 document.id.let { documentId ->
                     val bundle = Bundle()
@@ -67,19 +66,16 @@ class OrganizerVacancyListAdapter(
             }
 
             holder.vacancyItemDeleteButton.setOnClickListener {
-                // Создание всплывающего окна
                 val dialog = AlertDialog.Builder(context)
                     .setTitle("Удаление вакансии")
                     .setMessage("Вы точно хотите удалить эту вакансию?")
                     .setPositiveButton("Да") { _, _ ->
-                        // Удаление элемента
                         documentRef.delete()
                         updateChangedPositions(position)
                     }
                     .setNegativeButton("Нет", null)
                     .show()
 
-                // Изменение цвета кнопок
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
             }

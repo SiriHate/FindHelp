@@ -5,36 +5,35 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 
 class LoginPageViewModel(
-    private val firebaseAuth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    private val firebaseAuthModel: FirebaseAuthModel,
+    private val firestoreModel: FirebaseFirestoreModel
 ) : ViewModel() {
 
     companion object {
         const val USER_TYPE_USER = "user"
         const val USER_TYPE_ORGANIZER = "organizer"
         const val USER_TYPE_MODERATOR = "moderator"
-        const val USER_RIGHTS_COLLECTION = "user_rights"
     }
 
     val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
 
     fun checkUserAccess(): FirebaseUser? {
-        return firebaseAuth.currentUser
+        return firebaseAuthModel.checkUserAccess()
     }
 
     fun performLogin(email: String, password: String): Task<AuthResult> {
-        return firebaseAuth.signInWithEmailAndPassword(email, password)
+        return firebaseAuthModel.performLogin(email, password)
     }
 
     fun getUserTypeFromFirestore(userEmail: String): Task<DocumentSnapshot> {
-        return db.collection(USER_RIGHTS_COLLECTION).document(userEmail).get()
+        return firestoreModel.getUserTypeFromFirestore(userEmail)
     }
 
     fun startUserPageFragment(controller: NavController, userType: String?) {
