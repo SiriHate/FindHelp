@@ -6,27 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentCreateVacancyBinding
-import com.siri_hate.findhelp.model.models.Skill
-import com.siri_hate.findhelp.model.models.Vacancy
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.view.adapters.CreateAndEditVacancyAdapter
-
+import com.siri_hate.findhelp.viewmodel.factory.CreateVacancyViewModelFactory
+import com.siri_hate.findhelp.viewmodel.fragments.CreateVacancyViewModel
 
 class CreateVacancyFragment : Fragment() {
 
     private lateinit var adapter: CreateAndEditVacancyAdapter
-    private lateinit var db: FirebaseFirestore
+    private lateinit var viewModel: CreateVacancyViewModel
     private lateinit var binding: FragmentCreateVacancyBinding
-
-    companion object {
-        private const val SKILLS_COLLECTION = "skills"
-        private const val ORGANIZATION_INFO_COLLECTION = "organization_info"
-        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +28,34 @@ class CreateVacancyFragment : Fragment() {
     ): View {
         binding = FragmentCreateVacancyBinding.inflate(inflater, container, false)
 
-        db = FirebaseFirestore.getInstance()
+        viewModel = ViewModelProvider(
+            this,
+            CreateVacancyViewModelFactory(
+                FirebaseAuthModel(),
+                FirebaseFirestoreModel()
+            )
+        )[CreateVacancyViewModel::class.java]
 
-        setupLisListeners()
-        getInitData()
+        setupListeners()
+        observeSkillsList()
 
         return binding.root
     }
 
-    private fun setupLisListeners() {
+    private fun observeSkillsList() {
+        viewModel.skillsList.observe(viewLifecycleOwner) { skillsList ->
+            if (skillsList.isEmpty()) {
+                binding.createVacancyFragmentSkillsList.visibility = View.GONE
+                binding.createVacancyEmptyListMessage.visibility = View.VISIBLE
+            } else {
+                adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
+                binding.createVacancyFragmentSkillsList.adapter = adapter
+                binding.createVacancyEmptyListMessage.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupListeners() {
         binding.createVacancyFragmentCreateButton.setOnClickListener {
             if (validateInputs() && validateSkills()) {
                 createVacancy()
@@ -50,52 +63,16 @@ class CreateVacancyFragment : Fragment() {
         }
     }
 
-    private fun getInitData() {
-        db.collection("init_data").document("base_skills_init").get()
-            .addOnSuccessListener { documentSnapshot ->
-                @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Boolean>
-                val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
-
-                if (skillsList.isEmpty()) {
-                    binding.createVacancyFragmentSkillsList.visibility = View.GONE
-                    binding.createVacancyEmptyListMessage.visibility = View.VISIBLE
-                } else {
-                    adapter = CreateAndEditVacancyAdapter(requireContext(), skillsList)
-                    binding.createVacancyFragmentSkillsList.adapter = adapter
-                    binding.createVacancyEmptyListMessage.visibility = View.GONE
-                }
-            }
-    }
-
     private fun createVacancy() {
-        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email.toString()
-        db.collection(ORGANIZATION_INFO_COLLECTION).document(currentUserEmail).get()
-            .addOnSuccessListener { documentSnapshot ->
-                val contactPerson = documentSnapshot.getString("contact_person") ?: ""
-                val orgName = documentSnapshot.getString("organization_name") ?: ""
-                val orgPhone = documentSnapshot.getString("organization_phone") ?: ""
+        val name = binding.createVacancyFragmentNameInput.text.toString()
+        val city = binding.createVacancyFragmentCityInput.text.toString()
+        val description = binding.createVacancyFragmentDescriptionInput.text.toString()
+        val selectedSkillsMap = getSelectedSkillsMap()
 
-                val vacancy = Vacancy(
-                    creator_email = currentUserEmail,
-                    contact_person = contactPerson,
-                    organization_name = orgName,
-                    organization_phone = orgPhone,
-                    vacancy_name = binding.createVacancyFragmentNameInput.text.toString(),
-                    vacancy_city = binding.createVacancyFragmentCityInput.text.toString(),
-                    vacancy_description = binding.createVacancyFragmentDescriptionInput.text.toString(),
-                    vacancy_skills_list = getSelectedSkillsMap()
-                )
-
-                db.collection(VACANCIES_LIST_COLLECTION)
-                    .add(vacancy)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Вакансия успешно добавлена!", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
-                    }
-                    .addOnFailureListener {}
-            }
-            .addOnFailureListener {}
+        viewModel.createVacancy(name, city, description, selectedSkillsMap, {
+            Toast.makeText(requireContext(), "Вакансия успешно добавлена!", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
+        }, {})
     }
 
     private fun getSelectedSkillsMap(): Map<String, Boolean> {

@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentVacancyCardBinding
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.view.adapters.VacancySkillsListAdapter
+import com.siri_hate.findhelp.viewmodel.factory.VacancyCardViewModelFactory
 import com.siri_hate.findhelp.viewmodel.fragments.VacancyCardViewModel
 
 class VacancyCardPageFragment : Fragment() {
@@ -24,7 +25,6 @@ class VacancyCardPageFragment : Fragment() {
     private lateinit var viewModel: VacancyCardViewModel
     private lateinit var controller: NavController
     private lateinit var binding: FragmentVacancyCardBinding
-    private var user: FirebaseUser? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,20 +40,20 @@ class VacancyCardPageFragment : Fragment() {
 
         controller = findNavController()
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[VacancyCardViewModel::class.java]
+        val firebaseAuthModel = FirebaseAuthModel()
+        val firestoreModel = FirebaseFirestoreModel()
 
-        activity?.let {
-            user = FirebaseAuth.getInstance().currentUser
-        }
+        val viewModelFactory = VacancyCardViewModelFactory(firebaseAuthModel, firestoreModel)
+        viewModel = ViewModelProvider(this, viewModelFactory)[VacancyCardViewModel::class.java]
 
         binding.vacancyCardSkillsList.adapter = VacancySkillsListAdapter()
 
         arguments?.getString(DOCUMENT_ID_KEY)?.let { documentId ->
-            viewModel.loadVacancyInfo(documentId, user)
+            viewModel.loadVacancyInfo(documentId)
         }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) { LoadingStatus ->
-            if (LoadingStatus) {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
                 binding.vacancyCardLoadingBar.visibility = View.VISIBLE
                 binding.vacancyCard.visibility = View.GONE
             } else {
@@ -112,7 +112,6 @@ class VacancyCardPageFragment : Fragment() {
             }
         }
     }
-
 }
 
 

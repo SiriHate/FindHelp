@@ -114,4 +114,3 @@ class UserVacancyAdapter(
             itemView.findViewById(R.id.user_vacancies_list_item_layout)
     }
 }
-

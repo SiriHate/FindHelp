@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentOrganizerPageBinding
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.view.adapters.OrganizerVacancyListAdapter
+import com.siri_hate.findhelp.viewmodel.factory.OrganizerPageViewModelFactory
 import com.siri_hate.findhelp.viewmodel.fragments.OrganizerPageViewModel
 import java.util.Locale
 
@@ -38,7 +40,10 @@ class OrganizerPageFragment : Fragment() {
         adapter = OrganizerVacancyListAdapter(requireContext(), emptyList(), controller)
         binding.organizerPageVacancyList.adapter = adapter
 
-        viewModel = ViewModelProvider(this)[OrganizerPageViewModel::class.java]
+        val firebaseFirestoreModel = FirebaseFirestoreModel()
+        val viewModelFactory = OrganizerPageViewModelFactory(firebaseFirestoreModel)
+        viewModel = ViewModelProvider(this, viewModelFactory)[OrganizerPageViewModel::class.java]
+
         viewModel.initVacanciesListener()
 
         viewModel.vacanciesLiveData.observe(viewLifecycleOwner) { vacancies ->

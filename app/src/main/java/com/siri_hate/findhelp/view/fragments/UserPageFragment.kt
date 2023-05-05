@@ -46,9 +46,16 @@ class UserPageFragment : Fragment() {
         binding = FragmentUserPageBinding.inflate(inflater, container, false)
 
         loading(true)
+        fetchCurrentUserDocument()
 
+        setupNavigation()
+        setupSearchBar()
+
+        return binding.root
+    }
+
+    private fun setupNavigation() {
         controller = findNavController()
-
         binding.userPageMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_navigation_item_home -> {
@@ -73,7 +80,22 @@ class UserPageFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun setupSearchBar() {
+        binding.userPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterAndSortVacancies(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    private fun fetchCurrentUserDocument() {
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
         (currentUserEmail)?.let { it ->
             db.collection(USER_INFO_COLLECTION)
@@ -111,19 +133,6 @@ class UserPageFragment : Fragment() {
                     Toast.makeText(context, "Ошибка загрузки списка", Toast.LENGTH_SHORT).show()
                 }
         }
-
-        binding.userPageSearchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filterAndSortVacancies(newText ?: "")
-                return true
-            }
-        })
-
-        return binding.root
     }
 
     private fun loading(isLoading: Boolean) {
@@ -176,7 +185,14 @@ class UserPageFragment : Fragment() {
             if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         }
 
-        val newVacancies = ArrayList(filteredVacancies)
-        adapter.updateList(newVacancies)
+        if (filteredVacancies.isEmpty()) {
+            binding.userPageEmptyListMessage.visibility = View.VISIBLE
+            binding.userPageVacancyList.visibility = View.GONE
+        } else {
+            binding.userPageEmptyListMessage.visibility = View.GONE
+            binding.userPageVacancyList.visibility = View.VISIBLE
+        }
+
+        adapter.updateList(filteredVacancies.toList())
     }
 }

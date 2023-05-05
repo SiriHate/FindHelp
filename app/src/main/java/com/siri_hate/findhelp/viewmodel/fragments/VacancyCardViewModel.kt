@@ -6,20 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 
-class VacancyCardViewModel : ViewModel() {
-
-    companion object {
-        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
-        private const val USER_RIGHTS_COLLECTION = "user_rights"
-        private const val USER_TYPE_FIELD = "userType"
-        private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
-        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
-        private const val CREATOR_EMAIL_FIELD = "creator_email"
-    }
-
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+class VacancyCardViewModel(
+    private val firebaseAuthModel: FirebaseAuthModel,
+    private val firestoreModel: FirebaseFirestoreModel
+) : ViewModel() {
 
     private val _skillsList = MutableLiveData<List<String>>()
     val skillsList: LiveData<List<String>>
@@ -60,39 +53,26 @@ class VacancyCardViewModel : ViewModel() {
     private val _isSkillsListEmpty = MutableLiveData<Boolean>()
     val isSkillsListEmpty: LiveData<Boolean> = _isSkillsListEmpty
 
-    fun loadVacancyInfo(documentId: String, user: FirebaseUser?) {
-        _isLoading.postValue(true)
-        getVacancyDocument(documentId,
-            { snapshot ->
-                updateVacancyInfo(snapshot)
-                user?.let {
-                    checkUserRightsAndSetEditButtonVisibility(it, snapshot)
-                }
-                _isLoading.postValue(false)
-            },
-            { exception ->
-                Log.d("VacancyCardViewModel", "Error getting vacancy document", exception)
-                _isLoading.postValue(false)
-            }
-        )
+    companion object {
+        private const val USER_TYPE_FIELD = "userType"
+        private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
+        private const val USER_TYPE_MODERATOR_VALUE = "moderator"
+        private const val CREATOR_EMAIL_FIELD = "creator_email"
     }
 
-    private fun getVacancyDocument(
-        documentId: String,
-        onSuccess: (snapshot: DocumentSnapshot) -> Unit,
-        onFailure: (exception: Exception) -> Unit
-    ) {
-        db.collection(VACANCIES_LIST_COLLECTION).document(documentId)
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    onSuccess(document)
-                } else {
-                    Log.d("VacancyCardViewModel", "Vacancy document not found")
+    fun loadVacancyInfo(documentId: String) {
+        _isLoading.postValue(true)
+        firestoreModel.getVacancy(documentId)
+            .addOnSuccessListener { vacancySnapshot ->
+                updateVacancyInfo(vacancySnapshot)
+                firebaseAuthModel.getCurrentUser()?.let { user ->
+                    checkUserRightsAndSetEditButtonVisibility(user, vacancySnapshot)
                 }
+                _isLoading.postValue(false)
             }
             .addOnFailureListener { exception ->
-                onFailure(exception)
+                Log.d("VacancyCardViewModel", "Error getting vacancy document", exception)
+                _isLoading.postValue(false)
             }
     }
 
@@ -124,8 +104,7 @@ class VacancyCardViewModel : ViewModel() {
         snapshot: DocumentSnapshot
     ) {
         user.email?.let { email ->
-            db.collection(USER_RIGHTS_COLLECTION).document(email)
-                .get()
+            firestoreModel.getUserTypeFromFirestore(email)
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val userType = document.getString(USER_TYPE_FIELD)

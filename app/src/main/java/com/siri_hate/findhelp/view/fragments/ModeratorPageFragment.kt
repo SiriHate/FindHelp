@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.siri_hate.findhelp.databinding.FragmentModeratorPageBinding
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.view.adapters.ModeratorVacancyListAdapter
+import com.siri_hate.findhelp.viewmodel.factory.ModeratorPageViewModelFactory
 import com.siri_hate.findhelp.viewmodel.fragments.ModeratorPageViewModel
 import java.util.*
 
@@ -39,7 +41,11 @@ class ModeratorPageFragment : Fragment() {
         adapter = ModeratorVacancyListAdapter(controller)
         binding.moderatorVacancyList.adapter = adapter
 
-        viewModel = ViewModelProvider(this)[ModeratorPageViewModel::class.java]
+        val firestoreModel = FirebaseFirestoreModel()
+        val viewModelFactory = ModeratorPageViewModelFactory(firestoreModel)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ModeratorPageViewModel::class.java]
+
+
         viewModel.initSnapshotListener()
 
         viewModel.offersLiveData.observe(viewLifecycleOwner) { offers ->

@@ -25,7 +25,7 @@ class LoginPageViewModel(
     val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
 
     fun checkUserAccess(): FirebaseUser? {
-        return firebaseAuthModel.checkUserAccess()
+        return firebaseAuthModel.getCurrentUser()
     }
 
     fun performLogin(email: String, password: String): Task<AuthResult> {

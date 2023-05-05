@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import java.util.Locale
 
-class ModeratorPageViewModel : ViewModel() {
-
-    private val db = FirebaseFirestore.getInstance()
-    private val offersRef = db.collection(COLLECTION_NAME)
+class ModeratorPageViewModel(private val firestoreModel: FirebaseFirestoreModel) : ViewModel() {
 
     private var originalOffers: List<DocumentSnapshot> = emptyList()
 
@@ -37,18 +34,18 @@ class ModeratorPageViewModel : ViewModel() {
     fun initSnapshotListener() {
         _loading.value = true
 
-        snapshotListener = offersRef.addSnapshotListener { snapshots, e ->
-            if (e != null) {
-                _errorMessageLiveData.postValue("Listen failed.")
-                return@addSnapshotListener
+        snapshotListener = firestoreModel.addSnapshotListener(COLLECTION_NAME,
+            { snapshots ->
+                originalOffers = snapshots.documents.toList()
+                checkIfListEmpty(originalOffers)
+                _offersLiveData.postValue(originalOffers)
+
+                _loading.value = false
+            },
+            { exception ->
+                _errorMessageLiveData.postValue("Listen failed: ${exception.message}")
             }
-
-            originalOffers = snapshots?.documents?.toList() ?: emptyList()
-            checkIfListEmpty(originalOffers)
-            _offersLiveData.postValue(originalOffers)
-
-            _loading.value = false
-        }
+        )
     }
 
     private fun checkIfListEmpty(list: List<DocumentSnapshot>) {

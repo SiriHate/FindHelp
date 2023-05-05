@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 
-class OrganizerPageViewModel : ViewModel() {
+class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFirestoreModel) : ViewModel() {
 
-    private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
     private val _vacanciesLiveData = MutableLiveData<List<DocumentSnapshot>>()
@@ -28,7 +27,6 @@ class OrganizerPageViewModel : ViewModel() {
     val emptyListLiveData: LiveData<Boolean> = _emptyListLiveData
 
     companion object {
-        private const val VACANCIES_LIST_COLLECTION = "vacancies_list"
         private const val CREATOR_EMAIL_FIELD = "creator_email"
         private const val VACANCY_NAME_FIELD = "vacancy_name"
     }
@@ -38,15 +36,11 @@ class OrganizerPageViewModel : ViewModel() {
 
         _loading.value = true
 
-        db.collection(VACANCIES_LIST_COLLECTION)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    _errorMessageLiveData.postValue("Listen failed.")
-                    return@addSnapshotListener
-                }
-
+        snapshotListener = firebaseFirestoreModel.addSnapshotListener(
+            FirebaseFirestoreModel.VACANCIES_COLLECTION,
+            { value ->
                 val offers = mutableListOf<DocumentSnapshot>()
-                for (doc in value!!) {
+                for (doc in value) {
                     offers.add(doc)
                 }
 
@@ -58,7 +52,11 @@ class OrganizerPageViewModel : ViewModel() {
                 _vacanciesLiveData.postValue(filteredOffers)
 
                 _loading.value = false
+            },
+            {
+                _errorMessageLiveData.postValue("Listen failed.")
             }
+        )
     }
 
     fun filterVacancies(query: String, originalList: List<DocumentSnapshot>): List<DocumentSnapshot> {
@@ -75,4 +73,5 @@ class OrganizerPageViewModel : ViewModel() {
     fun clear() {
         onCleared()
     }
+
 }

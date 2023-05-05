@@ -8,25 +8,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentUserProfileBinding
-import com.siri_hate.findhelp.model.models.Skill
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.view.adapters.UserProfileSkillsAdapter
+import com.siri_hate.findhelp.viewmodel.factory.UserProfileViewModelFactory
+import com.siri_hate.findhelp.viewmodel.fragments.UserProfileViewModel
 
 class UserProfileFragment : Fragment() {
     private lateinit var adapter: UserProfileSkillsAdapter
     private lateinit var controller: NavController
     private lateinit var binding: FragmentUserProfileBinding
-
-    companion object {
-        private const val SKILLS_COLLECTION = "skills"
-        private const val USER_INFO_COLLECTION = "user_info"
-        private const val USER_CITY_FIELD = "user_city"
-    }
+    private lateinit var viewModel: UserProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,47 +35,48 @@ class UserProfileFragment : Fragment() {
 
         controller = findNavController()
 
-        val db = FirebaseFirestore.getInstance()
-        val userEmail = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
+        val firebaseAuthModel = FirebaseAuthModel()
+        val firestoreModel = FirebaseFirestoreModel()
 
-        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
-            .addOnSuccessListener { documentSnapshot ->
-                loading(false)
-                val userCity = documentSnapshot.getString(USER_CITY_FIELD)
-                binding.userProfileCityInput.apply {
-                    setText(userCity)
-                    setOnEditorActionListener { _, actionId, _ ->
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            val newCity = text.toString()
-                            db.collection(USER_INFO_COLLECTION).document(userEmail)
-                                .update(USER_CITY_FIELD, newCity)
+        viewModel = ViewModelProvider(
+            this,
+            UserProfileViewModelFactory(firebaseAuthModel, firestoreModel)
+        )[UserProfileViewModel::class.java]
 
-                            val inputMethodManager =
-                                requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                            inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+        viewModel.userCity.observe(viewLifecycleOwner) { userCity ->
+            binding.userProfileCityInput.apply {
+                setText(userCity)
+                setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        val newCity = text.toString()
+                        viewModel.updateUserCity(newCity)
 
-                            // Убираем фокус с EditText
-                            clearFocus()
+                        val inputMethodManager =
+                            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+                        clearFocus()
 
-                            true
-                        } else {
-                            false
-                        }
+                        true
+                    } else {
+                        false
                     }
-                    imeOptions =
-                        EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
                 }
-
+                imeOptions =
+                    EditorInfo.IME_ACTION_DONE or EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN
             }
+        }
 
-        binding.userProfileCityInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val newCity = binding.userProfileCityInput.text.toString()
-                db.collection(USER_INFO_COLLECTION).document(userEmail)
-                    .update(USER_CITY_FIELD, newCity)
-                true
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            loading(isLoading)
+        }
+
+        viewModel.userSkills.observe(viewLifecycleOwner) { skillsList ->
+            if (skillsList.isEmpty()) {
+                binding.userProfileSkillList.visibility = View.GONE
+                binding.userProfileEmptyListMessage.visibility = View.VISIBLE
             } else {
-                false
+                adapter = UserProfileSkillsAdapter(requireContext(), firestoreModel, firebaseAuthModel.getCurrentUser()?.email.orEmpty(), skillsList)
+                binding.userProfileSkillList.adapter = adapter
             }
         }
 
@@ -89,7 +87,6 @@ class UserProfileFragment : Fragment() {
                     true
                 }
                 R.id.bottom_navigation_item_profile -> {
-                    // Nothing
                     true
                 }
                 else -> false
@@ -107,21 +104,6 @@ class UserProfileFragment : Fragment() {
                 }
             }
         }
-
-        db.collection(USER_INFO_COLLECTION).document(userEmail).get()
-            .addOnSuccessListener { documentSnapshot ->
-                @Suppress("UNCHECKED_CAST")
-                val skillsMap = documentSnapshot?.get(SKILLS_COLLECTION) as? Map<String, Boolean>
-                val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
-
-                if (skillsList.isEmpty()) {
-                    binding.userProfileSkillList.visibility = View.GONE
-                    binding.userProfileEmptyListMessage.visibility = View.VISIBLE
-                } else {
-                    adapter = UserProfileSkillsAdapter(requireContext(), db, userEmail, skillsList)
-                    binding.userProfileSkillList.adapter = adapter
-                }
-            }
 
         return binding.root
     }

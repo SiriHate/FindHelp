@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import com.siri_hate.findhelp.model.models.Skill
 
 class UserProfileSkillsAdapter(
     private val context: Context,
-    private val db: FirebaseFirestore,
+    private val firestoreModel: FirebaseFirestoreModel,
     private val userEmail: String,
     private var skillsList: List<Skill>
 ) : RecyclerView.Adapter<UserProfileSkillsAdapter.ViewHolder>() {
@@ -43,11 +43,14 @@ class UserProfileSkillsAdapter(
         holder.skillCheckBox.isChecked = skill.isChecked
 
         holder.skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            db.collection(COLLECTION_NAME).document(userEmail)
-                .update("$SKILLS_FIELD.${skill.name}", isChecked)
-                .addOnSuccessListener {
+            val data = mapOf("$SKILLS_FIELD.${skill.name}" to isChecked)
+            firestoreModel.updateDocument(COLLECTION_NAME, userEmail, data,
+                onSuccess = {
                     skillsList[position].isChecked = isChecked
-                }
+                },
+                onFailure = {
+                    // Обработка ошибки
+                })
         }
     }
 
