@@ -1,9 +1,11 @@
 package com.siri_hate.findhelp.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,7 +43,12 @@ class LoginPageFragment : Fragment() {
 
         setupListeners()
         observeErrorMessage()
+        isUserauthorized()
 
+        return binding.root
+    }
+
+    private fun isUserauthorized() {
         viewModel.checkUserAccess()?.let { currentUser ->
             showLoadingIndicator()
             currentUser.email?.let { userEmail ->
@@ -56,13 +63,23 @@ class LoginPageFragment : Fragment() {
                 }
             }
         }
-
-        return binding.root
     }
 
     private fun setupListeners() {
-        binding.loginFragmentLoginButton.setOnClickListener { performLogin() }
+        binding.loginFragmentLoginButton.setOnClickListener {
+            hideKeyboard()
+            performLogin()
+        }
         binding.loginFragmentRegistrationButton.setOnClickListener { navigateToRegistration() }
+    }
+
+    private fun hideKeyboard() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        view?.let { v ->
+            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+
     }
 
     private fun performLogin() {

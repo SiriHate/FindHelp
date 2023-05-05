@@ -1,10 +1,12 @@
 package com.siri_hate.findhelp.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -41,6 +43,7 @@ class RegisterPageFragment : Fragment() {
     private fun setupListeners() {
 
         binding.registerFragmentRegisterButton.setOnClickListener {
+            hideKeyboard()
             registration()
         }
 
@@ -59,16 +62,33 @@ class RegisterPageFragment : Fragment() {
         }
     }
 
+    private fun hideKeyboard() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        view?.let { v ->
+            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+
+    }
+
     private fun observeViewModel() {
         viewModel.registrationSuccessLiveData.observe(viewLifecycleOwner) {
             if (it) {
-                Toast.makeText(activity, "Регистрация прошла успешно", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    activity,
+                    getString(R.string.user_registration_successfully_msg),
+                    Toast.LENGTH_SHORT
+                ).show()
                 navController.navigate(R.id.action_registerFragment_to_loginFragment)
             }
         }
 
         viewModel.registrationErrorLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(activity, "Ошибка регистрации: $it", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                getString(R.string.user_registration_error_msg),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -97,19 +117,23 @@ class RegisterPageFragment : Fragment() {
                 val (fieldName, error) = entry
                 if (error) {
                     when (fieldName) {
-                        "email" -> binding.registerFragmentEmailInput.error = "Введите email"
-                        "password" -> binding.registerFragmentPasswordInput.error = "Введите пароль"
+                        "email" -> binding.registerFragmentEmailInput.error =
+                            getString(R.string.reg_need_to_enter_email_msg)
+
+                        "password" -> binding.registerFragmentPasswordInput.error =
+                            getString(R.string.reg_need_to_enter_password_msg)
+
                         "confirmPassword" -> binding.registerFragmentPasswordInputRepeat.error =
-                            "Подтвердите пароль"
+                            getString(R.string.reg_need_to_enter_password_repeat_msg)
 
                         "organizationName" -> binding.registerFragmentOrganizationNameInput.error =
-                            "Введите название организации"
+                            getString(R.string.reg_need_to_enter_org_name_msg)
 
                         "contactPerson" -> binding.registerFragmentContactPersonInput.error =
-                            "Введите контактное лицо"
+                            getString(R.string.reg_need_to_enter_contact_person_msg)
 
                         "organizationPhone" -> binding.registerFragmentOrganizationPhoneInput.error =
-                            "Введите номер телефона"
+                            getString(R.string.reg_need_to_enter_org_phone_msg)
                     }
                 }
             }
@@ -123,12 +147,20 @@ class RegisterPageFragment : Fragment() {
                 val isPhoneExists = viewModel.checkOrganizationPhoneExists(organizationPhone)
 
                 if (isNameExists) {
-                    Toast.makeText(activity, "Название организации уже занято", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.reg_need_to_enter_org_name_already_exists_msg),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     return@runBlocking
                 }
                 if (isPhoneExists) {
-                    Toast.makeText(activity, "Номер телефона уже занят", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        getString(R.string.reg_need_to_enter_org_phone_already_exists_msg),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@runBlocking
                 }
 

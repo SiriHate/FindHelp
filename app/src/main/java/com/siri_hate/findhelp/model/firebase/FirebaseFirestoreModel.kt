@@ -13,6 +13,7 @@ class FirebaseFirestoreModel {
     companion object {
         const val USER_RIGHTS_COLLECTION = "user_rights"
         const val VACANCIES_COLLECTION = "vacancies_list"
+
     }
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -94,16 +95,6 @@ class FirebaseFirestoreModel {
         val user = User(uid = uid, userType = userType)
         val userRef = db.collection(USER_RIGHTS_COLLECTION).document(email)
         userRef.set(user)
-    }
-
-    fun addVacancy(vacancy: Vacancy, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        db.collection(VACANCIES_COLLECTION).add(vacancy)
-            .addOnSuccessListener { documentReference ->
-                onSuccess()
-            }
-            .addOnFailureListener {
-                onFailure()
-            }
     }
 
     fun getVacancy(documentId: String): Task<DocumentSnapshot> {

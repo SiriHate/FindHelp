@@ -41,7 +41,7 @@ class LoginPageViewModel(
             USER_TYPE_USER -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)
             USER_TYPE_ORGANIZER -> controller.navigate(R.id.action_loginFragment_to_organizerPageFragment)
             USER_TYPE_MODERATOR -> controller.navigate(R.id.action_loginFragment_to_moderatorPageFragment)
-            else -> showErrorMessage("Не удалось определить права доступа")
+            else -> showErrorMessage(R.string.login_cant_determine_user_rights_msg.toString())
         }
     }
 

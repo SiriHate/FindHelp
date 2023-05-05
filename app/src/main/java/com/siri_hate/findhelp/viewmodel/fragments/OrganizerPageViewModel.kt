@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
+import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 
-class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFirestoreModel) : ViewModel() {
+class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFirestoreModel) :
+    ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
 
@@ -54,12 +56,15 @@ class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFiresto
                 _loading.value = false
             },
             {
-                _errorMessageLiveData.postValue("Listen failed.")
+                _errorMessageLiveData.postValue(R.string.organizer_receiving_data_error_msg.toString())
             }
         )
     }
 
-    fun filterVacancies(query: String, originalList: List<DocumentSnapshot>): List<DocumentSnapshot> {
+    fun filterVacancies(
+        query: String,
+        originalList: List<DocumentSnapshot>
+    ): List<DocumentSnapshot> {
         return originalList.filter {
             it.getString(VACANCY_NAME_FIELD)?.startsWith(query, ignoreCase = true) ?: false
         }

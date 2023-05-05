@@ -45,12 +45,8 @@ class UserProfileSkillsAdapter(
         holder.skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
             val data = mapOf("$SKILLS_FIELD.${skill.name}" to isChecked)
             firestoreModel.updateDocument(COLLECTION_NAME, userEmail, data,
-                onSuccess = {
-                    skillsList[position].isChecked = isChecked
-                },
-                onFailure = {
-                    // Обработка ошибки
-                })
+                onSuccess = { skillsList[position].isChecked = isChecked },
+                onFailure = {})
         }
     }
 

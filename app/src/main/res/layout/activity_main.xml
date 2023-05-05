@@ -35,7 +35,7 @@
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/main_logout_button"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:srcCompat="@drawable/logout"
             app:tint="#FFFFFF" />
 
@@ -47,7 +47,7 @@
             android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/main_go_back_button"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:srcCompat="@drawable/go_back"
             app:tint="#FFFFFF" />
 

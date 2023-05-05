@@ -26,7 +26,7 @@ class UserPageFragment : Fragment() {
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
     private lateinit var controller: NavController
     private lateinit var adapter: UserVacancyAdapter
-    private lateinit var binding:FragmentUserPageBinding
+    private lateinit var binding: FragmentUserPageBinding
 
     companion object {
         private const val TAG = "UserPageFragment"
@@ -59,13 +59,14 @@ class UserPageFragment : Fragment() {
         binding.userPageMenu.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_navigation_item_home -> {
-                    // Nothing
                     true
                 }
+
                 R.id.bottom_navigation_item_profile -> {
                     controller.navigate(R.id.action_userPageFragment_to_userProfileFragment)
                     true
                 }
+
                 else -> false
             }
         }
@@ -73,10 +74,13 @@ class UserPageFragment : Fragment() {
         controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
-                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
+                        true
                 }
+
                 R.id.userProfileFragment -> {
-                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
+                        true
                 }
             }
         }
@@ -129,8 +133,12 @@ class UserPageFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d(TAG, "Ошибка: ", exception)
-                    Toast.makeText(context, "Ошибка загрузки списка", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "Error: ", exception)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.user_page_list_loading_err_msg),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }
@@ -168,6 +176,7 @@ class UserPageFragment : Fragment() {
         filteredVacancies.sortByDescending { vacancy ->
             @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
+
             @Suppress("UNCHECKED_CAST")
             val userSkills = userDoc[SKILLS_FIELD] as? HashMap<String, Boolean>
             var matchCount = 0

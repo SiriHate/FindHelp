@@ -85,9 +85,18 @@ class EditVacancyFragment : Fragment() {
             val description = binding.editVacancyFragmentDescriptionInput.text.toString()
             val selectedSkills = adapter.getSkills().associateBy({ it.name }, { it.isChecked })
 
-            if (viewModel.validateInputs(name, city, description) && viewModel.validateSelectedSkills(adapter.getSkills())) {
+            if (viewModel.validateInputs(
+                    name,
+                    city,
+                    description
+                ) && viewModel.validateSelectedSkills(adapter.getSkills())
+            ) {
                 viewModel.updateVacancy(documentId, name, city, description, selectedSkills, {
-                    Toast.makeText(requireContext(), "Вакансия успешно изменена!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.vacancy_edited_successfully_msg),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     val bundle = Bundle()
                     bundle.putString(DOCUMENT_ID_KEY, documentId)
@@ -96,7 +105,11 @@ class EditVacancyFragment : Fragment() {
                         bundle
                     )
                 }, { errorMessage ->
-                    Toast.makeText(requireContext(), "Ошибка изменения вакансии: $errorMessage", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.vacancy_edit_error_message, errorMessage),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 })
             }
         }

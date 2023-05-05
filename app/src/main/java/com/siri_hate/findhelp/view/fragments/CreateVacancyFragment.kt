@@ -70,7 +70,11 @@ class CreateVacancyFragment : Fragment() {
         val selectedSkillsMap = getSelectedSkillsMap()
 
         viewModel.createVacancy(name, city, description, selectedSkillsMap, {
-            Toast.makeText(requireContext(), "Вакансия успешно добавлена!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.vacancy_added_successfully_msg),
+                Toast.LENGTH_SHORT
+            ).show()
             findNavController().navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
         }, {})
     }
@@ -86,15 +90,18 @@ class CreateVacancyFragment : Fragment() {
     private fun validateInputs(): Boolean {
         var isValid = true
         if (binding.createVacancyFragmentNameInput.text.isBlank()) {
-            binding.createVacancyFragmentNameInput.error = "Введите имя вакансии!"
+            binding.createVacancyFragmentNameInput.error =
+                getString(R.string.neeed_to_enter_vacancy_name_msg)
             isValid = false
         }
         if (binding.createVacancyFragmentCityInput.text.isBlank()) {
-            binding.createVacancyFragmentCityInput.error = "Введите город вакансии!"
+            binding.createVacancyFragmentCityInput.error =
+                getString(R.string.neeed_to_enter_vacancy_city_msg)
             isValid = false
         }
         if (binding.createVacancyFragmentDescriptionInput.text.isBlank()) {
-            binding.createVacancyFragmentDescriptionInput.error = "Введите описание вакансии!"
+            binding.createVacancyFragmentDescriptionInput.error =
+                getString(R.string.neeed_to_enter_vacancy_description_msg)
             isValid = false
         }
         return isValid
@@ -103,7 +110,11 @@ class CreateVacancyFragment : Fragment() {
     private fun validateSkills(): Boolean {
         val selectedSkills = adapter.getSkills().filter { it.isChecked }
         if (selectedSkills.isEmpty()) {
-            Toast.makeText(requireContext(), "Выберите хотя бы один навык!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.neeed_to_select_vacancy_skill_msg),
+                Toast.LENGTH_SHORT
+            ).show()
             return false
         }
         return true

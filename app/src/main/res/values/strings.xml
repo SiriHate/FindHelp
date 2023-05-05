@@ -105,6 +105,37 @@
     <string name="empty_list_message">Здесь пока ничего нет</string>
 
     <!-- InCode messages -->
-
-
+    <!-- (CreateVacancyFragment) -->
+    <string name="vacancy_added_successfully_msg">Вакансия успешно добавлена!</string>
+    <string name="neeed_to_enter_vacancy_name_msg">Введите имя вакансии!</string>
+    <string name="neeed_to_enter_vacancy_city_msg">Введите город вакансии!</string>
+    <string name="neeed_to_enter_vacancy_description_msg">Введите описание вакансии!</string>
+    <string name="neeed_to_select_vacancy_skill_msg">Введите описание вакансии!</string>
+    <!-- (EditVacancyFragment) -->
+    <string name="vacancy_edited_successfully_msg">Вакансия успешно изменена!</string>
+    <string name="vacancy_edit_error_message">Ошибка изменения вакансии: %1$s</string>
+    <!-- (RegisterPageFragment) -->
+    <string name="user_registration_successfully_msg">Регистрация прошла успешно</string>
+    <string name="user_registration_error_msg">Ошибка регистрации: %1$s</string>
+    <string name="reg_need_to_enter_email_msg">Введите email</string>
+    <string name="reg_need_to_enter_password_msg">Введите пароль</string>
+    <string name="reg_need_to_enter_password_repeat_msg">Подтвердите пароль</string>
+    <string name="reg_need_to_enter_org_name_msg">Введите название организации</string>
+    <string name="reg_need_to_enter_contact_person_msg">Введите контактное лицо</string>
+    <string name="reg_need_to_enter_org_phone_msg">Введите номер телефона</string>
+    <string name="reg_need_to_enter_org_name_already_exists_msg">Название организации уже занято</string>
+    <string name="reg_need_to_enter_org_phone_already_exists_msg">Номер телефона уже занят</string>
+    <!-- (UserPageFragment) -->
+    <string name="user_page_list_loading_err_msg">Ошибка загрузки списка</string>
+    <!-- (VacancyDeleteAlertDialog) -->
+    <string name="delete_vacancy_dialog_tittle">Удаление вакансии</string>
+    <string name="delete_vacancy_dialog_description">Вы точно хотите удалить эту вакансию?</string>
+    <string name="delete_vacancy_dialog_positive_answer">Да</string>
+    <string name="delete_vacancy_dialog_negative_answer">Нет</string>
+    <!-- (LoginPageViewModel) -->
+    <string name="login_cant_determine_user_rights_msg">Не удалось определить права доступа</string>
+    <!-- (ModeratorPageFragment) -->
+    <string name="moderator_receiving_data_error_msg">Ошибка подключения!</string>
+    <!-- (OrganizerPageFragment) -->
+    <string name="organizer_receiving_data_error_msg">Ошибка подключения!</string>
 </resources>

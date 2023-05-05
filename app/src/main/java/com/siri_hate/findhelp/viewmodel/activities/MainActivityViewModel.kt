@@ -1,18 +1,19 @@
 package com.siri_hate.findhelp.viewmodel.activities
 
 import android.util.Log
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.model.firebase.FirebaseAuthModel
+import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 
-class MainActivityViewModel : ViewModel() {
+class MainActivityViewModel(
+    private val firestoreModel: FirebaseFirestoreModel,
+    private val authModel: FirebaseAuthModel
+) : ViewModel() {
 
     private val _showLogoutButton = MutableLiveData(false)
     val showLogoutButton: LiveData<Boolean>
@@ -22,21 +23,13 @@ class MainActivityViewModel : ViewModel() {
     val showGoBackButton: LiveData<Boolean>
         get() = _showGoBackButton
 
-    private lateinit var db: FirebaseFirestore
-
     companion object {
         private const val TAG = "MainActivityViewModel"
-        private const val USER_RIGHTS_COLLECTION = "user_rights"
         private const val USER_TYPE_FIELD = "userType"
         private const val USER_TYPE_ORGANIZER_VALUE = "organizer"
         private const val USER_TYPE_USER_VALUE = "user"
         private const val USER_TYPE_MODERATOR_VALUE = "moderator"
     }
-
-    fun initialize(db: FirebaseFirestore) {
-        this.db = db
-    }
-
     fun onDestinationChanged(destinationId: Int) {
         when (destinationId) {
             R.id.userPageFragment,
@@ -82,10 +75,9 @@ class MainActivityViewModel : ViewModel() {
     }
 
     private fun vacancyCardExit(controller: NavController) {
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = authModel.getCurrentUser()
         user?.email?.let { email ->
-            db.collection(USER_RIGHTS_COLLECTION).document(email)
-                .get()
+            firestoreModel.getUserTypeFromFirestore(email)
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         when (val userType = document.getString(USER_TYPE_FIELD)) {
@@ -102,5 +94,9 @@ class MainActivityViewModel : ViewModel() {
                     Log.d(TAG, "Ошибка получения документа", exception)
                 }
         }
+    }
+
+    fun performLogout() {
+        authModel.performLogout()
     }
 }

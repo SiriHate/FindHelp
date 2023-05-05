@@ -67,13 +67,13 @@ class OrganizerVacancyListAdapter(
 
             holder.vacancyItemDeleteButton.setOnClickListener {
                 val dialog = AlertDialog.Builder(context)
-                    .setTitle("Удаление вакансии")
-                    .setMessage("Вы точно хотите удалить эту вакансию?")
-                    .setPositiveButton("Да") { _, _ ->
+                    .setTitle(R.string.delete_vacancy_dialog_tittle)
+                    .setMessage(R.string.delete_vacancy_dialog_description)
+                    .setPositiveButton(R.string.delete_vacancy_dialog_positive_answer) { _, _ ->
                         documentRef.delete()
                         updateChangedPositions(position)
                     }
-                    .setNegativeButton("Нет", null)
+                    .setNegativeButton(R.string.delete_vacancy_dialog_negative_answer, null)
                     .show()
 
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)

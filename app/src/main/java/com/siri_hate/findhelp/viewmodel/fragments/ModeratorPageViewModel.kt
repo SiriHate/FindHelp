@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
+import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.model.firebase.FirebaseFirestoreModel
 import java.util.Locale
 
@@ -42,8 +43,8 @@ class ModeratorPageViewModel(private val firestoreModel: FirebaseFirestoreModel)
 
                 _loading.value = false
             },
-            { exception ->
-                _errorMessageLiveData.postValue("Listen failed: ${exception.message}")
+            {
+                _errorMessageLiveData.postValue(R.string.moderator_receiving_data_error_msg.toString())
             }
         )
     }
