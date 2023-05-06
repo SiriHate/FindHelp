@@ -10,7 +10,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:context=".view.fragments.OrganizerPageFragment">
+    tools:context=".ui.fragments.OrganizerPageFragment">
 
     <LinearLayout
         android:id="@+id/organizer_page_search_layout"

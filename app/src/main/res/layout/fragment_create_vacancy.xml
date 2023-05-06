@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#313338"
     android:orientation="vertical"
-    tools:context=".view.fragments.CreateVacancyFragment">
+    tools:context=".ui.viewmodels.fragments.CreateVacancyFragment">
 
     <TextView
         android:id="@+id/create_vacancy_fragment_main_tittle"

@@ -10,7 +10,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:context=".view.fragments.UserPageFragment">
+    tools:context=".ui.fragments.UserPageFragment">
 
     <LinearLayout
         android:id="@+id/user_page_search_layout"

@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".view.fragments.RegisterPageFragment">
+    tools:context=".ui.fragments.RegisterPageFragment">
 
     <TextView
         android:id="@+id/register_fragment_email_tittle"

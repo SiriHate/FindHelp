@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".view.fragments.VacancyCardPageFragment">
+    tools:context=".ui.fragments.VacancyCardPageFragment">
 
     <ProgressBar
         android:id="@+id/vacancy_card_loading_bar"

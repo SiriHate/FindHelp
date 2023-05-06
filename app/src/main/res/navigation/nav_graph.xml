@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.LoginPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.LoginPageFragment"
         android:label="login_fragment"
         tools:layout="@layout/fragment_login_page" >
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.RegisterPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.RegisterPageFragment"
         android:label="register_fragment"
         tools:layout="@layout/fragment_register_page" >
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/userPageFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.UserPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.UserPageFragment"
         android:label="user_page_fragment"
         tools:layout="@layout/fragment_user_page" >
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.UserProfileFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.UserProfileFragment"
         android:label="user_profile_fragment"
         tools:layout="@layout/fragment_user_profile" >
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/moderatorPageFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.ModeratorPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.ModeratorPageFragment"
         android:label="moderator_page_fragment"
         tools:layout="@layout/fragment_moderator_page" >
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/organizerPageFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.OrganizerPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.OrganizerPageFragment"
         android:label="organizer_page_fragment"
         tools:layout="@layout/fragment_organizer_page" >
         <action
@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/createVacancyFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.CreateVacancyFragment"
+        android:name="com.siri_hate.findhelp.ui.viewmodels.fragments.CreateVacancyFragment"
         android:label="create_vacancy_main_fragment"
         tools:layout="@layout/fragment_create_vacancy" >
         <action
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/vacancyCardFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.VacancyCardPageFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.VacancyCardPageFragment"
         android:label="vacancy_card_fragment"
         tools:layout="@layout/fragment_vacancy_card" >
         <action
@@ -114,7 +114,7 @@
     </fragment>
     <fragment
         android:id="@+id/editVacancyFragment"
-        android:name="com.siri_hate.findhelp.view.fragments.EditVacancyFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.EditVacancyFragment"
         android:label="edit_vacancy_main_fragment"
         tools:layout="@layout/fragment_edit_vacancy" >
         <action
