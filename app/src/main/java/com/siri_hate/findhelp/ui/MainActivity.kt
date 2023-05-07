@@ -33,9 +33,12 @@ class MainActivity : AppCompatActivity() {
         navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
         controller = navHostFragment.navController
 
-        controller.addOnDestinationChangedListener { _, destination, _ ->
-            viewModel.onDestinationChanged(destination.id)
-        }
+        setupListeners()
+        setupObservers()
+
+    }
+
+    private fun setupObservers() {
 
         viewModel.showLogoutButton.observe(this) {
             binding.mainLogoutButton.visibility = if (it) View.VISIBLE else View.GONE
@@ -43,6 +46,20 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.showGoBackButton.observe(this) {
             binding.mainGoBackButton.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
+        viewModel.editVacancyExit.observe(this) { status ->
+            if (status) {
+                editVacancyCardExit()
+            }
+        }
+
+    }
+
+    private fun setupListeners() {
+
+        controller.addOnDestinationChangedListener { _, destination, _ ->
+            viewModel.onDestinationChanged(destination.id)
         }
 
         binding.mainLogoutButton.setOnClickListener {
@@ -53,5 +70,13 @@ class MainActivity : AppCompatActivity() {
         binding.mainGoBackButton.setOnClickListener {
             viewModel.goBack(controller)
         }
+
     }
+
+    private fun editVacancyCardExit() {
+        val currentFragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
+        val bundle = currentFragment?.arguments
+        controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
+    }
+
 }

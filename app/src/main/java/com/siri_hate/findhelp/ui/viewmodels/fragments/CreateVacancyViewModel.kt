@@ -1,8 +1,12 @@
 package com.siri_hate.findhelp.ui.viewmodels.fragments
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 import com.siri_hate.findhelp.data.models.Skill
@@ -11,23 +15,47 @@ import com.siri_hate.findhelp.data.models.Vacancy
 class CreateVacancyViewModel(
     private val firebaseAuthModel: FirebaseAuthModel,
     private val firestoreModel: FirebaseFirestoreModel
-): ViewModel() {
+) : ViewModel() {
 
     private val _skillsList = MutableLiveData<List<Skill>>()
     val skillsList: LiveData<List<Skill>>
         get() = _skillsList
 
+    private val _toastMessage = MutableLiveData<Int>()
+    val toastMessage: LiveData<Int> = _toastMessage
+
+    private val _destPage = MutableLiveData<String>()
+    val destPage: LiveData<String> = _destPage
+
+    private val _vacancyNameInputError = MutableLiveData<Boolean>()
+    val vacancyNameInputError: LiveData<Boolean> = _vacancyNameInputError
+
+    private val _vacancyCityInputError = MutableLiveData<Boolean>()
+    val vacancyCityInputError: LiveData<Boolean> = _vacancyCityInputError
+
+    private val _vacancyDescriptionInputError = MutableLiveData<Boolean>()
+    val vacancyDescriptionInputError: LiveData<Boolean> = _vacancyDescriptionInputError
+
     init {
         loadSkills()
     }
 
-    fun createVacancy(
+    fun handleCreateVacancy(
         name: String,
         city: String,
         description: String,
-        selectedSkillsMap: Map<String, Boolean>,
-        onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        selectedSkills: Map<String, Boolean>
+    ) {
+        if (validateInputs(name, city, description) && validateSkills(selectedSkills)) {
+            createVacancy(name, city, description, selectedSkills)
+        }
+    }
+
+    private fun createVacancy(
+        name: String,
+        city: String,
+        description: String,
+        selectedSkillsMap: Map<String, Boolean>
     ) {
         val currentUserEmail = firebaseAuthModel.getCurrentUser()?.email.toString()
         firestoreModel.getDocument("organization_info", currentUserEmail,
@@ -48,18 +76,53 @@ class CreateVacancyViewModel(
                 )
 
                 firestoreModel.addDocument("vacancies_list", vacancy,
-                    onSuccess = {
-                        onSuccess()
-                    },
-                    onFailure = {
-                        onFailure()
-                    }
+                    onSuccess = { createVacancySuccess() },
+                    onFailure = { createVacancyFailed() }
                 )
             },
-            onFailure = {
-                onFailure()
-            }
+            onFailure = { createVacancyFailed() }
         )
+    }
+
+    private fun validateInputs(email: String, city: String, description: String): Boolean {
+        var isValid = true
+        if (email.isBlank()) {
+            _vacancyNameInputError.value = true
+            isValid = false
+        }
+        if (city.isBlank()) {
+            _vacancyCityInputError.value = true
+            isValid = false
+        }
+        if (description.isBlank()) {
+            _vacancyDescriptionInputError.value = true
+            isValid = false
+        }
+        return isValid
+    }
+
+    private fun validateSkills(selectedSkills: Map<String, Boolean>): Boolean {
+        if (!selectedSkills.containsValue(true)) {
+            _toastMessage.value = R.string.neeed_to_select_vacancy_skill_msg
+            return false
+        }
+        return true
+    }
+
+    private fun createVacancySuccess() {
+        _destPage.value = "organizer"
+        _toastMessage.value = R.string.vacancy_added_successfully_msg
+    }
+
+    private fun createVacancyFailed() {
+        _toastMessage.value = R.string.vacancy_added_failed_msg
+    }
+
+    fun navigateToPage(controller: NavController, destPage: String) {
+        when (destPage) {
+            "organizer" -> controller.navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
+            else -> Log.d(TAG, "Navigate error")
+        }
     }
 
     private fun loadSkills() {
@@ -73,14 +136,5 @@ class CreateVacancyViewModel(
             }
         )
     }
-
-    fun convertSkillsList(skillsList: List<Skill>): MutableMap<String, Boolean> {
-        val skillsMap = mutableMapOf<String, Boolean>()
-        skillsList.forEach { skill ->
-            skillsMap[skill.name] = skill.isChecked
-        }
-        return skillsMap
-    }
-
 
 }

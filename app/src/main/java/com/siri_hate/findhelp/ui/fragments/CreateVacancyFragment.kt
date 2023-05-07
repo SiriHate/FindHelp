@@ -1,4 +1,4 @@
-package com.siri_hate.findhelp.ui.viewmodels.fragments
+package com.siri_hate.findhelp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +14,7 @@ import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 import com.siri_hate.findhelp.ui.adapters.CreateVacancyAdapter
 import com.siri_hate.findhelp.ui.viewmodels.factories.CreateVacancyViewModelFactory
+import com.siri_hate.findhelp.ui.viewmodels.fragments.CreateVacancyViewModel
 
 class CreateVacancyFragment : Fragment() {
 
@@ -33,13 +34,14 @@ class CreateVacancyFragment : Fragment() {
     ): View {
         binding = FragmentCreateVacancyBinding.inflate(inflater, container, false)
 
+
         setupListeners()
-        observeSkillsList()
+        setupObservers()
 
         return binding.root
     }
 
-    private fun observeSkillsList() {
+    private fun setupObservers() {
         viewModel.skillsList.observe(viewLifecycleOwner) { skillsList ->
             if (skillsList.isEmpty()) {
                 binding.createVacancyFragmentSkillsList.visibility = View.GONE
@@ -50,13 +52,38 @@ class CreateVacancyFragment : Fragment() {
                 binding.createVacancyEmptyListMessage.visibility = View.GONE
             }
         }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), getString(message), Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.destPage.observe(viewLifecycleOwner) { destinationPage ->
+            viewModel.navigateToPage(findNavController(), destinationPage)
+        }
+
+        viewModel.vacancyNameInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.createVacancyFragmentNameInput.error = getString(R.string.neeed_to_enter_vacancy_name_msg)
+            }
+        }
+
+        viewModel.vacancyCityInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.createVacancyFragmentCityInput.error = getString(R.string.neeed_to_enter_vacancy_city_msg)
+            }
+        }
+
+        viewModel.vacancyDescriptionInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.createVacancyFragmentDescriptionInput.error = getString(R.string.neeed_to_enter_vacancy_description_msg)
+            }
+        }
+
     }
 
     private fun setupListeners() {
         binding.createVacancyFragmentCreateButton.setOnClickListener {
-            if (validateInputs() && validateSkills()) {
-                createVacancy()
-            }
+            createVacancy()
         }
     }
 
@@ -64,53 +91,9 @@ class CreateVacancyFragment : Fragment() {
         val name = binding.createVacancyFragmentNameInput.text.toString()
         val city = binding.createVacancyFragmentCityInput.text.toString()
         val description = binding.createVacancyFragmentDescriptionInput.text.toString()
-        val selectedSkillsMap = getSelectedSkillsMap()
+        val selectedSkillsMap = adapter.getSkills().associateBy({ it.name }, { it.isChecked })
 
-        viewModel.createVacancy(name, city, description, selectedSkillsMap, {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.vacancy_added_successfully_msg),
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
-        }, {})
+        viewModel.handleCreateVacancy(name, city, description, selectedSkillsMap)
     }
 
-    private fun getSelectedSkillsMap(): Map<String, Boolean> {
-        val skillsList = adapter.getSkills()
-        return viewModel.convertSkillsList(skillsList)
-    }
-
-    private fun validateInputs(): Boolean {
-        var isValid = true
-        if (binding.createVacancyFragmentNameInput.text.isBlank()) {
-            binding.createVacancyFragmentNameInput.error =
-                getString(R.string.neeed_to_enter_vacancy_name_msg)
-            isValid = false
-        }
-        if (binding.createVacancyFragmentCityInput.text.isBlank()) {
-            binding.createVacancyFragmentCityInput.error =
-                getString(R.string.neeed_to_enter_vacancy_city_msg)
-            isValid = false
-        }
-        if (binding.createVacancyFragmentDescriptionInput.text.isBlank()) {
-            binding.createVacancyFragmentDescriptionInput.error =
-                getString(R.string.neeed_to_enter_vacancy_description_msg)
-            isValid = false
-        }
-        return isValid
-    }
-
-    private fun validateSkills(): Boolean {
-        val selectedSkills = adapter.getSkills().filter { it.isChecked }
-        if (selectedSkills.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.neeed_to_select_vacancy_skill_msg),
-                Toast.LENGTH_SHORT
-            ).show()
-            return false
-        }
-        return true
-    }
 }

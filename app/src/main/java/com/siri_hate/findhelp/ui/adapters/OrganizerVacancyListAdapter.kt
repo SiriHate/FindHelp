@@ -12,14 +12,14 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
 
 class OrganizerVacancyListAdapter(
     private val context: Context,
     private var offers: List<DocumentSnapshot>,
-    private val controller: NavController
+    private val controller: NavController,
+    private val userEmail: String
 ) : RecyclerView.Adapter<OrganizerVacancyListAdapter.OrganizerViewHolder>() {
 
     companion object {
@@ -27,9 +27,6 @@ class OrganizerVacancyListAdapter(
         private const val VACANCY_NAME_FIELD = "vacancy_name"
         private const val CREATOR_EMAIL_FIELD = "creator_email"
     }
-
-    private val auth = FirebaseAuth.getInstance()
-    private val userEmail = auth.currentUser?.email
 
     private val changedPositions = mutableListOf<Int>()
 

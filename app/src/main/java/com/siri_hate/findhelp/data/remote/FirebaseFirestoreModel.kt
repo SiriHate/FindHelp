@@ -32,7 +32,7 @@ class FirebaseFirestoreModel {
             if (e != null) {
                 onError(e)
             } else {
-                onEvent(snapshots ?: return@addSnapshotListener)
+                onEvent(snapshots ?: return@addSnapshotListener) //TODO пофиксить это
             }
         }
     }
@@ -79,6 +79,22 @@ class FirebaseFirestoreModel {
         onFailure: () -> Unit
     ) {
         db.collection(collectionName).add(data)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                onFailure()
+            }
+    }
+
+    fun setDocument(
+        collectionName: String,
+        documentId: String,
+        data: Any,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        db.collection(collectionName).document(documentId).set(data)
             .addOnSuccessListener {
                 onSuccess()
             }

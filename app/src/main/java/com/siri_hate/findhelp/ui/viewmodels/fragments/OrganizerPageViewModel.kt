@@ -3,16 +3,17 @@ package com.siri_hate.findhelp.ui.viewmodels.fragments
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.siri_hate.findhelp.R
+import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 
-class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFirestoreModel) :
+class OrganizerPageViewModel(
+    private val firebaseAuthModel: FirebaseAuthModel,
+    private val firestoreModel: FirebaseFirestoreModel
+    ) :
     ViewModel() {
-
-    private val auth = FirebaseAuth.getInstance()
 
     private val _vacanciesLiveData = MutableLiveData<List<DocumentSnapshot>>()
     val vacanciesLiveData: LiveData<List<DocumentSnapshot>> = _vacanciesLiveData
@@ -33,12 +34,16 @@ class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFiresto
         private const val VACANCY_NAME_FIELD = "vacancy_name"
     }
 
+    fun getUserEmail(): String {
+        return firebaseAuthModel.getCurrentUser()?.email ?: ""
+    }
+
     fun initVacanciesListener() {
-        val userEmail = auth.currentUser?.email ?: ""
+        val userEmail = getUserEmail()
 
         _loading.value = true
 
-        snapshotListener = firebaseFirestoreModel.addSnapshotListener(
+        snapshotListener = firestoreModel.addSnapshotListener(
             FirebaseFirestoreModel.VACANCIES_COLLECTION,
             { value ->
                 val offers = mutableListOf<DocumentSnapshot>()
@@ -61,13 +66,26 @@ class OrganizerPageViewModel(private val firebaseFirestoreModel: FirebaseFiresto
         )
     }
 
-    fun filterVacancies(
+    fun filterVacanciesByQuery(query: String) {
+        val originalList = vacanciesLiveData.value ?: emptyList()
+        val filteredList = filterVacancies(query, originalList)
+        _vacanciesLiveData.postValue(filteredList)
+        _emptyListLiveData.postValue(filteredList.isEmpty())
+    }
+
+    private fun filterVacancies(
         query: String,
         originalList: List<DocumentSnapshot>
     ): List<DocumentSnapshot> {
         return originalList.filter {
             it.getString(VACANCY_NAME_FIELD)?.startsWith(query, ignoreCase = true) ?: false
         }
+    }
+
+    fun restartVacanciesListener() {
+        _loading.value = true
+        snapshotListener?.remove()
+        initVacanciesListener()
     }
 
     override fun onCleared() {

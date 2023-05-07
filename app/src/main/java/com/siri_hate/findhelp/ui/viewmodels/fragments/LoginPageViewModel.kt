@@ -23,7 +23,8 @@ class LoginPageViewModel(
         const val MODERATOR_PAGE = "moderator"
     }
 
-    val errorMessageLiveData: MutableLiveData<String> = MutableLiveData()
+    private val _toastMessage: MutableLiveData<String> = MutableLiveData()
+    val toastMessage: LiveData<String> = _toastMessage
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData()
     val loading:LiveData<Boolean> = _loading
@@ -126,6 +127,6 @@ class LoginPageViewModel(
     }
 
     private fun showErrorMessage(message: String) {
-        errorMessageLiveData.postValue(message)
+        _toastMessage.postValue(message)
     }
 }

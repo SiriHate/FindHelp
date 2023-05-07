@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import java.util.Locale
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentOrganizerPageBinding
-import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 import com.siri_hate.findhelp.ui.adapters.OrganizerVacancyListAdapter
 import com.siri_hate.findhelp.ui.viewmodels.factories.OrganizerPageViewModelFactory
 import com.siri_hate.findhelp.ui.viewmodels.fragments.OrganizerPageViewModel
-import java.util.Locale
-
+import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
+import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 class OrganizerPageFragment : Fragment() {
 
     private lateinit var adapter: OrganizerVacancyListAdapter
@@ -25,6 +25,7 @@ class OrganizerPageFragment : Fragment() {
 
     private val viewModel: OrganizerPageViewModel by viewModels {
         OrganizerPageViewModelFactory(
+            FirebaseAuthModel(),
             FirebaseFirestoreModel()
         )
     }
@@ -41,7 +42,8 @@ class OrganizerPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = OrganizerVacancyListAdapter(requireContext(), emptyList(), controller)
+        val userEmail = viewModel.getUserEmail()
+        adapter = OrganizerVacancyListAdapter(requireContext(), emptyList(), controller, userEmail)
         binding.organizerPageVacancyList.adapter = adapter
 
         viewModel.initVacanciesListener()
@@ -80,12 +82,11 @@ class OrganizerPageFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 val query = newText.lowercase(Locale.getDefault())
-                val originalList = viewModel.vacanciesLiveData.value ?: emptyList()
-                val filteredList = viewModel.filterVacancies(query, originalList)
-                adapter.updateVacancies(filteredList)
-
-                showEmptyListMessage(filteredList.isEmpty())
-
+                if (query.isEmpty()) {
+                    viewModel.restartVacanciesListener()
+                } else {
+                    viewModel.filterVacanciesByQuery(query)
+                }
                 return true
             }
         })

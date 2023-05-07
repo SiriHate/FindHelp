@@ -59,11 +59,7 @@ class LoginPageFragment : Fragment() {
 
     private fun hideKeyboard() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
-        view?.let { v ->
-            imm?.hideSoftInputFromWindow(v.windowToken, 0)
-        }
-
+        view?.let { v -> imm?.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 
     private fun performLogin() {
@@ -75,7 +71,7 @@ class LoginPageFragment : Fragment() {
 
     private fun setupObservers() {
 
-        viewModel.errorMessageLiveData.observe(viewLifecycleOwner) { errorMessage ->
+        viewModel.toastMessage.observe(viewLifecycleOwner) { errorMessage ->
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
 
@@ -112,4 +108,5 @@ class LoginPageFragment : Fragment() {
     private fun hideLoadingIndicator() {
         binding.loginFragmentRegistrationLoginProgressBar.visibility = View.INVISIBLE
     }
+
 }

@@ -55,6 +55,7 @@ class EditVacancyFragment : Fragment() {
     }
 
     private fun setupObservers() {
+
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.editVacancyMainLayout.visibility = View.GONE
@@ -87,6 +88,40 @@ class EditVacancyFragment : Fragment() {
                 binding.editVacancyEmptyListMessage.visibility = View.GONE
             }
         }
+
+        viewModel.vacancyNameInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.editVacancyFragmentNameInput.error = getString(R.string.neeed_to_enter_vacancy_name_msg)
+            }
+        }
+
+        viewModel.vacancyCityInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.editVacancyFragmentCityInput.error = getString(R.string.neeed_to_enter_vacancy_city_msg)
+            }
+        }
+
+        viewModel.vacancyDescriptionInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.editVacancyFragmentDescriptionInput.error = getString(R.string.neeed_to_enter_vacancy_description_msg)
+            }
+        }
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), getString(message), Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.goBack.observe(viewLifecycleOwner) { status ->
+            if (status) {
+                val bundle = Bundle()
+                bundle.putString(DOCUMENT_ID_KEY, documentId)
+                findNavController().navigate(
+                    R.id.action_editVacancyMainFragment_to_vacancyCardFragment,
+                    bundle
+                )
+            }
+        }
+
     }
 
     private fun setupListeners() {
@@ -101,33 +136,7 @@ class EditVacancyFragment : Fragment() {
         val description = binding.editVacancyFragmentDescriptionInput.text.toString()
         val selectedSkills = adapter.getSkills().associateBy({ it.name }, { it.isChecked })
 
-        if (viewModel.validateInputs(
-                name,
-                city,
-                description
-            ) && viewModel.validateSelectedSkills(adapter.getSkills())
-        ) {
-            viewModel.updateVacancy(documentId, name, city, description, selectedSkills, {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.vacancy_edited_successfully_msg),
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                val bundle = Bundle()
-                bundle.putString(DOCUMENT_ID_KEY, documentId)
-                findNavController().navigate(
-                    R.id.action_editVacancyMainFragment_to_vacancyCardFragment,
-                    bundle
-                )
-            }, { errorMessage ->
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.vacancy_edit_error_message, errorMessage),
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
-        }
+        viewModel.handleUpdateVacancy(documentId, name, city, description, selectedSkills)
     }
 
 }

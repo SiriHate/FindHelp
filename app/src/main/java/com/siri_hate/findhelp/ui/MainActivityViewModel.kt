@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
@@ -22,6 +21,9 @@ class MainActivityViewModel(
     private val _showGoBackButton = MutableLiveData(false)
     val showGoBackButton: LiveData<Boolean>
         get() = _showGoBackButton
+
+    private val _editVacancyExit = MutableLiveData<Boolean>()
+    val editVacancyExit: LiveData<Boolean> = _editVacancyExit
 
     companion object {
         private const val TAG = "MainActivityViewModel"
@@ -61,17 +63,9 @@ class MainActivityViewModel(
         when (controller.currentDestination?.id) {
             R.id.registerFragment -> controller.navigate(R.id.action_registerFragment_to_loginFragment)
             R.id.createVacancyFragment -> controller.navigate(R.id.action_createVacancyFragment_to_organizerPageFragment)
-            R.id.editVacancyFragment -> editVacancyCardExit(controller)
+            R.id.editVacancyFragment -> _editVacancyExit.value = true
             R.id.vacancyCardFragment -> vacancyCardExit(controller)
         }
-    }
-
-    private fun editVacancyCardExit(controller: NavController) {
-        val navHostFragment =
-            (controller.currentDestination as NavHostFragment)
-        val currentFragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
-        val bundle = currentFragment?.arguments
-        controller.navigate(R.id.action_editVacancyMainFragment_to_vacancyCardFragment, bundle)
     }
 
     private fun vacancyCardExit(controller: NavController) {

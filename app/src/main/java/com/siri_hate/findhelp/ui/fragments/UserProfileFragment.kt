@@ -21,6 +21,7 @@ import com.siri_hate.findhelp.ui.viewmodels.factories.UserProfileViewModelFactor
 import com.siri_hate.findhelp.ui.viewmodels.fragments.UserProfileViewModel
 
 class UserProfileFragment : Fragment(), UserProfileSkillsAdapter.UserProfileSkillsCallback {
+
     private lateinit var adapter: UserProfileSkillsAdapter
     private lateinit var controller: NavController
     private lateinit var binding: FragmentUserProfileBinding
@@ -85,9 +86,11 @@ class UserProfileFragment : Fragment(), UserProfileSkillsAdapter.UserProfileSkil
                     controller.navigate(R.id.action_userProfileFragment_to_userPageFragment)
                     true
                 }
+
                 R.id.bottom_navigation_item_profile -> {
                     true
                 }
+
                 else -> false
             }
         }
@@ -95,8 +98,10 @@ class UserProfileFragment : Fragment(), UserProfileSkillsAdapter.UserProfileSkil
         controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
-                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
+                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
+                        true
                 }
+
                 R.id.userProfileFragment -> {
                     binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
                         true

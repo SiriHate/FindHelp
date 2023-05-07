@@ -40,7 +40,7 @@ class UserProfileSkillsAdapter(
         holder.skillCheckBox.isChecked = skill.isChecked
 
         holder.skillCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            callback.onSkillChecked(skill, isChecked)
+            callback.onSkillChecked(skill, isChecked) //TODO исправить ошибку с адаптером
         }
     }
 

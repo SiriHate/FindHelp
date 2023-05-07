@@ -3,9 +3,11 @@ package com.siri_hate.findhelp.ui.viewmodels.fragments
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 import com.siri_hate.findhelp.data.models.Organization
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class RegisterPageViewModel(
@@ -21,20 +23,88 @@ class RegisterPageViewModel(
     private val _registrationSuccess = MutableLiveData<Boolean>()
     val registrationSuccess: LiveData<Boolean> = _registrationSuccess
 
-    private val _registrationError = MutableLiveData<String?>()
-    val registrationError: LiveData<String?> = _registrationError
+    private val _toastMessage = MutableLiveData<Int>()
+    val toastMessage: LiveData<Int> = _toastMessage
 
-    fun registerUser(email: String, password: String) {
+    private val _emailInputError = MutableLiveData<Boolean>()
+    val emailInputError: LiveData<Boolean> = _emailInputError
+
+    private val _passwordInputError = MutableLiveData<Boolean>()
+    val passwordInputError: LiveData<Boolean> = _passwordInputError
+
+    private val _passwordConfirmInputError = MutableLiveData<Boolean>()
+    val passwordConfirmInputError: LiveData<Boolean> = _passwordConfirmInputError
+
+    private val _organizationNameInputError = MutableLiveData<Boolean>()
+    val organizationNameInputError: LiveData<Boolean> = _organizationNameInputError
+
+    private val _contactPersonInputError = MutableLiveData<Boolean>()
+    val contactPersonInputError: LiveData<Boolean> = _contactPersonInputError
+
+    private val _organizationPhoneInputError = MutableLiveData<Boolean>()
+    val organizationPhoneInputError: LiveData<Boolean> = _organizationPhoneInputError
+
+    private fun registerUser(email: String, password: String) {
         firebaseAuthModel.performRegistration(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 registrationSuccess(USER_TYPE_USER, email)
             } else {
-                registrationError(task.exception?.message)
+                registrationError()
             }
         }
     }
 
-    fun registerOrganizer(
+    fun handleRegistration(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        isOrganizer: Boolean,
+        organizationName: String,
+        contactPerson: String,
+        organizationPhone: String
+    ) {
+        if (!validateInputs(
+                email,
+                password,
+                confirmPassword,
+                isOrganizer,
+                organizationName,
+                contactPerson,
+                organizationPhone
+            )
+        ) {
+            return
+        } else {
+            if (isOrganizer) {
+                runBlocking {
+
+                    val isNameExists = checkOrganizationNameExists(organizationName)
+                    val isPhoneExists = checkOrganizationPhoneExists(organizationPhone)
+
+                    if (isNameExists) {
+                        _toastMessage.postValue(R.string.reg_need_to_enter_org_name_already_exists_msg) //TODO исправить ошибку из-за которой не работают ошибки
+                        return@runBlocking
+                    }
+                    if (isPhoneExists) {
+                        _toastMessage.postValue(R.string.reg_need_to_enter_org_phone_already_exists_msg)
+                        return@runBlocking
+                    }
+
+                    registerOrganizer(
+                        email,
+                        password,
+                        organizationName,
+                        contactPerson,
+                        organizationPhone
+                    )
+                }
+            } else {
+                registerUser(email, password)
+            }
+        }
+    }
+
+    private fun registerOrganizer(
         email: String,
         password: String,
         organizationName: String,
@@ -51,13 +121,14 @@ class RegisterPageViewModel(
                     organization_phone = organizationPhone
                 )
 
-                firestoreModel.addDocument(
+                firestoreModel.setDocument(
                     "organization_info",
+                    email,
                     organization,
                     onSuccess = {},
                     onFailure = {})
             } else {
-                registrationError(task.exception?.message)
+                registrationError()
             }
         }
     }
@@ -67,15 +138,15 @@ class RegisterPageViewModel(
         val currentUser = firebaseAuthModel.getCurrentUser()
         currentUser?.let {
             firestoreModel.setUserAccessRights(userType, email, it.uid)
-            initUserInfo(userType)
+            initUserInfo(userType, email)
         }
     }
 
-    private fun registrationError(errorMessage: String?) {
-        _registrationError.postValue(errorMessage)
+    private fun registrationError() {
+        _toastMessage.postValue(R.string.user_registration_error_msg)
     }
 
-    private fun initUserInfo(userType: String) {
+    private fun initUserInfo(userType: String, email: String) {
         if (userType == USER_TYPE_USER) {
             val baseSkillsRef = "base_skills_init"
             firestoreModel.getDocument("init_data", baseSkillsRef,
@@ -84,8 +155,9 @@ class RegisterPageViewModel(
                     val userData = HashMap<String, Any>()
                     userData.putAll(baseSkillsData ?: return@getDocument)
 
-                    firestoreModel.addDocument(
+                    firestoreModel.setDocument(
                         "user_info",
+                        email,
                         userData,
                         onSuccess = {},
                         onFailure = {})
@@ -94,7 +166,7 @@ class RegisterPageViewModel(
         }
     }
 
-    suspend fun checkOrganizationNameExists(organizationName: String): Boolean {
+    private suspend fun checkOrganizationNameExists(organizationName: String): Boolean {
         val querySnapshot =
             firestoreModel.getQuerySnapshotWhereEqualTo(
                 "organization_info",
@@ -104,7 +176,7 @@ class RegisterPageViewModel(
         return querySnapshot.documents.isNotEmpty()
     }
 
-    suspend fun checkOrganizationPhoneExists(organizationPhone: String): Boolean {
+    private suspend fun checkOrganizationPhoneExists(organizationPhone: String): Boolean {
         val querySnapshot =
             firestoreModel.getQuerySnapshotWhereEqualTo(
                 "organization_info",
@@ -114,7 +186,7 @@ class RegisterPageViewModel(
         return querySnapshot.documents.isNotEmpty()
     }
 
-    fun inputCheck(
+    private fun validateInputs(
         email: String,
         password: String,
         confirmPassword: String,
@@ -122,40 +194,49 @@ class RegisterPageViewModel(
         organizationName: String,
         contactPerson: String,
         organizationPhone: String
-    ): Map<String, Boolean> {
+    ): Boolean {
 
-        val errors = mutableMapOf<String, Boolean>()
+        var isValid = true
 
         if (email.isEmpty()) {
-            errors["email"] = true
+            _emailInputError.postValue(true)
+            isValid = false
         }
 
         if (password.isEmpty()) {
-            errors["password"] = true
+            _passwordInputError.postValue(true)
+            isValid = false
         }
 
         if (confirmPassword.isEmpty()) {
-            errors["confirmPassword"] = true
+            _passwordConfirmInputError.postValue(true)
+            isValid = false
         }
 
         if (password != confirmPassword) {
-            errors["confirmPassword"] = true
+            _toastMessage.postValue(R.string.reg_passwords_dont_match_msg) //TODO сделать ошибку на оба поля вместо Toast
+            isValid = false
         }
 
         if (isOrganizer) {
             if (organizationName.isEmpty()) {
-                errors["organizationName"] = true
+                _organizationNameInputError.postValue(true)
+                isValid = false
             }
 
             if (contactPerson.isEmpty()) {
-                errors["contactPerson"] = true
+                _contactPersonInputError.postValue(true)
+                isValid = false
             }
 
             if (organizationPhone.isEmpty()) {
-                errors["organizationPhone"] = true
+                _organizationPhoneInputError.postValue(true)
+                isValid = false
             }
         }
 
-        return errors.toMap()
+        return isValid
     }
+
+
 }

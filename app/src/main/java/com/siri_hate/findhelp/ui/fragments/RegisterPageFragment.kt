@@ -17,7 +17,6 @@ import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
 import com.siri_hate.findhelp.ui.viewmodels.factories.RegisterPageViewModelFactory
 import com.siri_hate.findhelp.ui.viewmodels.fragments.RegisterPageViewModel
-import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
 class RegisterPageFragment : Fragment() {
@@ -39,7 +38,7 @@ class RegisterPageFragment : Fragment() {
         binding = FragmentRegisterPageBinding.inflate(inflater, container, false)
 
         setupListeners()
-        observeViewModel()
+        setupObservers()
         return binding.root
     }
 
@@ -67,14 +66,11 @@ class RegisterPageFragment : Fragment() {
 
     private fun hideKeyboard() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
-        view?.let { v ->
-            imm?.hideSoftInputFromWindow(v.windowToken, 0)
-        }
-
+        view?.let { v -> imm?.hideSoftInputFromWindow(v.windowToken, 0) }
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers() {
+
         viewModel.registrationSuccess.observe(viewLifecycleOwner) {
             if (it) {
                 Toast.makeText(
@@ -86,13 +82,56 @@ class RegisterPageFragment : Fragment() {
             }
         }
 
-        viewModel.registrationError.observe(viewLifecycleOwner) {
+        viewModel.toastMessage.observe(viewLifecycleOwner) {
             Toast.makeText(
                 activity,
                 getString(R.string.user_registration_error_msg),
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+        viewModel.emailInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentEmailInput.error =
+                    getString(R.string.reg_need_to_enter_email_msg)
+            }
+        }
+
+        viewModel.passwordInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentPasswordInput.error =
+                    getString(R.string.reg_need_to_enter_password_msg)
+            }
+        }
+
+        viewModel.passwordConfirmInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentPasswordInputRepeat.error =
+                    getString(R.string.reg_need_to_enter_password_repeat_msg)
+            }
+        }
+
+        viewModel.organizationNameInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentOrganizationNameInput.error =
+                    getString(R.string.reg_need_to_enter_org_name_msg)
+            }
+        }
+
+        viewModel.contactPersonInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentContactPersonInput.error =
+                    getString(R.string.reg_need_to_enter_contact_person_msg)
+            }
+        }
+
+        viewModel.organizationPhoneInputError.observe(viewLifecycleOwner) { errorStatus ->
+            if (errorStatus) {
+                binding.registerFragmentOrganizationPhoneInput.error =
+                    getString(R.string.reg_need_to_enter_org_phone_msg)
+            }
+        }
+
     }
 
     private fun registration() {
@@ -105,7 +144,7 @@ class RegisterPageFragment : Fragment() {
             binding.registerFragmentOrganizationPhoneInput.text.toString().trim()
         val isOrganizer = binding.registerFragmentOrganaizerTypeChip.isChecked
 
-        val inputErrors = viewModel.inputCheck(
+        viewModel.handleRegistration(
             email,
             password,
             confirmPassword,
@@ -114,69 +153,5 @@ class RegisterPageFragment : Fragment() {
             contactPerson,
             organizationPhone
         )
-
-        if (inputErrors.isNotEmpty()) {
-            inputErrors.forEach { entry ->
-                val (fieldName, error) = entry
-                if (error) {
-                    when (fieldName) {
-                        "email" -> binding.registerFragmentEmailInput.error =
-                            getString(R.string.reg_need_to_enter_email_msg)
-
-                        "password" -> binding.registerFragmentPasswordInput.error =
-                            getString(R.string.reg_need_to_enter_password_msg)
-
-                        "confirmPassword" -> binding.registerFragmentPasswordInputRepeat.error =
-                            getString(R.string.reg_need_to_enter_password_repeat_msg)
-
-                        "organizationName" -> binding.registerFragmentOrganizationNameInput.error =
-                            getString(R.string.reg_need_to_enter_org_name_msg)
-
-                        "contactPerson" -> binding.registerFragmentContactPersonInput.error =
-                            getString(R.string.reg_need_to_enter_contact_person_msg)
-
-                        "organizationPhone" -> binding.registerFragmentOrganizationPhoneInput.error =
-                            getString(R.string.reg_need_to_enter_org_phone_msg)
-                    }
-                }
-            }
-
-            return
-        }
-
-        if (isOrganizer) {
-            runBlocking {
-                val isNameExists = viewModel.checkOrganizationNameExists(organizationName)
-                val isPhoneExists = viewModel.checkOrganizationPhoneExists(organizationPhone)
-
-                if (isNameExists) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.reg_need_to_enter_org_name_already_exists_msg),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    return@runBlocking
-                }
-                if (isPhoneExists) {
-                    Toast.makeText(
-                        activity,
-                        getString(R.string.reg_need_to_enter_org_phone_already_exists_msg),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@runBlocking
-                }
-
-                viewModel.registerOrganizer(
-                    email,
-                    password,
-                    organizationName,
-                    contactPerson,
-                    organizationPhone
-                )
-            }
-        } else {
-            viewModel.registerUser(email, password)
-        }
     }
 }

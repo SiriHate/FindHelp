@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/createVacancyFragment"
-        android:name="com.siri_hate.findhelp.ui.viewmodels.fragments.CreateVacancyFragment"
+        android:name="com.siri_hate.findhelp.ui.fragments.CreateVacancyFragment"
         android:label="create_vacancy_main_fragment"
         tools:layout="@layout/fragment_create_vacancy" >
         <action
