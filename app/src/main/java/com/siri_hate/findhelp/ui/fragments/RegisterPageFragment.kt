@@ -82,12 +82,8 @@ class RegisterPageFragment : Fragment() {
             }
         }
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(
-                activity,
-                getString(R.string.user_registration_error_msg),
-                Toast.LENGTH_SHORT
-            ).show()
+        viewModel.toastMessage.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(activity, getString(errorMessage), Toast.LENGTH_SHORT).show()
         }
 
         viewModel.emailInputError.observe(viewLifecycleOwner) { errorStatus ->

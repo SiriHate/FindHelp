@@ -19,3 +19,4 @@ class LoginPageViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+

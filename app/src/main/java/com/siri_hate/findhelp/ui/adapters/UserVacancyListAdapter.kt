@@ -12,17 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.siri_hate.findhelp.R
 
-class UserVacancyAdapter(
+class UserVacancyListAdapter(
     private var vacancies: List<DocumentSnapshot>,
-    private val userDoc: DocumentSnapshot,
+    private val userSkills: HashMap<String, Boolean>,
     private val controller: NavController
-) : RecyclerView.Adapter<UserVacancyAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UserVacancyListAdapter.ViewHolder>() {
 
     companion object {
         private const val DOCUMENT_ID = "document_id"
         private const val VACANCY_NAME_FIELD = "vacancy_name"
         private const val VACANCY_SKILLS_LIST_FIELD = "vacancy_skills_list"
-        private const val SKILLS_FIELD = "skills"
     }
 
     override fun getItemCount(): Int {
@@ -56,13 +55,11 @@ class UserVacancyAdapter(
 
         @Suppress("UNCHECKED_CAST")
         val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
-        @Suppress("UNCHECKED_CAST")
-        val userSkills = userDoc[SKILLS_FIELD] as? HashMap<String, Boolean>
         var matchCount = 0
         var vacancyCount = 0
 
         vacancySkillsList?.forEach { (skill, value) ->
-            if (value && userSkills?.get(skill) == true) {
+            if (value && userSkills[skill] == true) {
                 matchCount++
             }
             if (value) {

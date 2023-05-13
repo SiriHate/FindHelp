@@ -39,10 +39,46 @@ class UserProfileFragment : Fragment(), UserProfileSkillsAdapter.UserProfileSkil
     ): View {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
 
-        loading(true)
-
         controller = findNavController()
 
+        setupObservers()
+        setupListeners()
+
+        return binding.root
+    }
+
+    private fun setupListeners() {
+        binding.userProfileMenu.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.bottom_navigation_item_home -> {
+                    controller.navigate(R.id.action_userProfileFragment_to_userPageFragment)
+                    true
+                }
+
+                R.id.bottom_navigation_item_profile -> {
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        controller.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.userPageFragment -> {
+                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
+                        true
+                }
+
+                R.id.userProfileFragment -> {
+                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
+                        true
+                }
+            }
+        }
+    }
+
+    private fun setupObservers() {
         viewModel.userCity.observe(viewLifecycleOwner) { userCity ->
             binding.userProfileCityInput.apply {
                 setText(userCity)
@@ -80,44 +116,14 @@ class UserProfileFragment : Fragment(), UserProfileSkillsAdapter.UserProfileSkil
             }
         }
 
-        binding.userProfileMenu.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.bottom_navigation_item_home -> {
-                    controller.navigate(R.id.action_userProfileFragment_to_userPageFragment)
-                    true
-                }
-
-                R.id.bottom_navigation_item_profile -> {
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        controller.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.userPageFragment -> {
-                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
-                        true
-                }
-
-                R.id.userProfileFragment -> {
-                    binding.userProfileMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
-                        true
-                }
-            }
-        }
-
-        return binding.root
     }
 
     override fun onSkillChecked(skill: Skill, isChecked: Boolean) {
         viewModel.updateUserSkill(skill.name, isChecked)
     }
 
-    private fun loading(isLoading: Boolean) {
-        if (isLoading) {
+    private fun loading(status: Boolean) {
+        if (status) {
             binding.userProfileLoadingProgressBar.visibility = View.VISIBLE
             binding.userProfileMainLayout.visibility = View.GONE
         } else {

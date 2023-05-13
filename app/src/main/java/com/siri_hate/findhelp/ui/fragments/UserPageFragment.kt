@@ -12,11 +12,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentUserPageBinding
-import com.siri_hate.findhelp.ui.adapters.UserVacancyAdapter
+import com.siri_hate.findhelp.ui.adapters.UserVacancyListAdapter
 
 class UserPageFragment : Fragment() {
 
@@ -25,8 +26,8 @@ class UserPageFragment : Fragment() {
     private var allVacancies = mutableListOf<DocumentSnapshot>()
     private var filteredVacancies = mutableListOf<DocumentSnapshot>()
     private lateinit var controller: NavController
-    private lateinit var adapter: UserVacancyAdapter
-    private lateinit var binding:FragmentUserPageBinding
+    private lateinit var adapter: UserVacancyListAdapter
+    private lateinit var binding: FragmentUserPageBinding
 
     companion object {
         private const val TAG = "UserPageFragment"
@@ -61,10 +62,12 @@ class UserPageFragment : Fragment() {
                 R.id.bottom_navigation_item_home -> {
                     true
                 }
+
                 R.id.bottom_navigation_item_profile -> {
                     controller.navigate(R.id.action_userPageFragment_to_userProfileFragment)
                     true
                 }
+
                 else -> false
             }
         }
@@ -72,10 +75,13 @@ class UserPageFragment : Fragment() {
         controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
-                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
+                        true
                 }
+
                 R.id.userProfileFragment -> {
-                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked = true
+                    binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_profile).isChecked =
+                        true
                 }
             }
         }
@@ -96,33 +102,14 @@ class UserPageFragment : Fragment() {
 
     private fun fetchCurrentUserDocument() {
         val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
-        (currentUserEmail)?.let { it ->
+        (currentUserEmail)?.let { email ->
             db.collection(USER_INFO_COLLECTION)
-                .document(it)
+                .document(email)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         userDoc = document
-
-                        adapter = UserVacancyAdapter(filteredVacancies, userDoc, controller)
-                        binding.userPageVacancyList.adapter = adapter
-
-                        db.collection(VACANCIES_LIST_COLLECTION)
-                            .addSnapshotListener { value, error ->
-                                if (error != null) {
-                                    Log.w(TAG, "Listen failed.", error)
-                                    return@addSnapshotListener
-                                }
-
-                                allVacancies.clear()
-                                filteredVacancies.clear()
-
-                                value?.documents?.let { allVacancies.addAll(it) }
-
-                                filterAndSortVacancies("")
-
-                                loading(false)
-                            }
+                        updateUserVacancies()
                     } else {
                         Log.d(TAG, "No such document")
                     }
@@ -133,6 +120,34 @@ class UserPageFragment : Fragment() {
                 }
         }
     }
+
+    private fun updateUserVacancies() {
+        @Suppress("UNCHECKED_CAST")
+        val userSkills = userDoc[SKILLS_FIELD] as HashMap<String, Boolean>
+        adapter = UserVacancyListAdapter(filteredVacancies, userSkills, controller)
+        binding.userPageVacancyList.adapter = adapter
+
+        db.collection(VACANCIES_LIST_COLLECTION)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.w(TAG, "Listen failed.", error)
+                    return@addSnapshotListener
+                }
+
+                updateAllAndFilteredVacancies(value)
+                loading(false)
+            }
+    }
+
+    private fun updateAllAndFilteredVacancies(value: QuerySnapshot?) {
+        allVacancies.clear()
+        filteredVacancies.clear()
+
+        value?.documents?.let { allVacancies.addAll(it) }
+
+        filterAndSortVacancies("")
+    }
+
 
     private fun loading(isLoading: Boolean) {
         if (isLoading) {
@@ -152,23 +167,32 @@ class UserPageFragment : Fragment() {
     }
 
     private fun filterAndSortVacancies(query: String) {
-        filteredVacancies = allVacancies.filter {
-            val vacancyCity = it.getString(VACANCY_CITY_FIELD)
-            vacancyCity == userDoc.getString(USER_CITY_FIELD)
+        val matchingCityVacancies = filterVacancies(allVacancies, "")
+
+        filteredVacancies = filterVacancies(matchingCityVacancies, query)
+        sortFilteredVacanciesByMatchingSkills()
+        updateUI(filteredVacancies.isEmpty())
+    }
+
+    private fun filterVacancies(
+        vacancies: List<DocumentSnapshot>,
+        query: String
+    ): MutableList<DocumentSnapshot> {
+        return vacancies.filter {
+            it.getString(VACANCY_CITY_FIELD) == userDoc.getString(USER_CITY_FIELD)
+                    && (query.isEmpty() || it.getString(VACANCY_NAME_FIELD)
+                ?.startsWith(query, ignoreCase = true) ?: false)
         }.toMutableList()
+    }
 
-        if (query.isNotEmpty()) {
-            filteredVacancies = filteredVacancies.filter {
-                val vacancyName = it.getString(VACANCY_NAME_FIELD) ?: ""
-                vacancyName.startsWith(query, ignoreCase = true)
-            }.toMutableList()
-        }
-
+    private fun sortFilteredVacanciesByMatchingSkills() {
         filteredVacancies.sortByDescending { vacancy ->
             @Suppress("UNCHECKED_CAST")
             val vacancySkillsList = vacancy[VACANCY_SKILLS_LIST_FIELD] as? HashMap<String, Boolean>
+
             @Suppress("UNCHECKED_CAST")
             val userSkills = userDoc[SKILLS_FIELD] as? HashMap<String, Boolean>
+
             var matchCount = 0
             var vacancyCount = 0
 
@@ -183,13 +207,22 @@ class UserPageFragment : Fragment() {
 
             if (vacancyCount == 0) 0 else (matchCount * 100 / vacancyCount)
         }
+    }
 
-        if (filteredVacancies.isEmpty()) {
-            binding.userPageEmptyListMessage.visibility = View.VISIBLE
+    private fun updateUI(isLoading: Boolean) {
+        if (isLoading) {
+            binding.userPageLoadingProgressBar.visibility = View.VISIBLE
             binding.userPageVacancyList.visibility = View.GONE
-        } else {
             binding.userPageEmptyListMessage.visibility = View.GONE
-            binding.userPageVacancyList.visibility = View.VISIBLE
+        } else {
+            if (filteredVacancies.isEmpty()) {
+                binding.userPageEmptyListMessage.visibility = View.VISIBLE
+                binding.userPageVacancyList.visibility = View.GONE
+            } else {
+                binding.userPageEmptyListMessage.visibility = View.GONE
+                binding.userPageVacancyList.visibility = View.VISIBLE
+            }
+            binding.userPageLoadingProgressBar.visibility = View.GONE
         }
 
         adapter.updateList(filteredVacancies.toList())

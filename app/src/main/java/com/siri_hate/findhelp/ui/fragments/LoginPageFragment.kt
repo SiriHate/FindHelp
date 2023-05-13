@@ -28,6 +28,7 @@ class LoginPageFragment : Fragment() {
             FirebaseAuthModel(),
             FirebaseFirestoreModel()
         )
+
     }
 
     override fun onCreateView(

@@ -22,6 +22,8 @@ class UserProfileViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private lateinit var userEmail: String
+
     companion object {
         private const val SKILLS_COLLECTION = "skills"
         private const val USER_INFO_COLLECTION = "user_info"
@@ -29,83 +31,75 @@ class UserProfileViewModel(
     }
 
     init {
-        _isLoading.value = true
+        getUserEmail()
+        dataInit()
+    }
+
+    private fun getUserEmail() {
         val currentUser = firebaseAuthModel.getCurrentUser()
+        userEmail = currentUser?.email.orEmpty()
+    }
 
-        if (currentUser != null) {
-            val userEmail = currentUser.email.orEmpty()
+    private fun dataInit() {
 
-            firestoreModel.getDocument(
-                USER_INFO_COLLECTION, userEmail,
-                onSuccess = { documentSnapshot ->
-                    val userCity = documentSnapshot.getString(USER_CITY_FIELD) ?: ""
-                    _userCity.value = userCity
-                    _isLoading.value = false
-                },
-                onFailure = {
-                    _isLoading.value = false
-                }
-            )
+        loading(true)
 
-            firestoreModel.getDocument(
-                USER_INFO_COLLECTION, userEmail,
-                onSuccess = { documentSnapshot ->
-                    @Suppress("UNCHECKED_CAST")
-                    val skillsMap = documentSnapshot.get(SKILLS_COLLECTION) as? Map<String, Boolean>
-                    val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
+        firestoreModel.getDocument(
+            USER_INFO_COLLECTION, userEmail,
+            onSuccess = { documentSnapshot ->
+                val userCity = documentSnapshot.getString(USER_CITY_FIELD) ?: ""
+                _userCity.value = userCity
+                loading(false)
+            },
+            onFailure = {
+                loading(false)
+            }
+        )
 
-                    _userSkills.value = skillsList
-                    _isLoading.value = false
-                },
-                onFailure = {
-                    _isLoading.value = false
-                }
-            )
-        }
+        firestoreModel.getDocument(
+            USER_INFO_COLLECTION, userEmail,
+            onSuccess = { documentSnapshot ->
+                @Suppress("UNCHECKED_CAST")
+                val skillsMap = documentSnapshot.get(SKILLS_COLLECTION) as? Map<String, Boolean>
+                val skillsList = skillsMap?.map { Skill(it.key, it.value) } ?: emptyList()
+
+                _userSkills.value = skillsList
+                loading(false)
+            },
+            onFailure = {
+                loading(false)
+            }
+        )
+    }
+
+    private fun loading(status: Boolean) {
+        _isLoading.value = status
     }
 
     fun updateUserCity(newCity: String) {
-        val currentUser = firebaseAuthModel.getCurrentUser()
-
-        if (currentUser != null) {
-            val userEmail = currentUser.email.orEmpty()
-            firestoreModel.getDocument(
-                USER_INFO_COLLECTION, userEmail,
-                onSuccess = {
-                    firestoreModel.updateDocument(
-                        USER_INFO_COLLECTION,
-                        userEmail,
-                        mapOf(USER_CITY_FIELD to newCity),
-                        onSuccess = {},
-                        onFailure = {}
-                    )
-                },
-                onFailure = {}
-            )
-        }
+        firestoreModel.getDocument(
+            USER_INFO_COLLECTION, userEmail,
+            onSuccess = {
+                firestoreModel.updateDocument(
+                    USER_INFO_COLLECTION,
+                    userEmail,
+                    mapOf(USER_CITY_FIELD to newCity),
+                    onSuccess = {},
+                    onFailure = {}
+                )
+            },
+            onFailure = {}
+        )
     }
 
     fun updateUserSkill(skillName: String, isChecked: Boolean) {
-        val currentUser = firebaseAuthModel.getCurrentUser()
-
-        if (currentUser != null) {
-            val userEmail = currentUser.email.orEmpty()
-            val data = mapOf("$SKILLS_COLLECTION.$skillName" to isChecked)
-            firestoreModel.updateDocument(
-                USER_INFO_COLLECTION, userEmail, data,
-                onSuccess = {
-                    val skillsList = _userSkills.value?.toMutableList() ?: mutableListOf()
-                    val updatedSkillIndex = skillsList.indexOfFirst { it.name == skillName }
-
-                    if (updatedSkillIndex != -1) {
-                        skillsList[updatedSkillIndex] = Skill(skillName, isChecked)
-                    } else {
-                        skillsList.add(Skill(skillName, isChecked))
-                    }
-
-                    _userSkills.value = skillsList
-                },
-                onFailure = {})
-        }
+        val data = mapOf("$SKILLS_COLLECTION.$skillName" to isChecked)
+        firestoreModel.updateDocument(
+            USER_INFO_COLLECTION,
+            userEmail,
+            data,
+            onSuccess = {},
+            onFailure = {})
     }
+
 }

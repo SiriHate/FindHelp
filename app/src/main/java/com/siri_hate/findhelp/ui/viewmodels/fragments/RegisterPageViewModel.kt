@@ -82,7 +82,7 @@ class RegisterPageViewModel(
                     val isPhoneExists = checkOrganizationPhoneExists(organizationPhone)
 
                     if (isNameExists) {
-                        _toastMessage.postValue(R.string.reg_need_to_enter_org_name_already_exists_msg) //TODO исправить ошибку из-за которой не работают ошибки
+                        _toastMessage.postValue(R.string.reg_need_to_enter_org_name_already_exists_msg)
                         return@runBlocking
                     }
                     if (isPhoneExists) {
@@ -214,7 +214,7 @@ class RegisterPageViewModel(
         }
 
         if (password != confirmPassword) {
-            _toastMessage.postValue(R.string.reg_passwords_dont_match_msg) //TODO сделать ошибку на оба поля вместо Toast
+            _toastMessage.postValue(R.string.reg_passwords_dont_match_msg)
             isValid = false
         }
 
@@ -237,6 +237,4 @@ class RegisterPageViewModel(
 
         return isValid
     }
-
-
 }
