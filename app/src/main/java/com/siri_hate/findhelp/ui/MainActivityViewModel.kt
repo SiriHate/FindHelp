@@ -32,6 +32,7 @@ class MainActivityViewModel(
         private const val USER_TYPE_USER_VALUE = "user"
         private const val USER_TYPE_MODERATOR_VALUE = "moderator"
     }
+
     fun onDestinationChanged(destinationId: Int) {
         when (destinationId) {
             R.id.userPageFragment,
