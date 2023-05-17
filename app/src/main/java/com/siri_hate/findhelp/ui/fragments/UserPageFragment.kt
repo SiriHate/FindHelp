@@ -36,6 +36,7 @@ class UserPageFragment : Fragment() {
     ): View {
         binding = FragmentUserPageBinding.inflate(inflater, container, false)
 
+        controller = findNavController()
         showVacancyListState(isLoading = true, isVacancyListEmpty = true)
         viewModel.fetchCurrentUserDocument()
 
@@ -97,7 +98,7 @@ class UserPageFragment : Fragment() {
             }
         }
 
-        findNavController().addOnDestinationChangedListener { _, destination, _ ->
+        controller.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.userPageFragment -> {
                     binding.userPageMenu.menu.findItem(R.id.bottom_navigation_item_home).isChecked =
