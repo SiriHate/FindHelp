@@ -105,6 +105,7 @@
     <string name="empty_list_message">Здесь пока ничего нет</string>
 
     <!-- InCode messages -->
+
     <!-- (CreateVacancyFragment) -->
     <string name="vacancy_added_successfully_msg">Вакансия успешно добавлена!</string>
     <string name="vacancy_added_failed_msg">Ошибка добавления вакансии!</string>
@@ -112,9 +113,11 @@
     <string name="neeed_to_enter_vacancy_city_msg">Введите город вакансии!</string>
     <string name="neeed_to_enter_vacancy_description_msg">Введите описание вакансии!</string>
     <string name="neeed_to_select_vacancy_skill_msg">Необходимо выбрать хотя бы один навык!</string>
+
     <!-- (EditVacancyFragment) -->
     <string name="vacancy_edited_successfully_msg">Вакансия успешно изменена!</string>
     <string name="vacancy_edit_error_message">Ошибка изменения вакансии!</string>
+
     <!-- (RegisterPageFragment) -->
     <string name="user_registration_successfully_msg">Регистрация прошла успешно</string>
     <string name="user_registration_error_msg">Ошибка регистрации!</string>
@@ -127,17 +130,28 @@
     <string name="reg_need_to_enter_org_name_already_exists_msg">Название организации уже занято</string>
     <string name="reg_need_to_enter_org_phone_already_exists_msg">Номер телефона уже занят</string>
     <string name="reg_passwords_dont_match_msg">Введеные пароли не совпадают!</string>
+
     <!-- (UserPageFragment) -->
     <string name="user_page_list_loading_err_msg">Ошибка загрузки списка</string>
+
     <!-- (VacancyDeleteAlertDialog) -->
     <string name="delete_vacancy_dialog_tittle">Удаление вакансии</string>
     <string name="delete_vacancy_dialog_description">Вы точно хотите удалить эту вакансию?</string>
     <string name="delete_vacancy_dialog_positive_answer">Да</string>
     <string name="delete_vacancy_dialog_negative_answer">Нет</string>
+
     <!-- (LoginPageViewModel) -->
     <string name="login_cant_determine_user_rights_msg">Не удалось определить права доступа</string>
+    <string name="login_error_msg">Ошибка авторизации!</string>
+    <string name="login_db_error_message">Ошибка доступа к базе данных!</string>
+
+    <!-- (LoginPageFragment) -->
+    <string name="login_need_to_enter_email_msg">Введите email</string>
+    <string name="login_need_to_enter_password_msg">Введите пароль</string>
+
     <!-- (ModeratorPageFragment) -->
     <string name="moderator_receiving_data_error_msg">Ошибка подключения!</string>
+
     <!-- (OrganizerPageFragment) -->
     <string name="organizer_receiving_data_error_msg">Ошибка подключения!</string>
 </resources>

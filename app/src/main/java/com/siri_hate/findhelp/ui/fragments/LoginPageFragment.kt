@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.siri_hate.findhelp.R
 import com.siri_hate.findhelp.databinding.FragmentLoginPageBinding
 import com.siri_hate.findhelp.data.remote.FirebaseAuthModel
 import com.siri_hate.findhelp.data.remote.FirebaseFirestoreModel
@@ -22,6 +23,13 @@ class LoginPageFragment : Fragment() {
 
     private lateinit var controller: NavController
     private lateinit var binding: FragmentLoginPageBinding
+
+    companion object {
+        const val USER_PAGE = "user"
+        const val ORGANIZER_PAGE = "organizer"
+        const val MODERATOR_PAGE = "moderator"
+
+    }
 
     private val viewModel: LoginPageViewModel by viewModels {
         LoginPageViewModelFactory(
@@ -41,11 +49,10 @@ class LoginPageFragment : Fragment() {
 
         setupListeners()
         setupObservers()
-        viewModel.isUserauthorized()
+        viewModel.isUserAuthorized()
 
         return binding.root
     }
-
 
     private fun setupListeners() {
         binding.loginFragmentLoginButton.setOnClickListener {
@@ -53,7 +60,7 @@ class LoginPageFragment : Fragment() {
             performLogin()
         }
         binding.loginFragmentRegistrationButton.setOnClickListener {
-            viewModel.navigateToRegistration(controller)
+            controller.navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 
@@ -71,8 +78,11 @@ class LoginPageFragment : Fragment() {
 
     private fun setupObservers() {
 
-        viewModel.toastMessage.observe(viewLifecycleOwner) { errorMessage ->
-            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+        viewModel.toastMessage.observe(viewLifecycleOwner) { errorMessageType ->
+            when (errorMessageType) {
+                "db_error" -> Toast.makeText(requireContext(), R.string.login_db_error_message, Toast.LENGTH_SHORT).show()
+                "login_error" -> Toast.makeText(requireContext(), R.string.login_error_msg, Toast.LENGTH_SHORT).show()
+            }
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { loadingStatus ->
@@ -83,19 +93,28 @@ class LoginPageFragment : Fragment() {
             }
         }
 
-        viewModel.destinationPage.observe(viewLifecycleOwner) { page ->
-            viewModel.startUserPageFragment(controller, page)
+        viewModel.destinationPage.observe(viewLifecycleOwner) { dest_page ->
+            when (dest_page) {
+                USER_PAGE -> controller.navigate(R.id.action_loginFragment_to_userPageFragment)
+                ORGANIZER_PAGE -> controller.navigate(R.id.action_loginFragment_to_organizerPageFragment)
+                MODERATOR_PAGE -> controller.navigate(R.id.action_loginFragment_to_moderatorPageFragment)
+                else -> Toast.makeText(
+                    requireContext(),
+                    R.string.login_cant_determine_user_rights_msg,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         viewModel.emailInputError.observe(viewLifecycleOwner) { errorStatus ->
             if (errorStatus) {
-                binding.loginFragmentLoginInput.error = "Введите email"
+                binding.loginFragmentLoginInput.error = getString(R.string.login_need_to_enter_email_msg)
             }
         }
 
         viewModel.passwordInputError.observe(viewLifecycleOwner) { errorStatus ->
             if (errorStatus) {
-                binding.loginFragmentPasswordInput.error = "Введите пароль"
+                binding.loginFragmentPasswordInput.error = getString(R.string.login_need_to_enter_password_msg)
             }
         }
 
